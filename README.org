@@ -1,0 +1,79 @@
+#+TITLE: Nix Builds of Haskell Language Server (HLS)
+#+SETUPFILE: ./doc/links.org
+
+[[https://github.com/shajra/shajra-nix-packages/actions][https://github.com/shajra/nix-hls/workflows/CI/badge.svg]]
+
+* About this project
+
+  This project has a [[nix][Nix]] expression for the [[haskell-hls][Haskell Language Server (HLS)]].
+
+  The Haskell Language Server is the latest attempt make an IDE-like experience
+  for the [[haskell][Haskell programming language]]. HLS implements [[lsp][Microsoft's Language
+  Server Protocol (LSP)]]. With this approach, a background service is launched
+  for a either a [[haskell-stack][Stack]] or [[haskell-cabal][Cabal]] project that answers questions needed by an
+  editor for common IDE features (code navigation, completion, documentation,
+  refactoring, etc.). There's a variety of editors supporting LSP that can take
+  advantage of such a server.
+  
+  The Nix expression provided by this project builds the latest version of HLS
+  targeting a variety of GHC compilers. Additionally, [[github-actions][this project's continuous
+  integration (using GitHub Actions)]] caches built packages at [[cachix][Cachix]], a service
+  for caching pre-built Nix packages. If you don't want to wait for a full local
+  build when first using this project, setting up Cachix is recommended.
+
+  See [[file:doc/nix.org][the provided documentation on Nix]] for more on what Nix is, why we're
+  motivated to use it, and how to get set up with it for this project.
+  
+* Prior Art
+
+  Prior initiatives to accomplish this, [[ghcide][GHCIDE]] and [[haskell-hie][Haskell IDE Engine (HIE)]],
+  have joined forces behind HLS, so there's some expectation that HLS will
+  subsume these projects in the future.
+  
+  For both GHCIDE and HIE, there are respective projects maintaining
+  Cachix-cached Nix builds/expressions. GHCIDE has [[ghcide-nix][ghcide-nix]] and HIE has
+  [[all-hies][all-hies]]. This project provides something similar for HLS.
+ 
+  Note that you need a version of HLS compiled specifically for the GHC compiler
+  used by your project. If you have multiple versions of GHC and HLS installed
+  in your path, then a provided wrapper can be used to select the right one for
+  the version of GHC used by your project. HLS personal laptops (one NixOS,
+  another MacOS). Later on it may have packages for more machines. For now, the
+  expression evaluates to an attribute set of package derivations. The package
+  sets are different depending on the detected operating system.
+
+* Using the project
+
+  #+INCLUDE: "doc/nix.org::*Nix package manager setup"
+
+  #+INCLUDE: "doc/nix.org::*Cache setup"
+
+** Installing Haskell Language Server
+
+   TODO
+
+* Release
+
+  The "master" branch of the repository on GitHub has the latest released
+  version of this code. There is currently no commitment to either forward or
+  backward compatibility.
+
+  "user/shajra" branches are personal branches that may be force-pushed to. The
+  "master" branch should not experience force-pushes and is recommended for
+  general use.
+
+* License
+
+  All files in this "nix-hls" project are licensed under the terms of GPLv3 or
+  (at your option) any later version.
+
+  Please see the [[./COPYING.md][./COPYING.md]] file for more details.
+
+* Contribution
+
+  Feel free to file issues and submit pull requests with GitHub.
+
+  There is only one author to date, so the following copyright covers all files
+  in this project:
+
+  Copyright © 2020 Sukant Hajra

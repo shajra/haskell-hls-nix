@@ -1,0 +1,24 @@
+#!/bin/sh -eu
+
+cd "$(dirname "$0")/.."
+
+# DESIGN: the `pkgs.coreutils` argument makes utilities like `whoami` available
+# for evaluated code blocks. This is just an example, you can include any
+# package you like.
+nix run \
+    --ignore-environment \
+    --keep LANG \
+    --keep LOCALE_ARCHIVE \
+    --file support \
+    nix-project-org2gfm \
+    pkgs.ansifilter \
+    pkgs.coreutils \
+    pkgs.gnutar \
+    pkgs.gzip \
+    pkgs.tree \
+    --command \
+    org2gfm \
+    --ignore links.org \
+    --nix "$(command -v nix)" \
+    --evaluate \
+    "$@"

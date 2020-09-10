@@ -1,0 +1,14 @@
+#!/bin/sh -eu
+
+cd "$(dirname "$0")/.."
+
+nix run \
+    --ignore-environment \
+    --file ./support \
+    nix-project-exe \
+    --command \
+    nix-project \
+    --upgrade \
+    --source-dir sources \
+    --nix "$(command -v nix)" \
+    "$@"
