@@ -56,7 +56,6 @@ let
         [{ enableSeparateDataOutput = true; }];
 
     trueVersion = {
-        "ghc844" = "8.4.4";
         "ghc861" = "8.6.1";
         "ghc862" = "8.6.2";
         "ghc863" = "8.6.3";
