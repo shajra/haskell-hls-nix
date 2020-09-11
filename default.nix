@@ -34,6 +34,7 @@ let
                 or checkMaterialization;
         in {
             inherit name modules index-state index-sha256;
+            configureArgs = "--disable-benchmarks";
             compiler-nix-name = ghcVersion;
             ${if plan-sha256 != null then "plan-sha256" else null} =
                 plan-sha256;
