@@ -1,7 +1,7 @@
 #+TITLE: Nix Builds of Haskell Language Server (HLS)
 #+SETUPFILE: ./doc/links.org
 
-[[https://github.com/shajra/shajra-nix-packages/actions][https://github.com/shajra/nix-hls/workflows/CI/badge.svg]]
+[[https://github.com/shajra/nix-hls/actions][https://github.com/shajra/nix-hls/workflows/CI/badge.svg]]
 
 * About this project
 

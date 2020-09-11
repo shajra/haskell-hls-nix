@@ -8,7 +8,7 @@
 - [License](#sec-5)
 - [Contribution](#sec-6)
 
-[![img](https://github.com/shajra/nix-hls/workflows/CI/badge.svg)](https://github.com/shajra/shajra-nix-packages/actions)
+[![img](https://github.com/shajra/nix-hls/workflows/CI/badge.svg)](https://github.com/shajra/nix-hls/actions)
 
 # About this project<a id="sec-1"></a>
 
@@ -16,7 +16,7 @@ This project has a [Nix](https://nixos.org/nix) expression for the [Haskell Lang
 
 The Haskell Language Server is the latest attempt make an IDE-like experience for the [Haskell programming language](https://www.haskell.org). HLS implements [Microsoft's Language Server Protocol (LSP)](https://microsoft.github.io/language-server-protocol). With this approach, a background service is launched for a either a [Stack](https://docs.haskellstack.org/en/stable/README/) or [Cabal](https://cabal.readthedocs.io/en/latest/) project that answers questions needed by an editor for common IDE features (code navigation, completion, documentation, refactoring, etc.). There's a variety of editors supporting LSP that can take advantage of such a server.
 
-The Nix expression provided by this project builds the latest version of HLS targeting a variety of GHC compilers. Additionally, [this project's continuous integration (using GitHub Actions)](https://github.com/shajra/shajra-nix-packages/actions) caches built packages at [Cachix](https://cachix.org/), a service for caching pre-built Nix packages. If you don't want to wait for a full local build when first using this project, setting up Cachix is recommended.
+The Nix expression provided by this project builds the latest version of HLS targeting a variety of GHC compilers. Additionally, [this project's continuous integration (using GitHub Actions)](https://github.com/shajra/nix-hls/actions) caches built packages at [Cachix](https://cachix.org/), a service for caching pre-built Nix packages. If you don't want to wait for a full local build when first using this project, setting up Cachix is recommended.
 
 See [the provided documentation on Nix](doc/nix.md) for more on what Nix is, why we're motivated to use it, and how to get set up with it for this project.
 
