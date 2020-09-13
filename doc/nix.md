@@ -119,7 +119,12 @@ In the remainder of this document, we'll use `.` instead of `default.nix` since 
 
 ## Building Nix expressions<a id="sec-4-2"></a>
 
-From our execution of `nix search` above we can see that a package named "haskell-language-server-ghc884-renamed" can be accessed with the "hls-renamed" attribute path in the Nix expression in the project root's `default.nix`.
+The following result is returned by our prior execution of `nix search --no-cache --file .`:
+
+    * hls-renamed (haskell-language-server-ghc884-renamed)
+      Haskell Language Server (HLS) for GHC 8.8.4, renamed binary
+
+We can see that a package named "haskell-language-server-ghc884-renamed" can be accessed with the "hls-renamed" attribute path in the Nix expression in the project root's `default.nix`. This package provides the executable `haskell-language-server-8.8.4`.
 
 We can build this package with `nix build` from the project root:
 
@@ -137,7 +142,7 @@ After a successful call of `nix build`, you'll see some symlinks for each packag
 readlink result*
 ```
 
-    /nix/store/jji7w77fbchryk5an0kwnyswg9cb61wx-haskell-language-server-ghc884-renamed
+    /nix/store/jj5dd9g1jdxi4xbrrkgwas4jnzmqlqim-haskell-language-server-ghc884-renamed
 
 Following these symlinks, we can see the files the project provides:
 
@@ -159,7 +164,7 @@ It's common to configure these "result" symlinks as ignored in source control to
 nix path-info --file . hls-renamed
 ```
 
-    /nix/store/jji7w77fbchryk5an0kwnyswg9cb61wx-haskell-language-server-ghc884-renamed
+    /nix/store/jj5dd9g1jdxi4xbrrkgwas4jnzmqlqim-haskell-language-server-ghc884-renamed
 
 ## Running commands<a id="sec-4-3"></a>
 
@@ -211,11 +216,12 @@ To install the `haskell-language-server-8.8.4` executable, which is accessed by 
 nix-env --install --file . --attr hls-renamed 2>&1
 ```
 
+    installing 'haskell-language-server-ghc884-renamed'
     …
     trace: Consider adding `--sha256: 1rkk09f8750qykrmkqfqbh44dbx1p8aq1caznxxlw8zqfvx39cxl` to the cabal.project file or passing in a lookupSha256 argument
-    trace: Using index-state: 2020-08-08T00:00:00Z for haskell-language-server
-    trace: To make this a fixed-output derivation but not materialized, set `plan-sha256` to the output of /nix/store/89p6s4m4i7lr78acmp2516bs57wlvp5w-calculateSha
-    trace: To materialize the output entirely, pass a writable path as the `materialized` argument and pass that path to /nix/store/nq2isk7d26vsqk6q2yxfgrvqwph702ik-generateMaterialized
+    trace: Using index-state: 2020-08-07T11:45:57Z for haskell-language-server
+    trace: To make this a fixed-output derivation but not materialized, set `plan-sha256` to the output of /nix/store/20yr8qlbw6ddbsvazx5n32ygdg627wh2-calculateSha
+    trace: To materialize the output entirely, pass a writable path as the `materialized` argument and pass that path to /nix/store/zys4qhnz13j8wk4bmjxqy3xxc1vc690r-generateMaterialized
 
 We can see this installation by querying what's been installed:
 

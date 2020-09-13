@@ -269,9 +269,21 @@
 
 ** Building Nix expressions
 
-   From our execution of =nix search= above we can see that a package named
-   {{{package-name}}} can be accessed with the {{{package-attr}}} attribute
-   path in the Nix expression in the project root's =default.nix=.
+   The following result is returned by our prior execution of ~nix search
+   --no-cache --file .~:
+
+   #+BEGIN_SRC shell :dir .. :results output :exports results :noweb yes
+     nix search --no-cache --file . | ansifilter \
+         | grep --color=never --after-context=1 '* <<get("package-attr")>> ('
+   #+END_SRC
+
+   #+RESULTS:
+   : * hls-renamed (haskell-language-server-ghc884-renamed)
+   :   Haskell Language Server (HLS) for GHC 8.8.4, renamed binary
+
+   We can see that a package named {{{package-name}}} can be accessed with the
+   {{{package-attr}}} attribute path in the Nix expression in the project root's
+   =default.nix=.  This package provides the executable {{{package-exe}}}.
 
    We can build this package with =nix build= from the project root:
 
@@ -297,7 +309,7 @@
    #+END_SRC
 
    #+RESULTS:
-   : /nix/store/jji7w77fbchryk5an0kwnyswg9cb61wx-haskell-language-server-ghc884-renamed
+   : /nix/store/jj5dd9g1jdxi4xbrrkgwas4jnzmqlqim-haskell-language-server-ghc884-renamed
 
    Following these symlinks, we can see the files the project provides:
 
@@ -324,7 +336,7 @@
    #+END_SRC
 
    #+RESULTS:
-   : /nix/store/jji7w77fbchryk5an0kwnyswg9cb61wx-haskell-language-server-ghc884-renamed
+   : /nix/store/jj5dd9g1jdxi4xbrrkgwas4jnzmqlqim-haskell-language-server-ghc884-renamed
 
 ** Running commands
 
@@ -401,16 +413,17 @@
    {{{package-attr}}} in our top-level =default.nix= file, we'd run the
    following:
 
-   #+BEGIN_SRC shell :session env :dir .. :results output :exports both :noweb yes :post crop(text=*this*, first-n=0, last-n=3)
+   #+BEGIN_SRC shell :session env :dir .. :results output :exports both :noweb yes :post crop(text=*this*, first-n=1, last-n=3)
      nix-env --install --file . --attr <<get("package-attr")>> 2>&1
    #+END_SRC
 
    #+RESULTS:
+   : installing 'haskell-language-server-ghc884-renamed'
    : …
    : trace: Consider adding `--sha256: 1rkk09f8750qykrmkqfqbh44dbx1p8aq1caznxxlw8zqfvx39cxl` to the cabal.project file or passing in a lookupSha256 argument
-   : trace: Using index-state: 2020-08-08T00:00:00Z for haskell-language-server
-   : trace: To make this a fixed-output derivation but not materialized, set `plan-sha256` to the output of /nix/store/89p6s4m4i7lr78acmp2516bs57wlvp5w-calculateSha
-   : trace: To materialize the output entirely, pass a writable path as the `materialized` argument and pass that path to /nix/store/nq2isk7d26vsqk6q2yxfgrvqwph702ik-generateMaterialized
+   : trace: Using index-state: 2020-08-07T11:45:57Z for haskell-language-server
+   : trace: To make this a fixed-output derivation but not materialized, set `plan-sha256` to the output of /nix/store/20yr8qlbw6ddbsvazx5n32ygdg627wh2-calculateSha
+   : trace: To materialize the output entirely, pass a writable path as the `materialized` argument and pass that path to /nix/store/zys4qhnz13j8wk4bmjxqy3xxc1vc690r-generateMaterialized
 
    We can see this installation by querying what's been installed:
 

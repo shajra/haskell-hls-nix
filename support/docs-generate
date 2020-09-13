@@ -13,6 +13,7 @@ nix run \
     nix-project-org2gfm \
     pkgs.ansifilter \
     pkgs.coreutils \
+    pkgs.gnugrep \
     pkgs.gnutar \
     pkgs.gzip \
     pkgs.tree \
