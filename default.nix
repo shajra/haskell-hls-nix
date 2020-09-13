@@ -132,7 +132,6 @@ let
 
 in {
     inherit
-    haskell-nix
     hls
     hls-wrapper
     hls-renamed;
