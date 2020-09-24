@@ -73,7 +73,7 @@ The "master" branch of the repository on GitHub has the latest released version 
 
 # License<a id="sec-5"></a>
 
-All files in this "nix-hls" project are licensed under the terms of GPLv3 or (at your option) any later version.
+All files in this "nix-hls" project are licensed under the terms of the MIT License.
 
 Please see the [./COPYING.md](./COPYING.md) file for more details.
 
