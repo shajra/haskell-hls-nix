@@ -6,6 +6,7 @@
 , index-state ? config.haskell-nix.hackage.index.state
 , index-sha256 ? config.haskell-nix.hackage.index.sha256
 , ghcVersion ? config.ghcVersion
+, unstable ? false
 }:
 
 let
@@ -50,10 +51,12 @@ let
         let planConfig = planConfigFor name modules // {
                 src = sources."${name}";
             };
-        in allExes (haskell-nix.cabalProject planConfig)."${name}";
+        in allExes (haskell-nix.cabalProject planConfig).haskell-language-server;
 
-    build = fromSource "haskell-language-server"
-        [{ enableSeparateDataOutput = true; }];
+    build =
+        if unstable
+        then fromSource "hls-unstable" [{ enableSeparateDataOutput = true; }]
+        else fromSource "hls-stable" [{ enableSeparateDataOutput = true; }];
 
     trueVersion = {
         "ghc861" = "8.6.1";

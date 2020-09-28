@@ -13,7 +13,8 @@ jobs:
           , "ghc884"
           , "ghc8102"
           ]
-    name: "${{ matrix.os }}, ${{ matrix.ghc }}"
+        unstable: [true, false]
+    name: "${{ matrix.os }}, ${{ matrix.ghc }}, unstable=${{ matrix.unstable }}"
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
@@ -35,7 +36,9 @@ jobs:
     - run: cat ~/.config/nix/nix.conf
     - run: |
         nix --print-build-logs build \
-            --argstr ghcVersion ${{ matrix.ghc }}
+            --argstr ghcVersion ${{ matrix.ghc }} \
+            --arg unstable ${{ matrix.unstable }}
     - run: |
         nix --print-build-logs path-info \
-            --argstr ghcVersion ${{ matrix.ghc }}
+            --argstr ghcVersion ${{ matrix.ghc }} \
+            --arg unstable ${{ matrix.unstable }}

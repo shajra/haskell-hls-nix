@@ -26,9 +26,12 @@ let
         else srcs // { nixpkgs-stable = srcs.nixpkgs-stable-linux ; };
 
     overrides = {
-        haskell-language-server = fromGitHub
-            sources.haskell-language-server
-            "haskell-language-server-src";
+        hls-stable =
+            let s = sources.hls-stable;
+            in fromGitHub s "haskell-hls-${s.branch}-src";
+        hls-unstable =
+            let s = sources.hls-unstable;
+            in fromGitHub s "haskell-hls-${s.branch}-src";
     };
 
 in darwinizedSrcs // overrides
