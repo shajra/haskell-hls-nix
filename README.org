@@ -1,7 +1,7 @@
 #+TITLE: Nix Builds of Haskell Language Server (HLS)
 #+SETUPFILE: ./doc/links.org
 
-[[https://github.com/shajra/nix-hls/actions][https://github.com/shajra/nix-hls/workflows/CI/badge.svg]]
+[[https://github.com/shajra/nix-haskell-hls/actions][https://github.com/shajra/nix-haskell-hls/workflows/CI/badge.svg]]
 
 * About this project
 
@@ -64,7 +64,7 @@
 
 * License
 
-  All files in this "nix-hls" project are licensed under the terms of
+  All files in this "nix-haskell-hls" project are licensed under the terms of
   the MIT License.
 
   Please see the [[./COPYING.md][./COPYING.md]] file for more details.

@@ -5,7 +5,7 @@
 #+LINK: gfm https://github.github.com/gfm/
 #+LINK: ghcide https://github.com/haskell/ghcide
 #+LINK: ghcide-nix https://github.com/cachix/ghcide-nix
-#+LINK: github-actions https://github.com/shajra/nix-hls/actions
+#+LINK: github-actions https://github.com/shajra/nix-haskell-hls/actions
 #+LINK: github-token https://github.com/settings/tokens
 #+LINK: haskell https://www.haskell.org 
 #+LINK: haskell-cabal https://cabal.readthedocs.io/en/latest/
