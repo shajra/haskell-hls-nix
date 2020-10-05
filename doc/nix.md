@@ -142,7 +142,7 @@ After a successful call of `nix build`, you'll see some symlinks for each packag
 readlink result*
 ```
 
-    /nix/store/jj5dd9g1jdxi4xbrrkgwas4jnzmqlqim-haskell-language-server-ghc884-renamed
+    /nix/store/mkgqqj3nyj46a2scvv40riqg75dshh31-haskell-language-server-ghc884-renamed
 
 Following these symlinks, we can see the files the project provides:
 
@@ -164,7 +164,7 @@ It's common to configure these "result" symlinks as ignored in source control to
 nix path-info --file . hls-renamed
 ```
 
-    /nix/store/jj5dd9g1jdxi4xbrrkgwas4jnzmqlqim-haskell-language-server-ghc884-renamed
+    /nix/store/mkgqqj3nyj46a2scvv40riqg75dshh31-haskell-language-server-ghc884-renamed
 
 ## Running commands<a id="sec-4-3"></a>
 
@@ -219,9 +219,9 @@ nix-env --install --file . --attr hls-renamed 2>&1
     installing 'haskell-language-server-ghc884-renamed'
     …
     trace: Consider adding `--sha256: 1rkk09f8750qykrmkqfqbh44dbx1p8aq1caznxxlw8zqfvx39cxl` to the cabal.project file or passing in a lookupSha256 argument
-    trace: Using index-state: 2020-08-07T11:45:57Z for haskell-language-server
-    trace: To make this a fixed-output derivation but not materialized, set `plan-sha256` to the output of /nix/store/20yr8qlbw6ddbsvazx5n32ygdg627wh2-calculateSha
-    trace: To materialize the output entirely, pass a writable path as the `materialized` argument and pass that path to /nix/store/zys4qhnz13j8wk4bmjxqy3xxc1vc690r-generateMaterialized
+    trace: Using index-state: 2020-10-05T00:00:00Z for hls-stable
+    trace: To make this a fixed-output derivation but not materialized, set `plan-sha256` to the output of /nix/store/qlmq48564gd69h0s6782qsxymfnqsjr7-calculateSha
+    trace: To materialize the output entirely, pass a writable path as the `materialized` argument and pass that path to /nix/store/n6n395r5s4mjpi5y9dcy190g7wslb51k-generateMaterialized
 
 We can see this installation by querying what's been installed:
 
