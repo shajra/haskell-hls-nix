@@ -3,8 +3,8 @@
     haskell-nix.useMaterialization = false;
     haskell-nix.checkMaterialization = false;
     haskell-nix.hackage.index = {
-        state = "2020-10-05T00:00:00Z";
-        sha256 = "1sazxknvajhyb6v8xhmi0ajgnz5jz300iww75gh5x8xnaf7lhfvw";
+        state = "2020-10-19T00:00:00Z";
+        sha256 = "03a98qiqr53csy59pwgbfvnzg90ikaiz9gvxv6s9aw95f990z9mb";
     };
     haskell-nix.nixpkgs-pin = "nixpkgs-2003";
     haskell-nix.plan = {
