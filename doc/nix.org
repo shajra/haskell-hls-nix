@@ -62,6 +62,13 @@
      rm --force "$NIX_PROFILE"*
    #+END_SRC
 
+   This begins a session with environment variables initialized.
+
+   #+NAME: session-init
+   #+BEGIN_SRC shell :session env :dir .. :results silent :noweb yes
+     <<nix-init>>
+   #+END_SRC
+
 * How this project uses Nix
 
   This project uses the [[nix][Nix package manager]] to download all necessary
@@ -202,6 +209,7 @@
    package derivations a Nix expression contains. For example from the root
    directory of this project, we can execute:
 
+   #+NAME: nix-derivation-show
    #+BEGIN_SRC shell :dir .. :results output silent :exports none
      nix show-derivation --file default.nix >/dev/null 2>&1
    #+END_SRC
@@ -210,11 +218,12 @@
      nix search --file default.nix --no-cache
    #+END_SRC
 
+   #+NAME: nix-search
    #+BEGIN_SRC shell :dir .. :results output :exports results :post crop(text=*this*, first-n=9, last-n=0)
      nix search --file default.nix --no-cache | ansifilter
    #+END_SRC
 
-   #+RESULTS:
+   #+RESULTS: nix-search
    : * hls (haskell-language-server-ghc884)
    :   Haskell Language Server (HLS) for GHC 8.8.4
    : 
@@ -234,10 +243,9 @@
    but may be inconsistent with what you really want to search. It can be
    confusing to get incorrect results due to an inconsistent cache. However,
    because small local projects rarely have that many package derivations we
-   don't really need the cache, and can bypass can bypass it with the
-   =--no-cache= switch, as used above. This guarantees accurate results that
-   are fast enough. So for the purposes of this project, it's recommended to
-   always use =--no-cache=.
+   don't really need the cache, and can bypass it with the =--no-cache= switch,
+   as used above. This guarantees accurate results that are fast enough. So for
+   the purposes of this project, it's recommended to always use =--no-cache=.
 
    The output of =nix search= is formatted as
 
@@ -248,8 +256,8 @@
 
    /Attribute paths/ are used to select values from Nix sets that might be
    nested. A dot delimits /attributes/ in the path. For instance an attribute
-   path of =a.b= selects a value from a set with a =a= attribute that has set
-   with a =b= attribute, that has the value to select.
+   path of =a.b= selects a value from a set with an =a= attribute that has set
+   with a =b= attribute, that then has the value to select.
 
    If the Nix expression we're searching evaluates to a single derivation (not
    in a container), the attribute path will be missing from the =nix search=
@@ -260,6 +268,7 @@
    the root directory of this project, we could use =.= instead of
    =default.nix=:
 
+   #+NAME: nix-search-alt
    #+BEGIN_SRC shell :dir .. :results silent
      nix search --file . --no-cache
    #+END_SRC
@@ -272,12 +281,13 @@
    The following result is returned by our prior execution of ~nix search
    --no-cache --file .~:
 
+   #+NAME: nix-search-specific
    #+BEGIN_SRC shell :dir .. :results output :exports results :noweb yes
      nix search --no-cache --file . | ansifilter \
          | grep --color=never --after-context=1 '* <<get("package-attr")>> ('
    #+END_SRC
 
-   #+RESULTS:
+   #+RESULTS: nix-search-specific
    : * hls-renamed (haskell-language-server-ghc884-renamed)
    :   Haskell Language Server (HLS) for GHC 8.8.4, renamed binary
 
@@ -287,6 +297,7 @@
 
    We can build this package with =nix build= from the project root:
 
+   #+NAME: nix-build
    #+BEGIN_SRC shell :dir .. :results output silent :noweb yes
      nix build --file . <<get("package-attr")>>
    #+END_SRC
@@ -296,28 +307,30 @@
    are built by default.
 
    All packages built by Nix are stored in =/nix/store=. Nix won't rebuild
-   packages found there. Once a package is built, its directory in =/nix/store=
-   is read-only (until the package is garbage collected, discussed later).
+   packages found there. Once a package is built, its content in =/nix/store= is
+   read-only (until the package is garbage collected, discussed later).
 
-   After a successful call of =nix build=, you'll see some symlinks
-   for each package requested in the current working directory. These symlinks
-   by default have a name prefixed with "result" and point back to the
-   respective build in =/nix/store=:
+   After a successful call of =nix build=, you'll see one or more symlinks for
+   each package requested in the current working directory. These symlinks by
+   default have a name prefixed with "result" and point back to the respective
+   build in =/nix/store=:
 
+   #+NAME: nix-build-link
    #+BEGIN_SRC shell :dir .. :results output :exports both
      readlink result*
    #+END_SRC
 
-   #+RESULTS:
+   #+RESULTS: nix-build-link
    : /nix/store/i863633rwz2p75cbfzjy2a8z7w52g7p1-haskell-language-server-ghc884-renamed
 
    Following these symlinks, we can see the files the project provides:
 
+   #+NAME: nix-build-tree
    #+BEGIN_SRC shell :dir .. :results output :exports both :post crop(text=*this*, first-n=10, last-n=0)
      tree -l result*
    #+END_SRC
 
-   #+RESULTS:
+   #+RESULTS: nix-build-tree
    : result
    : └── bin
    :     └── haskell-language-server-8.8.4
@@ -331,20 +344,22 @@
    without creating "result" symlinks. To get the paths where your packages are
    located, you can use =nix path-info= after a successful build:
 
+   #+NAME: nix-build-path
    #+BEGIN_SRC shell :dir .. :results output :exports both :noweb yes
      nix path-info --file . <<get("package-attr")>>
    #+END_SRC
 
-   #+RESULTS:
+   #+RESULTS: nix-build-path
    : /nix/store/i863633rwz2p75cbfzjy2a8z7w52g7p1-haskell-language-server-ghc884-renamed
 
 ** Running commands
 
    You can run a command from a package in a Nix expression with =nix run=. For
-   instance, to get the help message for the {{{package-exe}}} executable
+   example, to get the help message for the {{{package-exe}}} executable
    provided by the {{{package-name}}} package selected by the
    {{{package-attr}}} attribute path, we can call the following:
 
+   #+NAME: nix-run
    #+BEGIN_SRC shell :dir .. :results output :exports both :noweb yes :post crop(text=*this*, first-n=5, last-n=0)
      nix run \
          --file . \
@@ -352,7 +367,7 @@
          --command <<get("package-exe")>> --help
    #+END_SRC
 
-   #+RESULTS:
+   #+RESULTS: nix-run
    : haskell-language-server - GHC Haskell LSP server
    : 
    : Usage: haskell-language-server [--version | --numeric-version | --probe-tools | 
@@ -401,10 +416,7 @@
    We can query what's installed in the active profile with the =--query=
    switch:
 
-   #+BEGIN_SRC shell :session env :dir .. :results silent :exports none :noweb yes
-     <<nix-init>>
-   #+END_SRC
-
+   #+NAME: nix-env-query-1
    #+BEGIN_SRC shell :session env :results silent
      nix-env --query
    #+END_SRC
@@ -413,11 +425,12 @@
    {{{package-attr}}} in our top-level =default.nix= file, we'd run the
    following:
 
+   #+NAME: nix-env-install
    #+BEGIN_SRC shell :session env :dir .. :results output :exports both :noweb yes :post crop(text=*this*, first-n=1, last-n=3)
      nix-env --install --file . --attr <<get("package-attr")>> 2>&1
    #+END_SRC
 
-   #+RESULTS:
+   #+RESULTS: nix-env-install
    : installing 'haskell-language-server-ghc884-renamed'
    : …
    : trace: Consider adding `--sha256: 1rkk09f8750qykrmkqfqbh44dbx1p8aq1caznxxlw8zqfvx39cxl` to the cabal.project file or passing in a lookupSha256 argument
@@ -427,21 +440,23 @@
 
    We can see this installation by querying what's been installed:
 
+   #+NAME: nix-env-query-2
    #+BEGIN_SRC shell :session env :results output :exports both
      nix-env --query
    #+END_SRC
 
-   #+RESULTS:
+   #+RESULTS: nix-env-query-2
    : haskell-language-server-ghc884-renamed
 
    And if we want to uninstall a program from our active profile, we do so by
    its name, in this case {{{package-name}}}:
 
+   #+NAME: nix-env-uninstall
    #+BEGIN_SRC shell :session env :dir .. :results output :exports both :noweb yes
      nix-env --uninstall <<get("package-name")>> 2>&1
    #+END_SRC
 
-   #+RESULTS:
+   #+RESULTS: nix-env-uninstall
    : uninstalling 'haskell-language-server-ghc884-renamed'
 
    Note that we've installed our package using its attribute path
@@ -454,32 +469,53 @@
    derivation, but use different attribute paths. This is why we uninstall
    packages by their package name.
 
+   Also, if you look at the location for your profile, you'll see that Nix
+   retains the symlink trees of previous generations of your profile.  In fact
+   you can even rollback to a previous profile with the =--rollback= switch.
+   You can delete old generations of your profile with the
+   ==--delete-generations= switch.
+
    See the [[nix-env][documentation for =nix-env=]] for more details.
 
 ** Garbage collection
 
-   Old versions of packages stick around in =/nix/store=. We can clean this up
-   with garbage collection by calling =nix-collect-garbage=.
+   Every time you build a new version of your code, it's stored in =/nix/store=.
+   There is a command called =nix-collect-garbage= that purges unneeded packages.
+   Programs that should not be removed by =nix-collect-garbage= can by found by
+   starting with symlinks stored as /garbage collection (GC) roots/ under three
+   locations:
 
-   For each package, Nix is aware of all references back to =/nix/store= for
-   other packages, whether in text files or binaries. This allows Nix to
-   prevent the deletion of a runtime dependency required by another package.
+   - =/nix/var/nix/gcroots=
+   - =/nix/var/nix/profiles=
+   - =/nix/var/nix/manifests=.
 
-   Symlinks pointing to packages to exclude from garbage collection are
-   maintained by Nix under =/nix/var/nix/gcroots=. Looking closer, you'll see
-   that for each "result" symlink created by a =nix build= invocation, there
-   are symlinks in =/nix/var/nix/gcroots/auto= pointing back it. So we've got
-   symlinks in =/nix/var/nix/gcroots/auto= pointing to "result" symlinks in our
-   projects, which then reference the actual built project in =/nix/store=.
+   For each package, Nix is aware of all references back to other packages in
+   =/nix/store=, whether in text files or binaries.  This helps Nix assure that
+   dependencies of packages linked as GC roots won't be deleted.
 
-   These symlinks prevent packages built by =nix build= from being garbage
-   collected. If you want a package you've built with =nix build= to be garbage
-   collected, delete the "result" symlink created before calling
-   =nix-collect-garbage=. Breaking symlinks under =/nix/var/nix/gcroots=
-   removes protection from garbage collection. =nix-collect-garbage= will
-   cleans up broken symlinks when it runs.
+   Each "result" symlink created by a =nix build= invocation has a symlink in
+   =/nix/var/nix/gcroots/auto= pointing back it. So we've got symlinks in
+   =/nix/var/nix/gcroots/auto= pointing to "result" symlinks in our projects,
+   which then reference the actual built project in =/nix/store=.  These
+   symlinks prevent packages built by =nix build= from being garbage collected.
 
-   Also, it's good to know that =nix-collect-garbage= won't delete packages
+   If you want a package you've built with =nix build= to be garbage collected,
+   delete the "result" symlink created before calling =nix-collect-garbage=.
+   Breaking symlinks under =/nix/var/nix/gcroots= removes protection from
+   garbage collection. =nix-collect-garbage= will cleans up broken symlinks when
+   it runs.
+
+   Note that everything under =/nix/var/nix/profiles= is considered a GC root as
+   well.  This is why users by convention use this location to store their
+   =nix-env= profiles.
+
+   Also, note if you delete a “result*” link and call =nix-collect-garbage=,
+   though some garbage may be reclaimed, you may find that an old =nix-env=
+   profile is keeping the program alive.  As a convenience,
+   =nix-collect-garbage= has a =--delete-old= switch that will delete these old
+   profiles (it just calls ~nix-env --delete-generations~ on your behalf).
+
+   It's also good to know that =nix-collect-garbage= won't delete packages
    referenced by any running processes. In the case of =nix run= no garbage
    collection root symlink is created under =/nix/var/nix/gcroots=, but while
    =nix run= is running =nix-collect-garbage= won't delete packages needed by
@@ -505,11 +541,12 @@
    if you look in =/nix/store= you may find some. Instantiated derivations have
    references to all necessary build dependencies, also in =/nix/store=, which
    means that everything is physically in place in =/nix/store= to build the
-   package. No further evaluation of a Nix expression is needed once we have an
-   instantiated derivation to build the final package. Note that both =nix
-   build= and =nix run= perform both instantiation and realization of a
-   derivation, so for the most part, we don't have to worry about the
-   difference between instantiating and realizing a derivation.
+   package (no network connectivity is needed to realize an instantiated
+   derivation).
+
+   Note that both =nix build= and =nix run= perform both instantiation and
+   realization of a derivation, so for the most part, we don't have to worry
+   about the difference between instantiating and realizing a derivation.
 
    However, you may encounter a Nix expression where =nix search= returns
    nothing, though you're sure that there are derivations to select out. In
@@ -518,6 +555,7 @@
    instantiated into =/nix/store=. We can force the instantiation of these
    derivations without realizing their packages with the following command:
 
+   #+NAME: nix-derivation-show-again
    #+BEGIN_SRC shell :dir .. :results output silent
      nix show-derivation --file default.nix
    #+END_SRC

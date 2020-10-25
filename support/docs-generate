@@ -2,9 +2,6 @@
 
 cd "$(dirname "$0")/.."
 
-# DESIGN: the `pkgs.coreutils` argument makes utilities like `whoami` available
-# for evaluated code blocks. This is just an example, you can include any
-# package you like.
 nix run \
     --ignore-environment \
     --keep LANG \
@@ -13,6 +10,7 @@ nix run \
     nix-project-org2gfm \
     pkgs.ansifilter \
     pkgs.coreutils \
+    pkgs.git \
     pkgs.gnugrep \
     pkgs.gnutar \
     pkgs.gzip \

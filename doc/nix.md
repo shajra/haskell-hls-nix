@@ -98,14 +98,14 @@ nix search --file default.nix --no-cache
 
 If you don't get the results above, see the [section on understanding derivations](#nix-drv) for an explanation of a likely problem and workaround.
 
-Note that because for extremely large Nix expressions, searching can be slow, `nix search` by default returns results from searching an indexed cache. This cache is updated explicitly (with an `--update-cache` switch) but may be inconsistent with what you really want to search. It can be confusing to get incorrect results due to an inconsistent cache. However, because small local projects rarely have that many package derivations we don't really need the cache, and can bypass can bypass it with the `--no-cache` switch, as used above. This guarantees accurate results that are fast enough. So for the purposes of this project, it's recommended to always use `--no-cache`.
+Note that because for extremely large Nix expressions, searching can be slow, `nix search` by default returns results from searching an indexed cache. This cache is updated explicitly (with an `--update-cache` switch) but may be inconsistent with what you really want to search. It can be confusing to get incorrect results due to an inconsistent cache. However, because small local projects rarely have that many package derivations we don't really need the cache, and can bypass it with the `--no-cache` switch, as used above. This guarantees accurate results that are fast enough. So for the purposes of this project, it's recommended to always use `--no-cache`.
 
 The output of `nix search` is formatted as
 
     * attribute-path (name-of-package)
       Short description of package
 
-*Attribute paths* are used to select values from Nix sets that might be nested. A dot delimits *attributes* in the path. For instance an attribute path of `a.b` selects a value from a set with a `a` attribute that has set with a `b` attribute, that has the value to select.
+*Attribute paths* are used to select values from Nix sets that might be nested. A dot delimits *attributes* in the path. For instance an attribute path of `a.b` selects a value from a set with an `a` attribute that has set with a `b` attribute, that then has the value to select.
 
 If the Nix expression we're searching evaluates to a single derivation (not in a container), the attribute path will be missing from the `nix search` result.
 
@@ -134,9 +134,9 @@ nix build --file . hls-renamed
 
 The positional arguments to `nix build` are *installables*, which can be referenced by attribute paths. If you supply none then all derivations found are built by default.
 
-All packages built by Nix are stored in `/nix/store`. Nix won't rebuild packages found there. Once a package is built, its directory in `/nix/store` is read-only (until the package is garbage collected, discussed later).
+All packages built by Nix are stored in `/nix/store`. Nix won't rebuild packages found there. Once a package is built, its content in `/nix/store` is read-only (until the package is garbage collected, discussed later).
 
-After a successful call of `nix build`, you'll see some symlinks for each package requested in the current working directory. These symlinks by default have a name prefixed with "result" and point back to the respective build in `/nix/store`:
+After a successful call of `nix build`, you'll see one or more symlinks for each package requested in the current working directory. These symlinks by default have a name prefixed with "result" and point back to the respective build in `/nix/store`:
 
 ```shell
 readlink result*
@@ -168,7 +168,7 @@ nix path-info --file . hls-renamed
 
 ## Running commands<a id="sec-4-3"></a>
 
-You can run a command from a package in a Nix expression with `nix run`. For instance, to get the help message for the `haskell-language-server-8.8.4` executable provided by the "haskell-language-server-ghc884-renamed" package selected by the "hls-renamed" attribute path, we can call the following:
+You can run a command from a package in a Nix expression with `nix run`. For example, to get the help message for the `haskell-language-server-8.8.4` executable provided by the "haskell-language-server-ghc884-renamed" package selected by the "hls-renamed" attribute path, we can call the following:
 
 ```shell
 nix run \
@@ -241,19 +241,29 @@ nix-env --uninstall haskell-language-server-ghc884-renamed 2>&1
 
 Note that we've installed our package using its attribute path ("hls-renamed") within the referenced Nix expression. But we uninstall it using the package name ("haskell-language-server-ghc884-renamed"), which may or may not be the same as the attribute path. When a package is installed, Nix keeps no reference to the expression that evaluated to the derivation of the installed package. The attribute path is only relevant to this expression. In fact, two different expressions could evaluate to the exact same derivation, but use different attribute paths. This is why we uninstall packages by their package name.
 
+Also, if you look at the location for your profile, you'll see that Nix retains the symlink trees of previous generations of your profile. In fact you can even rollback to a previous profile with the `--rollback` switch. You can delete old generations of your profile with the `=--delete-generations` switch.
+
 See the [documentation for `nix-env`](https://nixos.org/nix/manual/#sec-nix-env) for more details.
 
 ## Garbage collection<a id="sec-4-5"></a>
 
-Old versions of packages stick around in `/nix/store`. We can clean this up with garbage collection by calling `nix-collect-garbage`.
+Every time you build a new version of your code, it's stored in `/nix/store`. There is a command called `nix-collect-garbage` that purges unneeded packages. Programs that should not be removed by `nix-collect-garbage` can by found by starting with symlinks stored as *garbage collection (GC) roots* under three locations:
 
-For each package, Nix is aware of all references back to `/nix/store` for other packages, whether in text files or binaries. This allows Nix to prevent the deletion of a runtime dependency required by another package.
+-   `/nix/var/nix/gcroots`
+-   `/nix/var/nix/profiles`
+-   `/nix/var/nix/manifests`.
 
-Symlinks pointing to packages to exclude from garbage collection are maintained by Nix under `/nix/var/nix/gcroots`. Looking closer, you'll see that for each "result" symlink created by a `nix build` invocation, there are symlinks in `/nix/var/nix/gcroots/auto` pointing back it. So we've got symlinks in `/nix/var/nix/gcroots/auto` pointing to "result" symlinks in our projects, which then reference the actual built project in `/nix/store`.
+For each package, Nix is aware of all references back to other packages in `/nix/store`, whether in text files or binaries. This helps Nix assure that dependencies of packages linked as GC roots won't be deleted.
 
-These symlinks prevent packages built by `nix build` from being garbage collected. If you want a package you've built with `nix build` to be garbage collected, delete the "result" symlink created before calling `nix-collect-garbage`. Breaking symlinks under `/nix/var/nix/gcroots` removes protection from garbage collection. `nix-collect-garbage` will cleans up broken symlinks when it runs.
+Each "result" symlink created by a `nix build` invocation has a symlink in `/nix/var/nix/gcroots/auto` pointing back it. So we've got symlinks in `/nix/var/nix/gcroots/auto` pointing to "result" symlinks in our projects, which then reference the actual built project in `/nix/store`. These symlinks prevent packages built by `nix build` from being garbage collected.
 
-Also, it's good to know that `nix-collect-garbage` won't delete packages referenced by any running processes. In the case of `nix run` no garbage collection root symlink is created under `/nix/var/nix/gcroots`, but while `nix run` is running `nix-collect-garbage` won't delete packages needed by the running command. However, once the `nix run` call exits, any packages pulled from a substituter or built locally are candidates for deletion by `nix-collect-garbage`. If you called `nix run` again after garbage collecting, those packages may be pulled or built again.
+If you want a package you've built with `nix build` to be garbage collected, delete the "result" symlink created before calling `nix-collect-garbage`. Breaking symlinks under `/nix/var/nix/gcroots` removes protection from garbage collection. `nix-collect-garbage` will cleans up broken symlinks when it runs.
+
+Note that everything under `/nix/var/nix/profiles` is considered a GC root as well. This is why users by convention use this location to store their `nix-env` profiles.
+
+Also, note if you delete a “result\*” link and call `nix-collect-garbage`, though some garbage may be reclaimed, you may find that an old `nix-env` profile is keeping the program alive. As a convenience, `nix-collect-garbage` has a `--delete-old` switch that will delete these old profiles (it just calls `nix-env --delete-generations` on your behalf).
+
+It's also good to know that `nix-collect-garbage` won't delete packages referenced by any running processes. In the case of `nix run` no garbage collection root symlink is created under `/nix/var/nix/gcroots`, but while `nix run` is running `nix-collect-garbage` won't delete packages needed by the running command. However, once the `nix run` call exits, any packages pulled from a substituter or built locally are candidates for deletion by `nix-collect-garbage`. If you called `nix run` again after garbage collecting, those packages may be pulled or built again.
 
 ## Understanding derivations<a id="nix-drv"></a>
 
@@ -262,7 +272,9 @@ We haven't detailed what happens when we build a Nix expression that evaluates t
 1.  *instantiating* the derivation
 2.  *realizing* the instantiated derivation, which builds the final package.
 
-An instantiated derivation is effectively a script stored in `/nix/store` that Nix can run to build the final package (which also ends up in `/nix/store`). These instantiated derivations have a ".drv" extension, and if you look in `/nix/store` you may find some. Instantiated derivations have references to all necessary build dependencies, also in `/nix/store`, which means that everything is physically in place in `/nix/store` to build the package. No further evaluation of a Nix expression is needed once we have an instantiated derivation to build the final package. Note that both `nix build` and `nix run` perform both instantiation and realization of a derivation, so for the most part, we don't have to worry about the difference between instantiating and realizing a derivation.
+An instantiated derivation is effectively a script stored in `/nix/store` that Nix can run to build the final package (which also ends up in `/nix/store`). These instantiated derivations have a ".drv" extension, and if you look in `/nix/store` you may find some. Instantiated derivations have references to all necessary build dependencies, also in `/nix/store`, which means that everything is physically in place in `/nix/store` to build the package (no network connectivity is needed to realize an instantiated derivation).
+
+Note that both `nix build` and `nix run` perform both instantiation and realization of a derivation, so for the most part, we don't have to worry about the difference between instantiating and realizing a derivation.
 
 However, you may encounter a Nix expression where `nix search` returns nothing, though you're sure that there are derivations to select out. In this case, the Nix expression is using an advanced technique that unfortunately hides attributes from `nix search` until some derivations are instantiated into `/nix/store`. We can force the instantiation of these derivations without realizing their packages with the following command:
 
