@@ -6,7 +6,7 @@
 , index-state ? config.haskell-nix.hackage.index.state
 , index-sha256 ? config.haskell-nix.hackage.index.sha256
 , ghcVersion ? config.ghcVersion
-, unstable ? false
+, unstable ? config.unstable
 }:
 
 let
@@ -126,7 +126,7 @@ let
     };
 
     hls-wrapper = build.haskell-language-server-wrapper.overrideAttrs (old: {
-        name = "haskell-language-server-${ghcVersion}-wrapper";
+        name = "haskell-language-server-wrapper";
         meta = old.meta // {
             description = "Haskell Language Server (HLS) wrapper";
             longDescription = "This package provides the server wrapper.";
@@ -137,5 +137,6 @@ in {
     inherit
     hls
     hls-wrapper
-    hls-renamed;
+    hls-renamed
+    nixpkgs;
 }

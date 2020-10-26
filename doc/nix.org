@@ -50,6 +50,7 @@
    #+BEGIN_SRC shell :eval no
      export NIX_PROFILE=$(pwd)/nix-profile
      export NIX_PAGER=cat
+     export PS1='$ '
    #+END_SRC
 
    Next we perform some side-effects to set up the evaluation of the whole
@@ -58,8 +59,8 @@
    #+NAME: cleanup
    #+BEGIN_SRC shell :dir .. :results output silent :noweb yes
      <<nix-init>>
-     rm --force result*
-     rm --force "$NIX_PROFILE"*
+     rm --force result* || true
+     rm --force "$NIX_PROFILE"* || true
    #+END_SRC
 
    This begins a session with environment variables initialized.
@@ -230,7 +231,7 @@
    : * hls-renamed (haskell-language-server-ghc884-renamed)
    :   Haskell Language Server (HLS) for GHC 8.8.4, renamed binary
    : 
-   : * hls-wrapper (haskell-language-server-ghc884-wrapper)
+   : * hls-wrapper (haskell-language-server-wrapper)
    :   Haskell Language Server (HLS) wrapper
    : 
 

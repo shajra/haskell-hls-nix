@@ -1,5 +1,6 @@
 {
     ghcVersion = "ghc884";
+    unstable = false;
     haskell-nix.useMaterialization = false;
     haskell-nix.checkMaterialization = false;
     haskell-nix.hackage.index = {

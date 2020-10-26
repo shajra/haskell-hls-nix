@@ -1,4 +1,5 @@
 #+LINK: all-hies https://github.com/Infinisil/all-hies
+#+LINK: all-hls https://github.com/masaeedu/all-hls
 #+LINK: cachix https://cachix.org/
 #+LINK: cachix-shajra https://shajra.cachix.org/
 #+LINK: cachix-action https://github.com/marketplace/actions/cachix
@@ -7,10 +8,14 @@
 #+LINK: ghcide-nix https://github.com/cachix/ghcide-nix
 #+LINK: github-actions https://github.com/shajra/nix-haskell-hls/actions
 #+LINK: github-token https://github.com/settings/tokens
-#+LINK: haskell https://www.haskell.org 
+#+LINK: haskell https://www.haskell.org
 #+LINK: haskell-cabal https://cabal.readthedocs.io/en/latest/
 #+LINK: haskell-hie https://github.com/haskell/haskell-ide-engine
 #+LINK: haskell-hls https://github.com/haskell/haskell-language-server
+#+LINK: haskell-hls-editor https://github.com/haskell/haskell-language-server#configuring-your-editor
+#+LINK: haskell-hls-issue https://github.com/mpickering/hie-bios/issues/208
+#+LINK: haskell-hls-releases https://github.com/haskell/haskell-language-server/releases
+#+LINK: haskell.nix https://input-output-hk.github.io/haskell.nix/
 #+LINK: haskell-stack https://docs.haskellstack.org/en/stable/README/
 #+LINK: litprog https://en.wikipedia.org/wiki/Literate_programming
 #+LINK: lsp https://microsoft.github.io/language-server-protocol

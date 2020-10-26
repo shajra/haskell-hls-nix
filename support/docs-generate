@@ -14,7 +14,9 @@ nix run \
     pkgs.gnugrep \
     pkgs.gnutar \
     pkgs.gzip \
+    pkgs.stack \
     pkgs.tree \
+    pkgs.which \
     --command \
     org2gfm \
     --ignore links.org \

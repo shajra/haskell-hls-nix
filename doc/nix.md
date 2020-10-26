@@ -93,7 +93,7 @@ nix search --file default.nix --no-cache
     * hls-renamed (haskell-language-server-ghc884-renamed)
       Haskell Language Server (HLS) for GHC 8.8.4, renamed binary
     
-    * hls-wrapper (haskell-language-server-ghc884-wrapper)
+    * hls-wrapper (haskell-language-server-wrapper)
       Haskell Language Server (HLS) wrapper
 
 If you don't get the results above, see the [section on understanding derivations](#nix-drv) for an explanation of a likely problem and workaround.
