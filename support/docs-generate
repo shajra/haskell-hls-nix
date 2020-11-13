@@ -4,12 +4,16 @@ cd "$(dirname "$0")/.."
 
 nix run \
     --ignore-environment \
+    --keep HOME \
     --keep LANG \
     --keep LOCALE_ARCHIVE \
     --file support \
     nix-project-org2gfm \
     pkgs.ansifilter \
+    pkgs.bash \
     pkgs.coreutils \
+    pkgs.direnv \
+    pkgs.findutils \
     pkgs.git \
     pkgs.gnugrep \
     pkgs.gnutar \

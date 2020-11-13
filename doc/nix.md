@@ -87,14 +87,16 @@ Once you learn the Nix language, you can read these files to see what kind of va
 nix search --file default.nix --no-cache
 ```
 
-    * hls (haskell-language-server-ghc884)
-      Haskell Language Server (HLS) for GHC 8.8.4
+    * cabal-install (cabal-install)
+      The command-line interface for Cabal and Hackage
     
-    * hls-renamed (haskell-language-server-ghc884-renamed)
-      Haskell Language Server (HLS) for GHC 8.8.4, renamed binary
+    * direnv (direnv)
+      A shell extension that manages your environment
     
-    * hls-wrapper (haskell-language-server-wrapper)
-      Haskell Language Server (HLS) wrapper
+    * direnv-nix-lorelei (direnv-nix-lorelei)
+      Alternative Nix functions for Direnv
+    
+    …
 
 If you don't get the results above, see the [section on understanding derivations](#nix-drv) for an explanation of a likely problem and workaround.
 
@@ -124,7 +126,7 @@ The following result is returned by our prior execution of `nix search --no-cach
     * hls-renamed (haskell-language-server-ghc884-renamed)
       Haskell Language Server (HLS) for GHC 8.8.4, renamed binary
 
-We can see that a package named "haskell-language-server-ghc884-renamed" can be accessed with the "hls-renamed" attribute path in the Nix expression in the project root's `default.nix`. This package provides the executable `haskell-language-server-8.8.4`.
+We can see that a package named "haskell-language-server-ghc884-renamed" can be accessed with the `hls-renamed` attribute path in the Nix expression in the project root's `default.nix`. Not shown in the search results above, this package happens to provide the executable `haskell-language-server-8.8.4`.
 
 We can build this package with `nix build` from the project root:
 
@@ -142,7 +144,7 @@ After a successful call of `nix build`, you'll see one or more symlinks for each
 readlink result*
 ```
 
-    /nix/store/i863633rwz2p75cbfzjy2a8z7w52g7p1-haskell-language-server-ghc884-renamed
+    /nix/store/47f78yzx72m7aljrr706df338la7cccy-haskell-language-server-ghc884-renamed
 
 Following these symlinks, we can see the files the project provides:
 
@@ -164,11 +166,15 @@ It's common to configure these "result" symlinks as ignored in source control to
 nix path-info --file . hls-renamed
 ```
 
-    /nix/store/i863633rwz2p75cbfzjy2a8z7w52g7p1-haskell-language-server-ghc884-renamed
+    /nix/store/47f78yzx72m7aljrr706df338la7cccy-haskell-language-server-ghc884-renamed
 
 ## Running commands<a id="sec-4-3"></a>
 
-You can run a command from a package in a Nix expression with `nix run`. For example, to get the help message for the `haskell-language-server-8.8.4` executable provided by the "haskell-language-server-ghc884-renamed" package selected by the "hls-renamed" attribute path, we can call the following:
+We can run commands in Nix-curated environments with `nix run`. Nix will take executables found in packages, put them in an environment's `PATH`, and then execute a user-specified command.
+
+With `nix run`, you don't even have to build the package first with `nix build` or mess around with the "result" symlinks. `nix run` will build the project if it's not yet been built.
+
+For example, to get the help message for the `haskell-language-server-8.8.4` executable provided by the `haskell-language-server-ghc884-renamed` package selected by the `hls-renamed` attribute path from `.`, we can call the following:
 
 ```shell
 nix run \
@@ -184,7 +190,7 @@ nix run \
                                      [--shake-profiling DIR] [--test] [--example] 
     …
 
-You don't even have to build the package first with `nix build` or mess around with the "result" symlinks. `nix run` will build the project if it's not yet been built.
+Thus far, the argument of the `--file` switch has always referenced a Nix file on our local filesystem. However, it's possible to reference a Nix expression downloaded from the internet. The Nix ecosystem is supported by a giant GitHub repository of Nix expressions called [Nixpkgs](https://github.com/NixOS/nixpkgs). Special branches of this repository are considered *channels* in the Nix ecosystem. A Nixpkgs branch of "nixos-20.09" can be referenced by "channel:nixos-20.09" for `nix` subcommands that accept a `--file` switch.
 
 Again, as with `nix build` attribute paths are specified as positional arguments to select packages.
 
@@ -194,7 +200,7 @@ The command to run is specified after the `--command` switch. `nix run` runs the
 
 ## Installing and uninstalling programs<a id="sec-4-4"></a>
 
-We've seen that we can build programs with `nix build` and then execute programs using the "result" symlink (`result/bin/*`). Additionally, we've seen that you can run programs with `nix run`. But these additional steps and switches/arguments can feel extraneous. It would be nice if we could just have the programs on our `PATH`. This is what `nix-env` is for.
+We've seen that we can build programs with `nix build` and then execute them using the "result" symlink (`result/bin/*`). Additionally, we've seen that you can run programs with `nix run`. But these additional steps and switches/arguments can feel extraneous. It would be nice if we could just have the programs on our `PATH`. This is what `nix-env` is for.
 
 `nix-env` maintains a symlink tree, called a *profile*, of installed programs. The active profile is pointed to by a symlink at `~/.nix-profile`. By default, this profile points to `/nix/var/nix/profiles/per-user/$USER/profile`. But you can point your `~/.nix-profile` to any writable location with the `--switch-profile` switch:
 
@@ -210,18 +216,13 @@ We can query what's installed in the active profile with the `--query` switch:
 nix-env --query
 ```
 
-To install the `haskell-language-server-8.8.4` executable, which is accessed by the "hls-renamed" in our top-level `default.nix` file, we'd run the following:
+To install the `haskell-language-server-8.8.4` executable, which is accessed by the `hls-renamed` in our top-level `default.nix` file, we'd run the following:
 
 ```shell
 nix-env --install --file . --attr hls-renamed 2>&1
 ```
 
     installing 'haskell-language-server-ghc884-renamed'
-    …
-    trace: Consider adding `--sha256: 1rkk09f8750qykrmkqfqbh44dbx1p8aq1caznxxlw8zqfvx39cxl` to the cabal.project file or passing in a lookupSha256 argument
-    trace: Using index-state: 2020-10-19T00:00:00Z for hls-stable
-    trace: To make this a fixed-output derivation but not materialized, set `plan-sha256` to the output of /nix/store/lfz8fvc0sa5izzgr2r3lvjka1grsc9av-calculateSha
-    trace: To materialize the output entirely, pass a writable path as the `materialized` argument and pass that path to /nix/store/zlgjhn9mjwfp063yzfrh6aabkdswqpfb-generateMaterialized
 
 We can see this installation by querying what's been installed:
 
@@ -239,9 +240,9 @@ nix-env --uninstall haskell-language-server-ghc884-renamed 2>&1
 
     uninstalling 'haskell-language-server-ghc884-renamed'
 
-Note that we've installed our package using its attribute path ("hls-renamed") within the referenced Nix expression. But we uninstall it using the package name ("haskell-language-server-ghc884-renamed"), which may or may not be the same as the attribute path. When a package is installed, Nix keeps no reference to the expression that evaluated to the derivation of the installed package. The attribute path is only relevant to this expression. In fact, two different expressions could evaluate to the exact same derivation, but use different attribute paths. This is why we uninstall packages by their package name.
+Note that we've installed our package using its attribute path (`hls-renamed`) within the referenced Nix expression. But we uninstall it using the package name ("haskell-language-server-ghc884-renamed"), which may or may not be the same as the attribute path. When a package is installed, Nix keeps no reference to the expression that evaluated to the derivation of the installed package. The attribute path is only relevant to this expression. In fact, two different expressions could evaluate to the exact same derivation, but use different attribute paths. This is why we uninstall packages by their package name.
 
-Also, if you look at the location for your profile, you'll see that Nix retains the symlink trees of previous generations of your profile. In fact you can even rollback to a previous profile with the `--rollback` switch. You can delete old generations of your profile with the `=--delete-generations` switch.
+Also, if you look at the location for your profile, you'll see that Nix retains the symlink trees of previous generations of your profile. In fact you can even rollback to a previous profile with the `--rollback` switch. You can delete old generations of your profile with the `--delete-generations` switch.
 
 See the [documentation for `nix-env`](https://nixos.org/nix/manual/#sec-nix-env) for more details.
 

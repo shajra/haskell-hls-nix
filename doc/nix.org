@@ -17,10 +17,16 @@
      (alist-get (intern arg) (car (read-from-string (f-read "nix.org.el"))))
    #+END_SRC
 
-   #+MACRO: get (eval (concat $2 (alist-get '$1 (car (read-from-string (f-read "nix.org.el")))) $2))
-   #+MACRO: package-attr {{{get(package-attr, "\"")}}}
-   #+MACRO: package-name {{{get(package-name, "\"")}}}
-   #+MACRO: package-exe {{{get(package-exe, "=")}}}
+   #+MACRO: get (eval (concat $2 (alist-get (intern $1) (car (read-from-string (f-read "nix.org.el")))) $2))
+   #+MACRO: package-attr {{{get(package-attr,=)}}}
+   #+MACRO: package-name {{{get(package-name,")}}}
+   #+MACRO: package-type {{{get(package-type)}}}
+   #+MACRO: package-target {{{get(package-target,=)}}}
+   #+MACRO: run-src {{{get(run-src,=)}}}
+   #+MACRO: run-attr {{{get(run-attr,=)}}}
+   #+MACRO: run-name {{{get(run-name,=)}}}
+   #+MACRO: run-target {{{get(run-target,=)}}}
+   #+MACRO: nixos-release {{{get(nixos-release)}}}
 
 ** Formatting help
 
@@ -50,7 +56,7 @@
    #+BEGIN_SRC shell :eval no
      export NIX_PROFILE=$(pwd)/nix-profile
      export NIX_PAGER=cat
-     export PS1='$ '
+     export PATH="$NIX_PROFILE/bin:$PATH"
    #+END_SRC
 
    Next we perform some side-effects to set up the evaluation of the whole
@@ -59,14 +65,23 @@
    #+NAME: cleanup
    #+BEGIN_SRC shell :dir .. :results output silent :noweb yes
      <<nix-init>>
-     rm --force result* || true
-     rm --force "$NIX_PROFILE"* || true
+     rm --force result*
+     rm --force "$NIX_PROFILE"*
+   #+END_SRC
+
+   This is just a hack to deal with the fact that we never know what directory a
+   session will start in, so we need a way to calculate the PWD to jump to it.
+
+   #+NAME: pwd-parent
+   #+BEGIN_SRC shell :results output silent
+     echo cd "$(pwd)/.."
    #+END_SRC
 
    This begins a session with environment variables initialized.
 
    #+NAME: session-init
-   #+BEGIN_SRC shell :session env :dir .. :results silent :noweb yes
+   #+BEGIN_SRC bash :session env :results output silent :noweb yes
+     <<pwd-parent()>>
      <<nix-init>>
    #+END_SRC
 
@@ -225,15 +240,18 @@
    #+END_SRC
 
    #+RESULTS: nix-search
-   : * hls (haskell-language-server-ghc884)
-   :   Haskell Language Server (HLS) for GHC 8.8.4
-   : 
-   : * hls-renamed (haskell-language-server-ghc884-renamed)
-   :   Haskell Language Server (HLS) for GHC 8.8.4, renamed binary
-   : 
-   : * hls-wrapper (haskell-language-server-wrapper)
-   :   Haskell Language Server (HLS) wrapper
-   : 
+   #+begin_example
+   ,* cabal-install (cabal-install)
+     The command-line interface for Cabal and Hackage
+
+   ,* direnv (direnv)
+     A shell extension that manages your environment
+
+   ,* direnv-nix-lorelei (direnv-nix-lorelei)
+     Alternative Nix functions for Direnv
+
+   …
+   #+end_example
 
    If you don't get the results above, see the [[#nix-drv][section on understanding
    derivations]] for an explanation of a likely problem and workaround.
@@ -270,7 +288,7 @@
    =default.nix=:
 
    #+NAME: nix-search-alt
-   #+BEGIN_SRC shell :dir .. :results silent
+   #+BEGIN_SRC shell :dir .. :results output silent
      nix search --file . --no-cache
    #+END_SRC
 
@@ -294,7 +312,8 @@
 
    We can see that a package named {{{package-name}}} can be accessed with the
    {{{package-attr}}} attribute path in the Nix expression in the project root's
-   =default.nix=.  This package provides the executable {{{package-exe}}}.
+   =default.nix=.  Not shown in the search results above, this package happens
+   to provide the {{{package-type}}} {{{package-target}}}.
 
    We can build this package with =nix build= from the project root:
 
@@ -322,7 +341,7 @@
    #+END_SRC
 
    #+RESULTS: nix-build-link
-   : /nix/store/i863633rwz2p75cbfzjy2a8z7w52g7p1-haskell-language-server-ghc884-renamed
+   : /nix/store/47f78yzx72m7aljrr706df338la7cccy-haskell-language-server-ghc884-renamed
 
    Following these symlinks, we can see the files the project provides:
 
@@ -351,21 +370,28 @@
    #+END_SRC
 
    #+RESULTS: nix-build-path
-   : /nix/store/i863633rwz2p75cbfzjy2a8z7w52g7p1-haskell-language-server-ghc884-renamed
+   : /nix/store/47f78yzx72m7aljrr706df338la7cccy-haskell-language-server-ghc884-renamed
 
 ** Running commands
 
-   You can run a command from a package in a Nix expression with =nix run=. For
-   example, to get the help message for the {{{package-exe}}} executable
-   provided by the {{{package-name}}} package selected by the
-   {{{package-attr}}} attribute path, we can call the following:
+   We can run commands in Nix-curated environments with =nix run=.  Nix will
+   take executables found in packages, put them in an environment's =PATH=, and
+   then execute a user-specified command.
+
+   With =nix run=, you don't even have to build the package first with =nix
+   build= or mess around with the "result" symlinks. =nix run= will build the
+   project if it's not yet been built.
+
+   For example, to get the help message for the {{{run-target}}} executable
+   provided by the {{{run-name}}} package selected by the {{{run-attr}}}
+   attribute path from {{{run-src}}}, we can call the following:
 
    #+NAME: nix-run
    #+BEGIN_SRC shell :dir .. :results output :exports both :noweb yes :post crop(text=*this*, first-n=5, last-n=0)
      nix run \
-         --file . \
-         <<get("package-attr")>> \
-         --command <<get("package-exe")>> --help
+         --file <<get("run-src")>> \
+         <<get("run-attr")>> \
+         --command <<get("run-target")>> --help
    #+END_SRC
 
    #+RESULTS: nix-run
@@ -376,9 +402,14 @@
    :                                  [--shake-profiling DIR] [--test] [--example] 
    : …
 
-   You don't even have to build the package first with =nix build= or mess
-   around with the "result" symlinks. =nix run= will build the project if it's
-   not yet been built.
+   Thus far, the argument of the =--file= switch has always referenced a Nix
+   file on our local filesystem.  However, it's possible to reference a Nix
+   expression downloaded from the internet.  The Nix ecosystem is supported by a
+   giant GitHub repository of Nix expressions called [[nixpkgs][Nixpkgs]].  Special branches
+   of this repository are considered /channels/ in the Nix ecosystem.  A Nixpkgs
+   branch of "{{{nixos-release}}}" can be referenced by
+   "channel:{{{nixos-release}}}" for =nix= subcommands that accept a =--file=
+   switch.
 
    Again, as with =nix build= attribute paths are specified as positional
    arguments to select packages.
@@ -393,11 +424,11 @@
 
 ** Installing and uninstalling programs
 
-   We've seen that we can build programs with =nix build= and then execute
-   programs using the "result" symlink (=result/bin/*=). Additionally, we've
-   seen that you can run programs with =nix run=. But these additional steps
-   and switches/arguments can feel extraneous. It would be nice if we could
-   just have the programs on our =PATH=. This is what =nix-env= is for.
+   We've seen that we can build programs with =nix build= and then execute them
+   using the "result" symlink (=result/bin/*=). Additionally, we've seen that
+   you can run programs with =nix run=. But these additional steps and
+   switches/arguments can feel extraneous. It would be nice if we could just
+   have the programs on our =PATH=. This is what =nix-env= is for.
 
    =nix-env= maintains a symlink tree, called a /profile/, of installed
    programs. The active profile is pointed to by a symlink at =~/.nix-profile=.
@@ -418,26 +449,21 @@
    switch:
 
    #+NAME: nix-env-query-1
-   #+BEGIN_SRC shell :session env :results silent
+   #+BEGIN_SRC shell :session env :results output silent
      nix-env --query
    #+END_SRC
 
-   To install the {{{package-exe}}} executable, which is accessed by the
-   {{{package-attr}}} in our top-level =default.nix= file, we'd run the
+   To install the {{{package-target}}} {{{package-type}}}, which is accessed by
+   the {{{package-attr}}} in our top-level =default.nix= file, we'd run the
    following:
 
    #+NAME: nix-env-install
-   #+BEGIN_SRC shell :session env :dir .. :results output :exports both :noweb yes :post crop(text=*this*, first-n=1, last-n=3)
+   #+BEGIN_SRC shell :session env :results output :exports both :noweb yes :post crop(text=*this*, first-n=1, last-n=3)
      nix-env --install --file . --attr <<get("package-attr")>> 2>&1
    #+END_SRC
 
    #+RESULTS: nix-env-install
    : installing 'haskell-language-server-ghc884-renamed'
-   : …
-   : trace: Consider adding `--sha256: 1rkk09f8750qykrmkqfqbh44dbx1p8aq1caznxxlw8zqfvx39cxl` to the cabal.project file or passing in a lookupSha256 argument
-   : trace: Using index-state: 2020-10-19T00:00:00Z for hls-stable
-   : trace: To make this a fixed-output derivation but not materialized, set `plan-sha256` to the output of /nix/store/lfz8fvc0sa5izzgr2r3lvjka1grsc9av-calculateSha
-   : trace: To materialize the output entirely, pass a writable path as the `materialized` argument and pass that path to /nix/store/zlgjhn9mjwfp063yzfrh6aabkdswqpfb-generateMaterialized
 
    We can see this installation by querying what's been installed:
 
@@ -453,7 +479,7 @@
    its name, in this case {{{package-name}}}:
 
    #+NAME: nix-env-uninstall
-   #+BEGIN_SRC shell :session env :dir .. :results output :exports both :noweb yes
+   #+BEGIN_SRC shell :session env :results output :exports both :noweb yes
      nix-env --uninstall <<get("package-name")>> 2>&1
    #+END_SRC
 
@@ -474,7 +500,7 @@
    retains the symlink trees of previous generations of your profile.  In fact
    you can even rollback to a previous profile with the =--rollback= switch.
    You can delete old generations of your profile with the
-   ==--delete-generations= switch.
+   =--delete-generations= switch.
 
    See the [[nix-env][documentation for =nix-env=]] for more details.
 

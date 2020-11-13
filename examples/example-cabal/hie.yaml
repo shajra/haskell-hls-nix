@@ -1,0 +1,24 @@
+cradle:
+  multi:
+    - path: ./application/Setup.hs
+      config:
+        cradle:
+          direct:
+            arguments:
+            - "-package Cabal"
+            - "-package base"
+    - path: ./library/Setup.hs
+      config:
+        cradle:
+          direct:
+            arguments:
+            - "-package Cabal"
+            - "-package base"
+    - path: .
+      config:
+        cradle:
+          cabal:
+            - path: "./application/src/Main.hs"
+              component: "example-haskell-app:exe:example-haskell"
+            - path: "./library/src"
+              component: "lib:example-haskell-lib"

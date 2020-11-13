@@ -1,0 +1,4 @@
+-- Specifies where the Cabal packages for our project are located.
+packages:
+    ./library
+    ./application

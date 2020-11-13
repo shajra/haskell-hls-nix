@@ -10,7 +10,9 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         ghc:
           [ "ghc865"
+          , "ghc883"
           , "ghc884"
+          , "ghc8101"
           , "ghc8102"
           ]
         unstable: [true, false]
@@ -18,8 +20,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
-    - uses: cachix/install-nix-action@v11
-    - uses: cachix/cachix-action@v6
+    - uses: cachix/install-nix-action@v12
+    - uses: cachix/cachix-action@v8
       with:
         name: shajra
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
@@ -30,15 +32,15 @@ jobs:
             >> ~/.config/nix/nix.conf
         echo "trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" \
             >> ~/.config/nix/nix.conf
-    - uses: cachix/cachix-action@v6
+    - uses: cachix/cachix-action@v8
       with:
         name: iohk
     - run: cat ~/.config/nix/nix.conf
     - run: |
         nix --print-build-logs build \
             --argstr ghcVersion ${{ matrix.ghc }} \
-            --arg unstable ${{ matrix.unstable }}
+            --arg hlsUnstable ${{ matrix.unstable }}
     - run: |
         nix --print-build-logs path-info \
             --argstr ghcVersion ${{ matrix.ghc }} \
-            --arg unstable ${{ matrix.unstable }}
+            --arg hlsUnstable ${{ matrix.unstable }}

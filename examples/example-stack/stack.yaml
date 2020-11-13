@@ -1,0 +1,12 @@
+# locks the versions of dependencies and GHC
+resolver: lts-16.18
+
+# Specifies where the Cabal packages for our project are located.
+packages:
+- ./library
+- ./application
+
+nix:
+    packages:
+    - icu
+

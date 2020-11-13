@@ -1,6 +1,6 @@
 let
 
-    sources = import ../sources;
+    sources = import ../nix/sources;
     pkgs = import sources.nixpkgs-stable { config = {}; overlays = []; };
     nix-project = import sources.nix-project;
 
