@@ -59,7 +59,7 @@
    This begins a session with environment variables initialized.
 
    #+NAME: session-init
-   #+BEGIN_SRC bash :session env :results output silent :noweb yes
+   #+BEGIN_SRC shell :session env :results output silent :noweb yes
      <<pwd()>>
      <<nix-init>>
    #+END_SRC
@@ -200,7 +200,7 @@
   : …
   : 
   : Completed (5 files worked, 0 files failed)
-  : [INFO] finish: User TypeCheck (took 0.08s)
+  : [INFO] finish: User TypeCheck (took 0.29s)
 
   And here we see that the script works for the Stack example project as well:
 
@@ -216,7 +216,7 @@
   : …
   : 
   : Completed (3 files worked, 0 files failed)
-  : [INFO] finish: User TypeCheck (took 0.06s)
+  : [INFO] finish: User TypeCheck (took 0.19s)
 
 * Command-line reference
 

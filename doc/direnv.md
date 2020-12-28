@@ -119,7 +119,7 @@ direnv exec examples/example-cabal \
     
     …
     Completed (5 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.10s)
+    [INFO] finish: User TypeCheck (took 0.26s)
 
 Before we can use Direnv with the example, we have to run `direnv allow` on it to permit running code from the `.envrc` file.
 
@@ -138,7 +138,7 @@ direnv exec examples/example-stack \
     
     …
     Completed (3 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.05s)
+    [INFO] finish: User TypeCheck (took 0.12s)
 
 # Suggested advanced configuration<a id="sec-7"></a>
 

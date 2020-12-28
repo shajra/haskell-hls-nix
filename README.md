@@ -405,7 +405,7 @@ nix-shell --pure --run 'haskell-language-server-wrapper'
     
     …
     Completed (5 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.06s)
+    [INFO] finish: User TypeCheck (took 0.14s)
 
 The same command can test HLS working with our Stack example project:
 
@@ -418,7 +418,8 @@ nix-shell --pure --run 'haskell-language-server-wrapper'
     Report bugs at https://github.com/haskell/haskell-language-server/issues
     
     …
-    [INFO] finish: User TypeCheck (took 0.04s)Completed (3 files worked, 0 files failed)
+    Completed (3 files worked, 0 files failed)
+    [INFO] finish: User TypeCheck (took 0.16s)
 
 # Editor integration with Nix shells<a id="sec-9"></a>
 

@@ -80,7 +80,7 @@
    This begins a session with environment variables initialized.
 
    #+NAME: session-init
-   #+BEGIN_SRC bash :session env :results output silent :noweb yes
+   #+BEGIN_SRC shell :session env :results output silent :noweb yes
      <<pwd-parent()>>
      <<nix-init>>
    #+END_SRC

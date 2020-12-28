@@ -95,7 +95,7 @@ hls-wrapper-nix --cwd examples/example-cabal
     …
     
     Completed (5 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.08s)
+    [INFO] finish: User TypeCheck (took 0.29s)
 
 And here we see that the script works for the Stack example project as well:
 
@@ -109,7 +109,7 @@ hls-wrapper-nix --cwd examples/example-stack
     …
     
     Completed (3 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.06s)
+    [INFO] finish: User TypeCheck (took 0.19s)
 
 # Command-line reference<a id="sec-7"></a>
 
