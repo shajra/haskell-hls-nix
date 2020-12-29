@@ -7,17 +7,17 @@ let
 
     lib = nixpkgs.lib;
 
+    instabilities = [
+        false
+        true
+    ];
+
     ghcVersions = [
         "ghc865"
         "ghc883"
         "ghc884"
         "ghc8101"
         "ghc8102"
-    ];
-
-    instabilities = [
-        true
-        false
     ];
 
 in builtins.concatMap (ghcVersion:

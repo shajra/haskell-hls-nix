@@ -67,6 +67,9 @@
         "mtl".revision = (((hackage."mtl")."2.2.2").revisions).default;
         "network-uri".revision = (((hackage."network-uri")."2.6.3.0").revisions).default;
         "regex-base".revision = (((hackage."regex-base")."0.94.0.0").revisions).default;
+        "pretty-simple".revision = (((hackage."pretty-simple")."4.0.0.0").revisions).default;
+        "pretty-simple".flags.buildexample = false;
+        "pretty-simple".flags.buildexe = false;
         "zlib".revision = (((hackage."zlib")."0.6.2.2").revisions).default;
         "zlib".flags.non-blocking-ffi = false;
         "zlib".flags.bundled-c-zlib = false;
@@ -93,6 +96,7 @@
         "safe-exceptions".revision = (((hackage."safe-exceptions")."0.1.7.1").revisions).default;
         "adjunctions".revision = (((hackage."adjunctions")."4.4").revisions).default;
         "invariant".revision = (((hackage."invariant")."0.5.4").revisions).default;
+        "with-utf8".revision = (((hackage."with-utf8")."1.0.2.1").revisions).default;
         "generic-deriving".revision = (((hackage."generic-deriving")."1.14").revisions).default;
         "generic-deriving".flags.base-4-9 = true;
         "syb".revision = (((hackage."syb")."0.7.1").revisions).default;
@@ -194,6 +198,7 @@
         "ansi-terminal".flags.example = false;
         "quickcheck-instances".revision = (((hackage."quickcheck-instances")."0.3.25.1").revisions).default;
         "quickcheck-instances".flags.bytestring-builder = false;
+        "th-env".revision = (((hackage."th-env")."0.1.0.2").revisions).default;
         "tagged".revision = (((hackage."tagged")."0.8.6").revisions).default;
         "tagged".flags.transformers = true;
         "tagged".flags.deepseq = true;
@@ -266,7 +271,7 @@
         "HsYAML".flags.exe = false;
         "ghc-trace-events".revision = (((hackage."ghc-trace-events")."0.1.2.1").revisions).default;
         "filemanip".revision = (((hackage."filemanip")."0.3.6.3").revisions).default;
-        "indexed-traversable".revision = (((hackage."indexed-traversable")."0.1").revisions).default;
+        "indexed-traversable".revision = (((hackage."indexed-traversable")."0.1.1").revisions).default;
         "parser-combinators".revision = (((hackage."parser-combinators")."1.2.1").revisions).default;
         "parser-combinators".flags.dev = false;
         "blaze-markup".revision = (((hackage."blaze-markup")."0.8.2.7").revisions).default;
@@ -419,6 +424,7 @@
     {
       packages = {
         hie-compat = ./.plan.nix/hie-compat.nix;
+        hls-class-plugin = ./.plan.nix/hls-class-plugin.nix;
         hls-retrie-plugin = ./.plan.nix/hls-retrie-plugin.nix;
         hls-explicit-imports-plugin = ./.plan.nix/hls-explicit-imports-plugin.nix;
         haskell-language-server = ./.plan.nix/haskell-language-server.nix;
@@ -433,6 +439,7 @@
       {
         packages = {
           "hie-compat" = { flags = { "ghc-lib" = lib.mkOverride 900 false; }; };
+          "hls-class-plugin" = { flags = {}; };
           "hls-retrie-plugin" = { flags = {}; };
           "hls-explicit-imports-plugin" = { flags = {}; };
           "haskell-language-server" = {
@@ -453,6 +460,7 @@
               "floskell" = lib.mkOverride 900 false;
               "all-plugins" = lib.mkOverride 900 true;
               "ormolu" = lib.mkOverride 900 false;
+              "class" = lib.mkOverride 900 false;
               };
             };
           "ghcide" = { flags = { "ghc-lib" = lib.mkOverride 900 false; }; };

@@ -266,7 +266,7 @@
         "HsYAML".flags.exe = false;
         "ghc-trace-events".revision = (((hackage."ghc-trace-events")."0.1.2.1").revisions).default;
         "filemanip".revision = (((hackage."filemanip")."0.3.6.3").revisions).default;
-        "indexed-traversable".revision = (((hackage."indexed-traversable")."0.1").revisions).default;
+        "indexed-traversable".revision = (((hackage."indexed-traversable")."0.1.1").revisions).default;
         "parser-combinators".revision = (((hackage."parser-combinators")."1.2.1").revisions).default;
         "parser-combinators".flags.dev = false;
         "blaze-markup".revision = (((hackage."blaze-markup")."0.8.2.7").revisions).default;

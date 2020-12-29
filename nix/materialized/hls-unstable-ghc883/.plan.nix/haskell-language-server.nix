@@ -13,6 +13,7 @@
       pedantic = false;
       all-plugins = true;
       all-formatters = true;
+      class = false;
       eval = false;
       importlens = false;
       retrie = false;
@@ -84,7 +85,7 @@
         };
       exes = {
         "haskell-language-server" = {
-          depends = (((((((([
+          depends = ((((((((([
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
             (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
             (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
@@ -113,21 +114,38 @@
             (hsPkgs."time" or (errorHandler.buildDepError "time"))
             (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
             (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
-            ] ++ (pkgs.lib).optional (flags.importlens || flags.all-plugins) (hsPkgs."hls-explicit-imports-plugin" or (errorHandler.buildDepError "hls-explicit-imports-plugin"))) ++ (pkgs.lib).optional (flags.retrie || flags.all-plugins) (hsPkgs."hls-retrie-plugin" or (errorHandler.buildDepError "hls-retrie-plugin"))) ++ (pkgs.lib).optional (flags.tactic || flags.all-plugins) (hsPkgs."hls-tactics-plugin" or (errorHandler.buildDepError "hls-tactics-plugin"))) ++ (pkgs.lib).optional (flags.hlint || flags.all-plugins) (hsPkgs."hls-hlint-plugin" or (errorHandler.buildDepError "hls-hlint-plugin"))) ++ (pkgs.lib).optional (flags.floskell || flags.all-formatters) (hsPkgs."floskell" or (errorHandler.buildDepError "floskell"))) ++ (pkgs.lib).optional (flags.fourmolu || flags.all-formatters) (hsPkgs."fourmolu" or (errorHandler.buildDepError "fourmolu"))) ++ (pkgs.lib).optional (flags.ormolu || flags.all-formatters) (hsPkgs."ormolu" or (errorHandler.buildDepError "ormolu"))) ++ (pkgs.lib).optional (flags.stylishhaskell || flags.all-formatters) (hsPkgs."stylish-haskell" or (errorHandler.buildDepError "stylish-haskell"))) ++ (pkgs.lib).optional ((flags.brittany || flags.all-formatters) && flags.agpl) (hsPkgs."brittany" or (errorHandler.buildDepError "brittany"));
+            (hsPkgs."parser-combinators" or (errorHandler.buildDepError "parser-combinators"))
+            (hsPkgs."pretty-simple" or (errorHandler.buildDepError "pretty-simple"))
+            (hsPkgs."Diff" or (errorHandler.buildDepError "Diff"))
+            (hsPkgs."QuickCheck" or (errorHandler.buildDepError "QuickCheck"))
+            (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
+            (hsPkgs."with-utf8" or (errorHandler.buildDepError "with-utf8"))
+            ] ++ (pkgs.lib).optional (flags.class || flags.all-plugins) (hsPkgs."hls-class-plugin" or (errorHandler.buildDepError "hls-class-plugin"))) ++ (pkgs.lib).optional (flags.importlens || flags.all-plugins) (hsPkgs."hls-explicit-imports-plugin" or (errorHandler.buildDepError "hls-explicit-imports-plugin"))) ++ (pkgs.lib).optional (flags.retrie || flags.all-plugins) (hsPkgs."hls-retrie-plugin" or (errorHandler.buildDepError "hls-retrie-plugin"))) ++ (pkgs.lib).optional (flags.tactic || flags.all-plugins) (hsPkgs."hls-tactics-plugin" or (errorHandler.buildDepError "hls-tactics-plugin"))) ++ (pkgs.lib).optional (flags.hlint || flags.all-plugins) (hsPkgs."hls-hlint-plugin" or (errorHandler.buildDepError "hls-hlint-plugin"))) ++ (pkgs.lib).optional (flags.floskell || flags.all-formatters) (hsPkgs."floskell" or (errorHandler.buildDepError "floskell"))) ++ (pkgs.lib).optional (flags.fourmolu || flags.all-formatters) (hsPkgs."fourmolu" or (errorHandler.buildDepError "fourmolu"))) ++ (pkgs.lib).optional (flags.ormolu || flags.all-formatters) (hsPkgs."ormolu" or (errorHandler.buildDepError "ormolu"))) ++ (pkgs.lib).optional (flags.stylishhaskell || flags.all-formatters) (hsPkgs."stylish-haskell" or (errorHandler.buildDepError "stylish-haskell"))) ++ (pkgs.lib).optional ((flags.brittany || flags.all-formatters) && flags.agpl) (hsPkgs."brittany" or (errorHandler.buildDepError "brittany"));
           buildable = true;
           modules = ((((((([
             "Ide/Plugin/Example"
             "Ide/Plugin/Example2"
             "Plugins"
-            ] ++ (pkgs.lib).optional (flags.eval || flags.all-plugins) "Ide/Plugin/Eval") ++ (pkgs.lib).optional (flags.modulename || flags.all-plugins) "Ide/Plugin/ModuleName") ++ (pkgs.lib).optional (flags.pragmas || flags.all-plugins) "Ide/Plugin/Pragmas") ++ (pkgs.lib).optional (flags.floskell || flags.all-formatters) "Ide/Plugin/Floskell") ++ (pkgs.lib).optional (flags.fourmolu || flags.all-formatters) "Ide/Plugin/Fourmolu") ++ (pkgs.lib).optional (flags.ormolu || flags.all-formatters) "Ide/Plugin/Ormolu") ++ (pkgs.lib).optional (flags.stylishhaskell || flags.all-formatters) "Ide/Plugin/StylishHaskell") ++ (pkgs.lib).optional ((flags.brittany || flags.all-formatters) && flags.agpl) "Ide/Plugin/Brittany";
+            ] ++ (pkgs.lib).optionals (flags.eval || flags.all-plugins) [
+            "Ide/Plugin/Eval"
+            "Ide/Plugin/Eval/Code"
+            "Ide/Plugin/Eval/CodeLens"
+            "Ide/Plugin/Eval/GHC"
+            "Ide/Plugin/Eval/Parse/Option"
+            "Ide/Plugin/Eval/Parse/Parser"
+            "Ide/Plugin/Eval/Parse/Section"
+            "Ide/Plugin/Eval/Parse/Token"
+            "Ide/Plugin/Eval/Types"
+            "Ide/Plugin/Eval/Util"
+            ]) ++ (pkgs.lib).optional (flags.modulename || flags.all-plugins) "Ide/Plugin/ModuleName") ++ (pkgs.lib).optional (flags.pragmas || flags.all-plugins) "Ide/Plugin/Pragmas") ++ (pkgs.lib).optional (flags.floskell || flags.all-formatters) "Ide/Plugin/Floskell") ++ (pkgs.lib).optional (flags.fourmolu || flags.all-formatters) "Ide/Plugin/Fourmolu") ++ (pkgs.lib).optional (flags.ormolu || flags.all-formatters) "Ide/Plugin/Ormolu") ++ (pkgs.lib).optional (flags.stylishhaskell || flags.all-formatters) "Ide/Plugin/StylishHaskell") ++ (pkgs.lib).optional ((flags.brittany || flags.all-formatters) && flags.agpl) "Ide/Plugin/Brittany";
           hsSourceDirs = ((((((([
             "plugins/default/src"
             "exe"
             ] ++ (pkgs.lib).optional (flags.eval || flags.all-plugins) "plugins/default/src") ++ (pkgs.lib).optional (flags.modulename || flags.all-plugins) "plugins/default/src") ++ (pkgs.lib).optional (flags.pragmas || flags.all-plugins) "plugins/default/src") ++ (pkgs.lib).optional (flags.floskell || flags.all-formatters) "plugins/default/src") ++ (pkgs.lib).optional (flags.fourmolu || flags.all-formatters) "plugins/default/src") ++ (pkgs.lib).optional (flags.ormolu || flags.all-formatters) "plugins/default/src") ++ (pkgs.lib).optional (flags.stylishhaskell || flags.all-formatters) "plugins/default/src") ++ (pkgs.lib).optional ((flags.brittany || flags.all-formatters) && flags.agpl) "plugins/default/src";
           includeDirs = [ "include" ];
-          mainPath = ((((((((((((([
+          mainPath = (((((((((((((([
             "Main.hs"
-            ] ++ (pkgs.lib).optional (flags.agpl) "") ++ (pkgs.lib).optional (flags.eval || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.importlens || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.retrie || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.tactic || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.hlint || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.modulename || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.pragmas || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.floskell || flags.all-formatters) "") ++ (pkgs.lib).optional (flags.fourmolu || flags.all-formatters) "") ++ (pkgs.lib).optional (flags.ormolu || flags.all-formatters) "") ++ (pkgs.lib).optional (flags.stylishhaskell || flags.all-formatters) "") ++ (pkgs.lib).optional ((flags.brittany || flags.all-formatters) && flags.agpl) "") ++ (pkgs.lib).optional (flags.pedantic) "";
+            ] ++ (pkgs.lib).optional (flags.agpl) "") ++ (pkgs.lib).optional (flags.class || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.eval || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.importlens || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.retrie || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.tactic || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.hlint || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.modulename || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.pragmas || flags.all-plugins) "") ++ (pkgs.lib).optional (flags.floskell || flags.all-formatters) "") ++ (pkgs.lib).optional (flags.fourmolu || flags.all-formatters) "") ++ (pkgs.lib).optional (flags.ormolu || flags.all-formatters) "") ++ (pkgs.lib).optional (flags.stylishhaskell || flags.all-formatters) "") ++ (pkgs.lib).optional ((flags.brittany || flags.all-formatters) && flags.agpl) "") ++ (pkgs.lib).optional (flags.pedantic) "";
           };
         "haskell-language-server-wrapper" = {
           depends = [
@@ -194,8 +212,10 @@
           buildable = true;
           modules = [
             "Test/Hls/Util"
+            "Class"
             "Command"
             "Completion"
+            "Config"
             "Deferred"
             "Definition"
             "Diagnostic"

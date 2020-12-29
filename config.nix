@@ -5,9 +5,10 @@
 
     haskell-nix.useMaterialization = true;
     haskell-nix.checkMaterialization = false;
+    # DESIGN: https://github.com/input-output-hk/hackage.nix/blob/master/index-state-hashes.nix
     haskell-nix.hackage.index = {
-        state = "2020-12-21T00:00:00Z";
-        sha256 = "6d2af09cd26716143017741ec319e21e47421419506f9c373df28f029b63d8b1";
+        state = "2020-12-28T00:00:00Z";
+        sha256 = "ce5696846e316c2d151c69f5f292dfe1aceca540253757831d9081990a2a1d90";
     };
     haskell-nix.nixpkgs-pin = "nixpkgs-2009";
 
@@ -16,16 +17,16 @@
     haskell-nix.plan = {
         # DESIGN: a "<packagename>.sha256" property will set the plan's hash
         # DESIGN: a "<packagename>.check" property will check materialization
-        hls-released-ghc865.sha256  = "1gj14zqfb9lm4xlvz6jvprsb2x1viwx393c2ph08x8l3v8vcrn4n";
-        hls-released-ghc883.sha256  = "0h993j32wpbjvmzjiphjqc5q5rklw2q63qc5ai3iw9x0bbadp5qc";
-        hls-released-ghc884.sha256  = "0rll74f8xxnmsb3a8srkmxhpnzf0fm33ccc1f4kgb6yzpasx2w7y";
-        hls-released-ghc8101.sha256 = "1bhmdzmgc1ri95r6nn6152m3zpmx5danr0j9xz8lw8hqgk7bnl8y";
-        hls-released-ghc8102.sha256 = "07k8h18q4dvd6xin29sj17pvlqbhzvpjxhqh7qibsr642qjh4vfb";
-        hls-unstable-ghc865.sha256  = "08ckay3yf8g808zxabqvqz0fb0hsvrhmvk6cqhgr3c1rzl4y2l51";
-        hls-unstable-ghc883.sha256  = "0z3lx9l6p5g1q734lfg4x3p6igaak3zgqkzmgaykr0f24qcm79x1";
-        hls-unstable-ghc884.sha256  = "1i6ip3n4jvbg17qm0hdjxfyb06n771ya4xavrbyr9rw3wzikpv48";
-        hls-unstable-ghc8101.sha256 = "193p5k7yd5a2ylr1r32awvaj25b4ygf1w3bg319f7nbnhnisd7ji";
-        hls-unstable-ghc8102.sha256 = "1frylxf89wg2vgddqgg99cbvg2sxmw83cy69p8zwh6ixhg0hn0il";
+        hls-released-ghc865.sha256  = "1lv1v3k6ni8f4bbnrxnl75aysnch5rj40y1czr2l7fqy70bjljv8";
+        hls-released-ghc883.sha256  = "0qm0a6nxx3h6z5j39j3038qvp6qnddzxny9hqvzqvligrgkypnwp";
+        hls-released-ghc884.sha256  = "0rm2z4qvhgbiq7w7kymf61inyj1g7hw3w0j37aj3yi9dn61jhcz4";
+        hls-released-ghc8101.sha256 = "1iv7y6707vrmzlzrf900xqarymwl2ca2wcmb50hfcxq3wh16j7mh";
+        hls-released-ghc8102.sha256 = "06ilaf4z30w0a1avf7f87zib37199ndfdbkvincbyvjm2z6nwr10";
+        hls-unstable-ghc865.sha256  = "0kq8k8m4pr1ifspamr59m8rd5l6v023anj2lxlcmnp74p8y9g2n5";
+        hls-unstable-ghc883.sha256  = "19lig0rjd9r2224ggksp1a1xy93zpzdh556y8hh76rbp81mmjzwf";
+        hls-unstable-ghc884.sha256  = "0dnlqy7c9qpqi2m5gs1172hn10j0y9663hcs0i3ndkypbj68rb1s";
+        hls-unstable-ghc8101.sha256 = "0swn2faj8f98agi8cskirndyhlyj7cdg3imgml1g1hbmd5mn0p0d";
+        hls-unstable-ghc8102.sha256 = "0jys0gnbqbbyrfv8pzlm9gsgj9aijlm5xnm97bqrg7r3nv4fl5n8";
         implicit-hie.sha256 = "0yk0v09ad3bjkrk24fnyfkhja7v0a3b1r1bzbfg1kyym87fh8aa6";
     };
 

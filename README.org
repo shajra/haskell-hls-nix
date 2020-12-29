@@ -473,7 +473,7 @@
    expression:
 
    #+NAME: nix-env-install-most
-   #+BEGIN_SRC shell :session env :results silent output
+   #+BEGIN_SRC shell :session env :results output silent
      nix-env --install --file . \
          --attr hls-renamed \
          --attr hls-wrapper-nix \
@@ -492,7 +492,7 @@
    select a recent "master" branch version of HLS:
 
    #+NAME: nix-env-install-rest
-   #+BEGIN_SRC shell :session env :results silent output
+   #+BEGIN_SRC shell :session env :results output silent
      nix-env --install --file . \
          --argstr ghcVersion ghc8102 \
          --arg hlsUnstable true \
@@ -517,7 +517,7 @@
    : haskell-language-server-ghc884-renamed
    : hls-wrapper-nix
    : implicit-hie-0.1.2.5
-   : stack-2.5.1
+   : stack-2.5.1.1
 
    If we've set up the =bin= directory of our Nix profile in our =PATH=, we
    should be able to see what we've installed as available.  For instance, we
@@ -646,7 +646,7 @@
   : 
   : …
   : Completed (5 files worked, 0 files failed)
-  : [INFO] finish: User TypeCheck (took 0.14s)
+  : [INFO] finish: User TypeCheck (took 0.05s)
 
   The same command can test HLS working with our Stack example project:
 
@@ -662,7 +662,7 @@
   : 
   : …
   : Completed (3 files worked, 0 files failed)
-  : [INFO] finish: User TypeCheck (took 0.16s)
+  : [INFO] finish: User TypeCheck (took 0.04s)
 
 * Editor integration with Nix shells
 

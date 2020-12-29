@@ -164,7 +164,7 @@ let
 
     stack-args = args: (nixpkgs-stable.writeScriptBin "stack" ''
         #!${nixpkgs-stable.runtimeShell}
-        exec ${stack}/bin/stack ${args} "$@"
+        exec "${stack}/bin/stack" ${args} "$@"
     '') // {
         name = "stack-args";
         version = stack.version;
@@ -183,7 +183,7 @@ let
         let
             lib = nixpkgs-stable.lib;
             jsonFile = nixpkgs-stable.runCommand "yaml2json" {} ''
-                ${nixpkgs-stable.yj}/bin/yj < ${stackYaml} > "$out"
+                "${nixpkgs-stable.yj}/bin/yj" < ${stackYaml} > "$out"
             '';
             json = builtins.fromJSON (builtins.readFile jsonFile);
             packageNames = json.nix.packages;

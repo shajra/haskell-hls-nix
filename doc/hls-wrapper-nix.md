@@ -93,9 +93,9 @@ hls-wrapper-nix --cwd examples/example-cabal
     Found "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/a"
     Module "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/a" is loaded by Cradle: Cradle {cradleRootDir = "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal", cradleOptsProg = CradleAction: Multi}
     …
+    [INFO] Making new HscEnv[main,main,example-haskell-lib-0.1.0.0-inplace,main]
     
-    Completed (5 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.29s)
+    [INFO] finish: User TypeCheck (took 0.04s)Completed (5 files worked, 0 files failed)
 
 And here we see that the script works for the Stack example project as well:
 
@@ -109,7 +109,7 @@ hls-wrapper-nix --cwd examples/example-stack
     …
     
     Completed (3 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.19s)
+    [INFO] finish: User TypeCheck (took 0.05s)
 
 # Command-line reference<a id="sec-7"></a>
 

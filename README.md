@@ -322,7 +322,7 @@ nix-env --query
     haskell-language-server-ghc884-renamed
     hls-wrapper-nix
     implicit-hie-0.1.2.5
-    stack-2.5.1
+    stack-2.5.1.1
 
 If we've set up the `bin` directory of our Nix profile in our `PATH`, we should be able to see what we've installed as available. For instance, we should be able to the see the version of GHC is as expected:
 
@@ -405,7 +405,7 @@ nix-shell --pure --run 'haskell-language-server-wrapper'
     
     …
     Completed (5 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.14s)
+    [INFO] finish: User TypeCheck (took 0.05s)
 
 The same command can test HLS working with our Stack example project:
 
@@ -419,7 +419,7 @@ nix-shell --pure --run 'haskell-language-server-wrapper'
     
     …
     Completed (3 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.16s)
+    [INFO] finish: User TypeCheck (took 0.04s)
 
 # Editor integration with Nix shells<a id="sec-9"></a>
 

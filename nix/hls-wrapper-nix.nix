@@ -34,10 +34,10 @@ HLS_ARGS=()
 
 print_usage()
 {
-    ${coreutils}/bin/cat - <<EOF
-USAGE: $(${coreutils}/bin/basename "$0") [OPTION]... [HLS_OPTIONS]...
-       $(${coreutils}/bin/basename "$0") --show-path PATH
-       $(${coreutils}/bin/basename "$0") --help
+    "${coreutils}/bin/cat" - <<EOF
+USAGE: $("${coreutils}/bin/basename" "$0") [OPTION]... [HLS_OPTIONS]...
+       $("${coreutils}/bin/basename" "$0") --show-path PATH
+       $("${coreutils}/bin/basename" "$0") --help
 
 DESCRIPTION:
 
@@ -150,8 +150,8 @@ main()
 integrate_args()
 {
     local work_dir
-    work_dir="$(${coreutils}/bin/pwd)"
-    work_dir="$(${coreutils}/bin/readlink -f "$work_dir")"
+    work_dir="$(pwd)"
+    work_dir="$("${coreutils}/bin/readlink" -f "$work_dir")"
 
     local config=""
     if test -r "$DEFAULT_CONFIG" || test -n "$CONFIG"
@@ -159,25 +159,25 @@ integrate_args()
         local config_file="''${CONFIG:-"$DEFAULT_CONFIG"}"
         log_info "using config file: $config_file"
         if "${yq-go}/bin/yq" v "$config_file"
-        then config="$(${yq-go}/bin/yq r "$config_file" ["$work_dir"])"
+        then config="$("${yq-go}/bin/yq" r "$config_file" ["$work_dir"])"
         else die "config file malformed: $config_file"
         fi
     fi
 
     if [ -z "$SHELL_FILE" ]
     then SHELL_FILE="$(echo "$config" \
-            | ${yq-go}/bin/yq r - "[shell_file]")"
+            | "${yq-go}/bin/yq" r - "[shell_file]")"
     fi
     if [ -n "$SHELL_FILE" ]
     then MODE=shell
     fi
     if [ -z "$MODE" ]
     then MODE="$(echo "$config" \
-            | ${yq-go}/bin/yq r - "[mode]" --defaultValue detect)"
+            | "${yq-go}/bin/yq" r - "[mode]" --defaultValue detect)"
     fi
     if [ -z "$NIX_PURE" ]
     then NIX_PURE="$(echo "$config" \
-            | ${yq-go}/bin/yq r - "[pure]" --defaultValue true)"
+            | "${yq-go}/bin/yq" r - "[pure]" --defaultValue true)"
     fi
 }
 
@@ -233,7 +233,7 @@ call_with_shell()
         --run \
         "
         $(declare -p HLS_ARGS)
-        exec ${hls-wrapper}/bin/haskell-language-server-wrapper \
+        exec \"${hls-wrapper}/bin/haskell-language-server-wrapper\" \
             \"\''${HLS_ARGS[@]}\"
         "
 }
@@ -241,7 +241,7 @@ call_with_shell()
 call_without_shell()
 {
     log_info "Not entering Nix shell"
-    exec ${hls-wrapper}/bin/haskell-language-server-wrapper \
+    exec "${hls-wrapper}/bin/haskell-language-server-wrapper" \
         "''${HLS_ARGS[@]}"
 }
 
@@ -258,9 +258,9 @@ shell_file()
 
 hls_options()
 {
-    ${hls-wrapper}/bin/haskell-language-server-wrapper --help \
-    | ${gnugrep}/bin/grep -A99 options: \
-    | ${gnused}/bin/sed '/options:/d;s/^/  /;/--help/d'
+    "${hls-wrapper}/bin/haskell-language-server-wrapper" --help \
+    | "${gnugrep}/bin/grep" -A99 options: \
+    | "${gnused}/bin/sed" '/options:/d;s/^/  /;/--help/d'
 }
 
 log_info()

@@ -118,8 +118,7 @@ direnv exec examples/example-cabal \
     Report bugs at https://github.com/haskell/haskell-language-server/issues
     
     …
-    Completed (5 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.26s)
+    [INFO] finish: User TypeCheck (took 0.07s)Completed (5 files worked, 0 files failed)
 
 Before we can use Direnv with the example, we have to run `direnv allow` on it to permit running code from the `.envrc` file.
 
@@ -138,7 +137,7 @@ direnv exec examples/example-stack \
     
     …
     Completed (3 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.12s)
+    [INFO] finish: User TypeCheck (took 0.05s)
 
 # Suggested advanced configuration<a id="sec-7"></a>
 
