@@ -63,4 +63,4 @@
           ];
         };
       };
-    } // rec { src = (pkgs.lib).mkDefault .././ghcide/hie-compat; }
+    } // rec { src = (pkgs.lib).mkDefault .././hie-compat; }

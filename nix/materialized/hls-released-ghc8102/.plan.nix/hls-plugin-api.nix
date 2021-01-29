@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-plugin-api"; version = "0.5.0.1"; };
+      identifier = { name = "hls-plugin-api"; version = "0.6.0.0"; };
       license = "Apache-2.0";
       copyright = "Alan Zimmerman";
       maintainer = "alan.zimm@gmail.com (for now)";
@@ -38,9 +38,6 @@
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
           (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
           (hsPkgs."Diff" or (errorHandler.buildDepError "Diff"))
-          (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
-          (hsPkgs."ghc-boot-th" or (errorHandler.buildDepError "ghc-boot-th"))
-          (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
           (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))
@@ -50,14 +47,13 @@
           (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
-          ];
+          ] ++ (if system.isWindows
+          then [ (hsPkgs."Win32" or (errorHandler.buildDepError "Win32")) ]
+          else [ (hsPkgs."unix" or (errorHandler.buildDepError "unix")) ]);
         buildable = true;
         modules = [
           "Ide/Logger"
-          "Ide/Plugin"
           "Ide/Plugin/Config"
-          "Ide/Plugin/Formatter"
-          "Ide/Plugin/GhcIde"
           "Ide/PluginUtils"
           "Ide/Types"
           ];

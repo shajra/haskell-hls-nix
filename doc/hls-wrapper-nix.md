@@ -93,9 +93,9 @@ hls-wrapper-nix --cwd examples/example-cabal
     Found "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/a"
     Module "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/a" is loaded by Cradle: Cradle {cradleRootDir = "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal", cradleOptsProg = CradleAction: Multi}
     …
-    [INFO] Making new HscEnv[main,main,example-haskell-lib-0.1.0.0-inplace,main]
     
-    [INFO] finish: User TypeCheck (took 0.04s)Completed (5 files worked, 0 files failed)
+    Completed (5 files worked, 0 files failed)
+    [INFO] finish: User TypeCheck (took 0.08s)
 
 And here we see that the script works for the Stack example project as well:
 
@@ -105,11 +105,11 @@ hls-wrapper-nix --cwd examples/example-stack
 
     INFO: Entering pure Nix shell
     Module "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack/a" is loaded by Cradle: Cradle {cradleRootDir = "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack", cradleOptsProg = CradleAction: Stack}
-    Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 0.7.1.0 x86_64 ghc-8.8.4
+    Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 0.8.0.0 x86_64 ghc-8.8.4
     …
     
     Completed (3 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.05s)
+    [INFO] finish: User TypeCheck (took 0.03s)
 
 # Command-line reference<a id="sec-7"></a>
 

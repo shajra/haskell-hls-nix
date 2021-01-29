@@ -27,7 +27,7 @@
       isLocal = true;
       detailLevel = "FullDetails";
       licenseFiles = [ "LICENSE" ];
-      dataDir = "";
+      dataDir = ".";
       dataFiles = [];
       extraSrcFiles = [ "LICENSE" "include/ghc-api-version.h" ];
       extraTmpFiles = [];

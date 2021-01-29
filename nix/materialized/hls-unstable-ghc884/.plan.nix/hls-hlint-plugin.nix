@@ -13,18 +13,18 @@
       specVersion = "2.2";
       identifier = { name = "hls-hlint-plugin"; version = "0.1.0.0"; };
       license = "Apache-2.0";
-      copyright = "Alan Zimmerman";
-      maintainer = "alan.zimm@gmail.com (for now)";
-      author = "Many,TBD when we release";
+      copyright = "The Haskell IDE Team";
+      maintainer = "alan.zimm@gmail.com";
+      author = "The Haskell IDE Team";
       homepage = "";
       url = "";
       synopsis = "Hlint integration plugin with Haskell Language Server";
-      description = "Please see README.md";
+      description = "Please see Haskell Language Server Readme (https://github.com/haskell/haskell-language-server#readme)";
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";
       licenseFiles = [ "LICENSE" ];
-      dataDir = "";
+      dataDir = ".";
       dataFiles = [];
       extraSrcFiles = [];
       extraTmpFiles = [];
@@ -45,6 +45,7 @@
           (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
           (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
+          (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
           (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))

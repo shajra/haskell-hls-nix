@@ -39,7 +39,7 @@ Nix is a package manager we can use not only to build and install HLS, but also 
 
 The [Nix expression provided by this project](./default.nix) builds two versions of HLS
 
--   the latest release (0.7.1)
+-   the latest release (0.8.0)
 -   a recent commit from the "master" branch on GitHub.
 
 To use HLS with a Haskell project, you must have an instance of HLS compiled with the same version of GHC used to compile your project. To meet the needs of a broad spectrum of users, we build both versions of HLS listed above against all of the following versions of GHC:
@@ -47,8 +47,8 @@ To use HLS with a Haskell project, you must have an instance of HLS compiled wit
 -   8.6.5
 -   8.8.3
 -   8.8.4
--   8.10.1
 -   8.10.2
+-   8.10.3
 
 [This project's continuous integration (using GitHub Actions)](https://github.com/shajra/nix-haskell-hls/actions) caches all ten of these builds at [Cachix](https://cachix.org/), a service for caching pre-built Nix packages. If you don't want to wait for a full local build when first using this project, setting up Cachix is recommended.
 
@@ -109,7 +109,7 @@ What we need to set up for any given project to use HLS falls into three main ca
 -   Haskell library dependencies (such as `mtl`, and `aeson`)
 -   non-Haskell library dependencies (such as C libraries for FFI compilation)
 
-Here's a quick summary of what Nix can manage or not:
+Here's a quick summary of what Nix can manage or not, depending on whether your project builds with Stack or Cabal:
 
 | Dependency Type       | Stack              | Cabal          |
 |--------------------- |------------------ |-------------- |
@@ -173,10 +173,10 @@ The Nix expression provided by this project ([./default.nix](./default.nix)) eva
 
 For this project's Nix expression, the following overrides can be done:
 
--   `--argstr ghcVersion ${GHC_VERSION}` sets the GHC version used for the build (the default is otherwise `ghc884`).
--   `--arg hlsUnstable ${BOOLEAN_VALUE}` when set to `true` picks a recent commit from the "master" branch for the HLS packages (defaulting otherwise to `false`, which selects the 0.7.1 release of HLS).
+-   `--argstr ghcVersion ${GHC_VERSION}` sets the GHC version used for the build (the default is otherwise `ghc884`). The format for this string follows a convention in Nix of dropping periods and prefixing with "ghc".
+-   `--arg hlsUnstable ${BOOLEAN_VALUE}` when set to `true` picks a recent commit from the "master" branch for the HLS packages (defaulting otherwise to `false`, which selects the 0.8.0 release of HLS).
 
-We can see the package derivations provided with following `nix` calls:
+We can see the package derivations provided with the following `nix` calls:
 
 ```shell
 nix show-derivation --file . > /dev/null
@@ -221,7 +221,7 @@ nix search --no-cache --file .
 
 Note, when loading a directory with `--file`, a Nix expression is assumed to be in the directory's `default.nix` file. Also, the call of `nix show-derivation` is only needed one time to get search results as discussed in [the provided documentation on Nix](doc/nix.md).
 
-The search results of `nix search` tell us the *attribute paths* we can use to select out the package derivations from our Nix expression. Above we got the default 0.7.1 version of HLS packages compiled for GHC 8.8.4. We could have explicitly called `nix search` above with `--argstr ghcVersion ghc884` and `--arg hlsUnstable false` and have gotten the same default results.
+The search results of `nix search` tell us the *attribute paths* we can use to select out the package derivations from our Nix expression. Above we got the default 0.8.0 version of HLS packages compiled for GHC 8.8.4. We could have explicitly called `nix search` above with `--argstr ghcVersion ghc884` and `--arg hlsUnstable false` and have gotten the same default results.
 
 The `hls` package is provided for completeness, but its usage is not generally recommended. It provides the unmodified output of the upstream HLS project, specifically a binary named "haskell-language-server". You can only install one of these to your `PATH`. Because the version of GHC we compile HLS against must match the version of GHC for the project we wish to use HLS with, using `hls` would limit all of our projects to just one version of GHC. The `hls-renamed`, `hls-wrapper`, and `hls-wrapper-nix` packages help work around this limitation, and are recommended.
 
@@ -278,10 +278,10 @@ To install programs into the user-level `PATH` with Nix, we generally use `nix-e
 To illustrate installing with `nix-env` let's consider installing the following:
 
 -   this project's drop-in replacement for the HLS wrapper
--   the latest release of HLS (0.7.1) targeting 8.8.4
+-   the latest release of HLS (0.8.0) targeting 8.8.4
 -   useful recent stable versions of Cabal, Stack, `gen-hie`, Direnv, and Lorelei
--   GHC 8.10.2
--   a recent "master" branch version of HLS targeting GHC 8.10.2.
+-   GHC 8.10.3
+-   a recent "master" branch version of HLS targeting GHC 8.10.3.
 
 We can install the first three in one step relying on defaults of the Nix expression:
 
@@ -302,7 +302,7 @@ Next we can install another version of GHC as well as an instance of HLS targeti
 
 ```shell
 nix-env --install --file . \
-    --argstr ghcVersion ghc8102 \
+    --argstr ghcVersion ghc8103 \
     --arg hlsUnstable true \
     --attr ghc \
     --attr hls-renamed
@@ -317,8 +317,8 @@ nix-env --query
     cabal-install-3.2.0.0
     direnv-2.22.0
     direnv-nix-lorelei
-    ghc-8.10.2
-    haskell-language-server-ghc8102-renamed
+    ghc-8.10.3
+    haskell-language-server-ghc8103-renamed
     haskell-language-server-ghc884-renamed
     hls-wrapper-nix
     implicit-hie-0.1.2.5
@@ -330,7 +330,7 @@ If we've set up the `bin` directory of our Nix profile in our `PATH`, we should 
 ghc --version
 ```
 
-    The Glorious Glasgow Haskell Compilation System, version 8.10.2
+    The Glorious Glasgow Haskell Compilation System, version 8.10.3
 
 Without using `nix-shell`, Cabal and Stack will both manage Haskell dependencies of projects. In this case, for Cabal you need to at least once call `cabal update` to download the latest index of Haskell packages on Hackage:
 
@@ -359,7 +359,7 @@ The code between these two examples is largely the same, and both have a depende
 
 Once you have a project-level Nix expression written should you should be able to
 
--   enter into an interactive Nix shell by calling \`nix shell\`
+-   enter into an interactive Nix shell by calling `nix-shell`
 -   within the shell call `cabal` or `stack` as you normally would to build locally (for instance, `cabal build all` or `stack build`) with all needed dependencies set up in environment variables
 -   call `haskell-language-server-wrapper`, which editors will need to call with the `--lsp` switch.
 
@@ -375,7 +375,7 @@ nix-shell --pure --run 'cabal run all'
 ```
 
     Resolving dependencies...
-    Build profile: -w ghc-8.10.2 -O1
+    Build profile: -w ghc-8.10.3 -O1
     In order, the following will be built (use -v for more details):
     …
     Answer to the Ultimate Question of Life,
@@ -405,7 +405,7 @@ nix-shell --pure --run 'haskell-language-server-wrapper'
     
     …
     Completed (5 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.05s)
+    [INFO] finish: User TypeCheck (took 0.06s)
 
 The same command can test HLS working with our Stack example project:
 
@@ -469,7 +469,7 @@ cd examples/example-cabal
 nix-shell --pure --run 'ghc-pkg list text-icu'
 ```
 
-    /nix/store/hfawp7204pan3w4rfblicypj2c9drg2l-ghc-8.10.2-with-packages/lib/ghc-8.10.2/package.conf.d
+    /nix/store/nnyyw87jsjarg2fkgprjlpa7nb5jpv4y-ghc-8.10.3-with-packages/lib/ghc-8.10.3/package.conf.d
         text-icu-0.7.0.1
 
 We can similarly look at the GHC instance for the Stack example project to see that it doesn't provide third-party Haskell dependencies:
@@ -479,7 +479,7 @@ cd examples/example-stack
 nix-shell --pure --run 'ghc-pkg list text-icu'
 ```
 
-    /nix/store/pi09aqrn49aryhdqy1h62czz7x0z57g8-ghc-8.8.4/lib/ghc-8.8.4/package.conf.d
+    /nix/store/4igazfl1z3vrc7cq2zs0yxwrnhsl1igf-ghc-8.10.3/lib/ghc-8.10.3/package.conf.d
         (no packages)
 
 This leads to a complication with Cabal projects when using Nix. Changing the dependencies of a Cabal file mean we need to rebuild the package database that our project's Nix shell provides.

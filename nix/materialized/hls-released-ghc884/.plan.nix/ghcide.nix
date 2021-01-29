@@ -11,7 +11,7 @@
     flags = { ghc-lib = false; };
     package = {
       specVersion = "1.20";
-      identifier = { name = "ghcide"; version = "0.6.0.1"; };
+      identifier = { name = "ghcide"; version = "0.7.0.0"; };
       license = "Apache-2.0";
       copyright = "Digital Asset and Ghcide contributors 2018-2020";
       maintainer = "Ghcide contributors";
@@ -24,7 +24,7 @@
       isLocal = true;
       detailLevel = "FullDetails";
       licenseFiles = [ "LICENSE" ];
-      dataDir = "";
+      dataDir = ".";
       dataFiles = [];
       extraSrcFiles = [
         "include/ghc-api-version.h"
@@ -50,6 +50,7 @@
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
           (hsPkgs."binary" or (errorHandler.buildDepError "binary"))
           (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
+          (hsPkgs."case-insensitive" or (errorHandler.buildDepError "case-insensitive"))
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
           (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
           (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
@@ -64,6 +65,8 @@
           (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
           (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
           (hsPkgs."hie-compat" or (errorHandler.buildDepError "hie-compat"))
+          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
+          (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
           (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
           (hsPkgs."network-uri" or (errorHandler.buildDepError "network-uri"))
           (hsPkgs."parallel" or (errorHandler.buildDepError "parallel"))
@@ -112,15 +115,14 @@
           "Development/IDE/GHC/Warnings"
           "Development/IDE/Import/FindImports"
           "Development/IDE/LSP/Notifications"
-          "Development/IDE/Spans/Documentation"
           "Development/IDE/Plugin/CodeAction/PositionIndexed"
           "Development/IDE/Plugin/CodeAction/Rules"
           "Development/IDE/Plugin/CodeAction/RuleTypes"
           "Development/IDE/Plugin/Completions/Logic"
           "Development/IDE/Plugin/Completions/Types"
+          "Development/IDE/Plugin/HLS/Formatter"
           "Development/IDE/Types/Action"
           "Development/IDE"
-          "Development/IDE/Compat"
           "Development/IDE/Core/Debouncer"
           "Development/IDE/Core/FileStore"
           "Development/IDE/Core/IdeConfiguration"
@@ -143,6 +145,7 @@
           "Development/IDE/LSP/Protocol"
           "Development/IDE/LSP/Server"
           "Development/IDE/Spans/Common"
+          "Development/IDE/Spans/Documentation"
           "Development/IDE/Spans/AtPoint"
           "Development/IDE/Spans/LocalBindings"
           "Development/IDE/Types/Diagnostics"
@@ -155,6 +158,8 @@
           "Development/IDE/Plugin"
           "Development/IDE/Plugin/Completions"
           "Development/IDE/Plugin/CodeAction"
+          "Development/IDE/Plugin/HLS"
+          "Development/IDE/Plugin/HLS/GhcIde"
           "Development/IDE/Plugin/Test"
           ] ++ (pkgs.lib).optionals (!flags.ghc-lib) [
           "Development/IDE/Session/VersionCheck"
@@ -187,6 +192,7 @@
             (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
             (hsPkgs."heapsize" or (errorHandler.buildDepError "heapsize"))
             (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
+            (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
             (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
             (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
@@ -233,6 +239,7 @@
             (hsPkgs."binary" or (errorHandler.buildDepError "binary"))
             (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
+            (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
             (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
             (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
             (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
@@ -242,6 +249,7 @@
             (hsPkgs."haddock-library" or (errorHandler.buildDepError "haddock-library"))
             (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
             (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
+            (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
             (hsPkgs."network-uri" or (errorHandler.buildDepError "network-uri"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
             (hsPkgs."lsp-test" or (errorHandler.buildDepError "lsp-test"))

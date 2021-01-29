@@ -24,7 +24,7 @@
       isLocal = true;
       detailLevel = "FullDetails";
       licenseFiles = [];
-      dataDir = "";
+      dataDir = ".";
       dataFiles = [];
       extraSrcFiles = [];
       extraTmpFiles = [];
@@ -68,6 +68,7 @@
           "Ide/Plugin/Tactic/GHC"
           "Ide/Plugin/Tactic/Judgements"
           "Ide/Plugin/Tactic/KnownStrategies"
+          "Ide/Plugin/Tactic/KnownStrategies/QuickCheck"
           "Ide/Plugin/Tactic/Machinery"
           "Ide/Plugin/Tactic/Naming"
           "Ide/Plugin/Tactic/Range"

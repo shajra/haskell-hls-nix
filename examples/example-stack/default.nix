@@ -9,7 +9,7 @@ let
     # instead of a version that happens to be in the environment's `NIX_PATH`.
     #
     sources = import ../../nix/sources;
-    nixpkgs = (import sources.nixpkgs-stable) {
+    nixpkgs = (import sources.nixpkgs-unstable) {
         # We don't want user configuration affecting this build.  This is
         # recommended boilerplate when importing Nixpkgs.
         config   = {};  # to avoid picking up ~/.config/nixpkgs/config.nix

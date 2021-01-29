@@ -64,7 +64,7 @@ let
     defaultModules = [{ enableSeparateDataOutput = true; }];
 
     fromHackage = name:
-        let planConfig = planConfigFor name "ghc8102" defaultModules // {
+        let planConfig = planConfigFor name "ghc8103" defaultModules // {
                 version = config.hackage.version."${name}";
             };
         in allExes (haskell-nix.hackage-package planConfig);
@@ -72,6 +72,9 @@ let
     fromSource = name:
         let planConfig = planConfigFor name ghcVersion defaultModules // {
                 src = sources."${name}";
+                ${if ! hlsUnstable then "cabalProjectLocal" else null} = ''
+                    constraints: apply-refact < 0.9.0.0
+                '';
             };
         in allExes (haskell-nix.cabalProject planConfig).haskell-language-server;
 
@@ -89,6 +92,7 @@ let
         "ghc884" = "8.8.4";
         "ghc8101" = "8.10.1";
         "ghc8102" = "8.10.2";
+        "ghc8103" = "8.10.3";
     }."${ghcVersion}" or (throw "unsupported GHC Version: ${ghcVersion}");
 
     longDesc = suffix: ''
@@ -194,7 +198,7 @@ let
 
     cabal-install = nixpkgs-stable.cabal-install;
     direnv = nixpkgs-stable.direnv;
-    ghc = nixpkgs-stable.haskell.compiler."${ghcVersion}";
+    ghc = nixpkgs-unstable.haskell.compiler."${ghcVersion}";
     implicit-hie = nixpkgs-unstable.haskellPackages.implicit-hie;
 
 in {

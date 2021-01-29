@@ -11,7 +11,7 @@
     flags = { ghc-lib = false; };
     package = {
       specVersion = "1.20";
-      identifier = { name = "ghcide"; version = "0.6.0.1"; };
+      identifier = { name = "ghcide"; version = "0.7.2.0"; };
       license = "Apache-2.0";
       copyright = "Digital Asset and Ghcide contributors 2018-2020";
       maintainer = "Ghcide contributors";
@@ -50,20 +50,25 @@
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
           (hsPkgs."binary" or (errorHandler.buildDepError "binary"))
           (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
+          (hsPkgs."case-insensitive" or (errorHandler.buildDepError "case-insensitive"))
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
           (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
           (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
           (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
+          (hsPkgs."dlist" or (errorHandler.buildDepError "dlist"))
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
           (hsPkgs."fuzzy" or (errorHandler.buildDepError "fuzzy"))
           (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
           (hsPkgs."fingertree" or (errorHandler.buildDepError "fingertree"))
+          (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
           (hsPkgs."Glob" or (errorHandler.buildDepError "Glob"))
           (hsPkgs."haddock-library" or (errorHandler.buildDepError "haddock-library"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
           (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
           (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
           (hsPkgs."hie-compat" or (errorHandler.buildDepError "hie-compat"))
+          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
+          (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
           (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
           (hsPkgs."network-uri" or (errorHandler.buildDepError "network-uri"))
           (hsPkgs."parallel" or (errorHandler.buildDepError "parallel"))
@@ -71,6 +76,7 @@
           (hsPkgs."prettyprinter-ansi-terminal" or (errorHandler.buildDepError "prettyprinter-ansi-terminal"))
           (hsPkgs."prettyprinter" or (errorHandler.buildDepError "prettyprinter"))
           (hsPkgs."regex-tdfa" or (errorHandler.buildDepError "regex-tdfa"))
+          (hsPkgs."retrie" or (errorHandler.buildDepError "retrie"))
           (hsPkgs."rope-utf16-splay" or (errorHandler.buildDepError "rope-utf16-splay"))
           (hsPkgs."safe" or (errorHandler.buildDepError "safe"))
           (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
@@ -83,6 +89,7 @@
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
           (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
           (hsPkgs."utf8-string" or (errorHandler.buildDepError "utf8-string"))
+          (hsPkgs."vector" or (errorHandler.buildDepError "vector"))
           (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))
           (hsPkgs."opentelemetry" or (errorHandler.buildDepError "opentelemetry"))
           (hsPkgs."heapsize" or (errorHandler.buildDepError "heapsize"))
@@ -112,15 +119,14 @@
           "Development/IDE/GHC/Warnings"
           "Development/IDE/Import/FindImports"
           "Development/IDE/LSP/Notifications"
-          "Development/IDE/Spans/Documentation"
           "Development/IDE/Plugin/CodeAction/PositionIndexed"
           "Development/IDE/Plugin/CodeAction/Rules"
           "Development/IDE/Plugin/CodeAction/RuleTypes"
           "Development/IDE/Plugin/Completions/Logic"
           "Development/IDE/Plugin/Completions/Types"
+          "Development/IDE/Plugin/HLS/Formatter"
           "Development/IDE/Types/Action"
           "Development/IDE"
-          "Development/IDE/Compat"
           "Development/IDE/Core/Debouncer"
           "Development/IDE/Core/FileStore"
           "Development/IDE/Core/IdeConfiguration"
@@ -134,6 +140,7 @@
           "Development/IDE/Core/Tracing"
           "Development/IDE/GHC/Compat"
           "Development/IDE/GHC/Error"
+          "Development/IDE/GHC/ExactPrint"
           "Development/IDE/GHC/Orphans"
           "Development/IDE/GHC/Util"
           "Development/IDE/Import/DependencyInformation"
@@ -143,6 +150,7 @@
           "Development/IDE/LSP/Protocol"
           "Development/IDE/LSP/Server"
           "Development/IDE/Spans/Common"
+          "Development/IDE/Spans/Documentation"
           "Development/IDE/Spans/AtPoint"
           "Development/IDE/Spans/LocalBindings"
           "Development/IDE/Types/Diagnostics"
@@ -155,7 +163,11 @@
           "Development/IDE/Plugin"
           "Development/IDE/Plugin/Completions"
           "Development/IDE/Plugin/CodeAction"
+          "Development/IDE/Plugin/CodeAction/ExactPrint"
+          "Development/IDE/Plugin/HLS"
+          "Development/IDE/Plugin/HLS/GhcIde"
           "Development/IDE/Plugin/Test"
+          "Development/IDE/Plugin/TypeLenses"
           ] ++ (pkgs.lib).optionals (!flags.ghc-lib) [
           "Development/IDE/Session/VersionCheck"
           "Development/IDE/Session"
@@ -187,9 +199,11 @@
             (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
             (hsPkgs."heapsize" or (errorHandler.buildDepError "heapsize"))
             (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
+            (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
             (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
             (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
+            (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
             (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
             ];
@@ -233,6 +247,7 @@
             (hsPkgs."binary" or (errorHandler.buildDepError "binary"))
             (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
+            (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
             (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
             (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
             (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
@@ -242,6 +257,7 @@
             (hsPkgs."haddock-library" or (errorHandler.buildDepError "haddock-library"))
             (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
             (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
+            (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
             (hsPkgs."network-uri" or (errorHandler.buildDepError "network-uri"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
             (hsPkgs."lsp-test" or (errorHandler.buildDepError "lsp-test"))
@@ -293,6 +309,7 @@
             ];
           build-tools = [
             (hsPkgs.buildPackages.ghcide or (pkgs.buildPackages.ghcide or (errorHandler.buildToolDepError "ghcide")))
+            (hsPkgs.buildPackages.hp2pretty or (pkgs.buildPackages.hp2pretty or (errorHandler.buildToolDepError "hp2pretty")))
             ];
           buildable = true;
           modules = [ "Experiments/Types" ];

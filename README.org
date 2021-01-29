@@ -26,9 +26,9 @@
 
 ** Macros for text
 
-   #+MACRO: version-hls-latest 0.7.1
+   #+MACRO: version-hls-latest 0.8.0
    #+MACRO: version-ghc-default 8.8.4
-   #+MACRO: version-ghc-latest 8.10.2
+   #+MACRO: version-ghc-latest 8.10.3
    #+MACRO: ghcVersion-default $1ghc884$2
 
 ** Setup action
@@ -104,8 +104,8 @@
   - 8.6.5
   - 8.8.3
   - 8.8.4
-  - 8.10.1
   - 8.10.2
+  - 8.10.3
 
   [[github-actions][This project's continuous integration (using GitHub Actions)]] caches all ten of
   these builds at [[cachix][Cachix]], a service for caching pre-built Nix packages. If you
@@ -223,7 +223,8 @@
   - Haskell library dependencies (such as =mtl=, and =aeson=)
   - non-Haskell library dependencies (such as C libraries for FFI compilation)
 
-  Here's a quick summary of what Nix can manage or not:
+  Here's a quick summary of what Nix can manage or not, depending on whether
+  your project builds with Stack or Cabal:
 
   | Dependency Type       | Stack              | Cabal          |
   |-----------------------+--------------------+----------------|
@@ -279,12 +280,14 @@
   For this project's Nix expression, the following overrides can be done:
 
   - ~--argstr ghcVersion ${GHC_VERSION}~ sets the GHC version used for the build
-    (the default is otherwise {{{ghcVersion-default(~,~)}}}).
+    (the default is otherwise {{{ghcVersion-default(~,~)}}}).  The format for
+    this string follows a convention in Nix of dropping periods and prefixing
+    with "ghc".
   - ~--arg hlsUnstable ${BOOLEAN_VALUE}~ when set to ~true~ picks a recent
     commit from the "master" branch for the HLS packages (defaulting otherwise
     to ~false~, which selects the {{{version-hls-latest}}} release of HLS).
 
-  We can see the package derivations provided with following =nix= calls:
+  We can see the package derivations provided with the following =nix= calls:
 
   #+BEGIN_SRC shell :eval no
     nix show-derivation --file . > /dev/null
@@ -467,7 +470,8 @@
    - useful recent stable versions of Cabal, Stack, =gen-hie=, Direnv, and
      Lorelei
    - GHC {{{version-ghc-latest}}}
-   - a recent "master" branch version of HLS targeting GHC 8.10.2.
+   - a recent "master" branch version of HLS targeting GHC
+     {{{version-ghc-latest}}}.
 
    We can install the first three in one step relying on defaults of the Nix
    expression:
@@ -494,7 +498,7 @@
    #+NAME: nix-env-install-rest
    #+BEGIN_SRC shell :session env :results output silent
      nix-env --install --file . \
-         --argstr ghcVersion ghc8102 \
+         --argstr ghcVersion ghc8103 \
          --arg hlsUnstable true \
          --attr ghc \
          --attr hls-renamed
@@ -512,8 +516,8 @@
    : cabal-install-3.2.0.0
    : direnv-2.22.0
    : direnv-nix-lorelei
-   : ghc-8.10.2
-   : haskell-language-server-ghc8102-renamed
+   : ghc-8.10.3
+   : haskell-language-server-ghc8103-renamed
    : haskell-language-server-ghc884-renamed
    : hls-wrapper-nix
    : implicit-hie-0.1.2.5
@@ -529,7 +533,7 @@
    #+END_SRC
 
    #+RESULTS: nix-env-versions
-   : The Glorious Glasgow Haskell Compilation System, version 8.10.2
+   : The Glorious Glasgow Haskell Compilation System, version 8.10.3
 
    Without using =nix-shell=, Cabal and Stack will both manage Haskell
    dependencies of projects.  In this case, for Cabal you need to at least once
@@ -576,7 +580,7 @@
 
   Once you have a project-level Nix expression written should you should be able
   to
-  - enter into an interactive Nix shell by calling `nix shell`
+  - enter into an interactive Nix shell by calling =nix-shell=
   - within the shell call =cabal= or =stack= as you normally would to build
     locally (for instance, ~cabal build all~ or ~stack build~) with all needed
     dependencies set up in environment variables
@@ -606,7 +610,7 @@
 
   #+RESULTS: shell-build-cabal
   : Resolving dependencies...
-  : Build profile: -w ghc-8.10.2 -O1
+  : Build profile: -w ghc-8.10.3 -O1
   : In order, the following will be built (use -v for more details):
   : …
   : Answer to the Ultimate Question of Life,
@@ -646,7 +650,7 @@
   : 
   : …
   : Completed (5 files worked, 0 files failed)
-  : [INFO] finish: User TypeCheck (took 0.05s)
+  : [INFO] finish: User TypeCheck (took 0.06s)
 
   The same command can test HLS working with our Stack example project:
 
@@ -751,7 +755,7 @@
    #+END_SRC
 
    #+RESULTS: example-cabal-pkg-list
-   : /nix/store/hfawp7204pan3w4rfblicypj2c9drg2l-ghc-8.10.2-with-packages/lib/ghc-8.10.2/package.conf.d
+   : /nix/store/nnyyw87jsjarg2fkgprjlpa7nb5jpv4y-ghc-8.10.3-with-packages/lib/ghc-8.10.3/package.conf.d
    :     text-icu-0.7.0.1
    : 
 
@@ -765,7 +769,7 @@
    #+END_SRC
 
    #+RESULTS: example-stack-pkg-list
-   : /nix/store/pi09aqrn49aryhdqy1h62czz7x0z57g8-ghc-8.8.4/lib/ghc-8.8.4/package.conf.d
+   : /nix/store/4igazfl1z3vrc7cq2zs0yxwrnhsl1igf-ghc-8.10.3/lib/ghc-8.10.3/package.conf.d
    :     (no packages)
 
    This leads to a complication with Cabal projects when using Nix.  Changing

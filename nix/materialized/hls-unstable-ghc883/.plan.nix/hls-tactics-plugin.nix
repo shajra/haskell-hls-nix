@@ -12,7 +12,7 @@
     package = {
       specVersion = "2.2";
       identifier = { name = "hls-tactics-plugin"; version = "0.5.1.0"; };
-      license = "NONE";
+      license = "Apache-2.0";
       copyright = "Sandy Maguire, Reed Mullanix";
       maintainer = "sandy@sandymaguire.me";
       author = "Sandy Maguire, Reed Mullanix";
@@ -23,8 +23,8 @@
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";
-      licenseFiles = [];
-      dataDir = "";
+      licenseFiles = [ "LICENSE" ];
+      dataDir = ".";
       dataFiles = [];
       extraSrcFiles = [];
       extraTmpFiles = [];
@@ -75,7 +75,6 @@
           "Ide/Plugin/Tactic/Tactics"
           "Ide/Plugin/Tactic/Types"
           "Ide/Plugin/Tactic/TestTypes"
-          "Ide/TreeTransform"
           ];
         hsSourceDirs = [ "src" ];
         };
@@ -103,4 +102,4 @@
           };
         };
       };
-    } // rec { src = (pkgs.lib).mkDefault .././plugins/tactics; }
+    } // rec { src = (pkgs.lib).mkDefault .././plugins/hls-tactics-plugin; }

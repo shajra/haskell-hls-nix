@@ -11,20 +11,20 @@
     flags = {};
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-class-plugin"; version = "0.1.0.0"; };
+      identifier = { name = "hls-class-plugin"; version = "0.1.0.1"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "jjc9310@gmail.com";
       author = "Junyoung Clare Jang";
-      homepage = "";
+      homepage = "https://github.com/haskell/haskell-language-server#readme";
       url = "";
-      synopsis = "Explicit imports plugin for Haskell Language Server";
-      description = "";
+      synopsis = "Class/instance management plugin for Haskell Language Server";
+      description = "Class/instance management plugin for Haskell Language Server.\nFor usage, please see README of HLS on GitHub at <https://github.com/haskell/haskell-language-server#readme>";
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";
       licenseFiles = [ "LICENSE" ];
-      dataDir = "";
+      dataDir = ".";
       dataFiles = [];
       extraSrcFiles = [];
       extraTmpFiles = [];
