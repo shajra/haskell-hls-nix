@@ -8,25 +8,25 @@
   , config
   , ... }:
   {
-    flags = {};
+    flags = { pedantic = false; };
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-eval-plugin"; version = "0.1.0.0"; };
+      identifier = { name = "hls-eval-plugin"; version = "0.1.0.1"; };
       license = "Apache-2.0";
       copyright = "";
-      maintainer = "pepeiborra@gmail.com,tittoassini@gmail.com";
-      author = "pepeiborra@gmail.com,tittoassini@gmail.com";
+      maintainer = "https://github.com/haskell/haskell-language-server/contributors";
+      author = "https://github.com/haskell/haskell-language-server/contributors";
       homepage = "";
       url = "";
       synopsis = "Eval plugin for Haskell Language Server";
-      description = "";
+      description = "Please see the README on GitHub at <https://github.com/haskell/haskell-language-server#readme>";
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";
       licenseFiles = [ "LICENSE" ];
       dataDir = "";
       dataFiles = [];
-      extraSrcFiles = [ "LICENSE" ];
+      extraSrcFiles = [ "LICENSE" "README.md" ];
       extraTmpFiles = [];
       extraDocFiles = [];
       };

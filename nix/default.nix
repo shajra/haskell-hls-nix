@@ -62,9 +62,10 @@ let
     fromSource = name:
         let planConfig = planConfigFor name ghcVersion defaultModules // {
                 src = sources."${name}";
-                ${if ! hlsUnstable then "cabalProjectLocal" else null} = ''
-                    constraints: apply-refact < 0.9.0.0
-                '';
+                # DESIGN: needed before, might be useful in the future
+                #${if ! hlsUnstable then "cabalProjectLocal" else null} = ''
+                #    constraints: apply-refact < 0.9.0.0
+                #'';
             };
         in allExes (haskell-nix.cabalProject planConfig).haskell-language-server;
 

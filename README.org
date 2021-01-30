@@ -26,7 +26,7 @@
 
 ** Macros for text
 
-   #+MACRO: version-hls-latest 0.8.0
+   #+MACRO: version-hls-latest 0.9.0
    #+MACRO: version-ghc-default 8.8.4
    #+MACRO: version-ghc-latest 8.10.3
    #+MACRO: ghcVersion-default $1ghc884$2
@@ -647,7 +647,7 @@
   #+RESULTS: shell-hls-cabal
   : (haskell-language-server)Ghcide setup tester in /home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal.
   : Report bugs at https://github.com/haskell/haskell-language-server/issues
-  : 
+  :
   : …
   : Completed (5 files worked, 0 files failed)
   : [INFO] finish: User TypeCheck (took 0.06s)
@@ -663,7 +663,7 @@
   #+RESULTS: shell-hls-stack
   : (haskell-language-server)Ghcide setup tester in /home/tnks/src/shajra/nix-haskell-hls/examples/example-stack.
   : Report bugs at https://github.com/haskell/haskell-language-server/issues
-  : 
+  :
   : …
   : Completed (3 files worked, 0 files failed)
   : [INFO] finish: User TypeCheck (took 0.04s)
@@ -757,7 +757,7 @@
    #+RESULTS: example-cabal-pkg-list
    : /nix/store/nnyyw87jsjarg2fkgprjlpa7nb5jpv4y-ghc-8.10.3-with-packages/lib/ghc-8.10.3/package.conf.d
    :     text-icu-0.7.0.1
-   : 
+   :
 
    We can similarly look at the GHC instance for the Stack example project to
    see that it doesn't provide third-party Haskell dependencies:

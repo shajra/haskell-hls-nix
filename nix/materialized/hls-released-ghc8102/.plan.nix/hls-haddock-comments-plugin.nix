@@ -11,20 +11,23 @@
     flags = {};
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-class-plugin"; version = "0.1.0.1"; };
+      identifier = {
+        name = "hls-haddock-comments-plugin";
+        version = "0.1.0.0";
+        };
       license = "Apache-2.0";
       copyright = "";
-      maintainer = "jjc9310@gmail.com";
-      author = "Junyoung Clare Jang";
-      homepage = "https://github.com/haskell/haskell-language-server#readme";
+      maintainer = "berberman@yandex.com";
+      author = "Potato Hatsue";
+      homepage = "https://github.com/haskell/haskell-language-server";
       url = "";
-      synopsis = "Class/instance management plugin for Haskell Language Server";
-      description = "Class/instance management plugin for Haskell Language Server.\nFor usage, please see README of HLS on GitHub at <https://github.com/haskell/haskell-language-server#readme>";
+      synopsis = "Haddock comments plugin for Haskell Language Server";
+      description = "Please see [Haskell Language Server](https://github.com/haskell/haskell-language-server)";
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";
       licenseFiles = [ "LICENSE" ];
-      dataDir = ".";
+      dataDir = "";
       dataFiles = [];
       extraSrcFiles = [];
       extraTmpFiles = [];
@@ -33,23 +36,21 @@
     components = {
       "library" = {
         depends = [
-          (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
-          (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
-          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
-          (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
-          (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
+          (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
+          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
-          (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
           (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
           ];
         buildable = true;
-        modules = [ "Ide/Plugin/Class" ];
+        modules = [ "Ide/Plugin/HaddockComments" ];
         hsSourceDirs = [ "src" ];
         };
       };
-    } // rec { src = (pkgs.lib).mkDefault .././plugins/hls-class-plugin; }
+    } // rec {
+    src = (pkgs.lib).mkDefault .././plugins/hls-haddock-comments-plugin;
+    }

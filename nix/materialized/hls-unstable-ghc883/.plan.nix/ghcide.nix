@@ -69,6 +69,7 @@
           (hsPkgs."hie-compat" or (errorHandler.buildDepError "hie-compat"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
+          (hsPkgs."hiedb" or (errorHandler.buildDepError "hiedb"))
           (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
           (hsPkgs."network-uri" or (errorHandler.buildDepError "network-uri"))
           (hsPkgs."parallel" or (errorHandler.buildDepError "parallel"))
@@ -82,6 +83,7 @@
           (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
           (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
           (hsPkgs."sorted-list" or (errorHandler.buildDepError "sorted-list"))
+          (hsPkgs."sqlite-simple" or (errorHandler.buildDepError "sqlite-simple"))
           (hsPkgs."stm" or (errorHandler.buildDepError "stm"))
           (hsPkgs."syb" or (errorHandler.buildDepError "syb"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
@@ -91,6 +93,9 @@
           (hsPkgs."utf8-string" or (errorHandler.buildDepError "utf8-string"))
           (hsPkgs."vector" or (errorHandler.buildDepError "vector"))
           (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))
+          (hsPkgs."Diff" or (errorHandler.buildDepError "Diff"))
+          (hsPkgs."vector" or (errorHandler.buildDepError "vector"))
+          (hsPkgs."bytestring-encoding" or (errorHandler.buildDepError "bytestring-encoding"))
           (hsPkgs."opentelemetry" or (errorHandler.buildDepError "opentelemetry"))
           (hsPkgs."heapsize" or (errorHandler.buildDepError "heapsize"))
           ] ++ (if flags.ghc-lib
@@ -187,6 +192,7 @@
           };
         "ghcide" = {
           depends = [
+            (hsPkgs."hiedb" or (errorHandler.buildDepError "hiedb"))
             (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
             (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
@@ -194,6 +200,8 @@
             (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
             (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
             (hsPkgs."gitrev" or (errorHandler.buildDepError "gitrev"))
+            (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
+            (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
             (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
             (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
             (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
@@ -210,6 +218,7 @@
           buildable = if flags.ghc-lib then false else true;
           modules = [ "Arguments" "Paths_ghcide" ];
           hsSourceDirs = [ "exe" ];
+          includeDirs = [ "include" ];
           mainPath = [ "Main.hs" ] ++ (pkgs.lib).optional (flags.ghc-lib) "";
           };
         "ghcide-bench" = {

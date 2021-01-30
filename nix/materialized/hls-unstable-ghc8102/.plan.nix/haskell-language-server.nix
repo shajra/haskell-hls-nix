@@ -31,7 +31,7 @@
       };
     package = {
       specVersion = "2.2";
-      identifier = { name = "haskell-language-server"; version = "0.8.0.0"; };
+      identifier = { name = "haskell-language-server"; version = "0.9.0.0"; };
       license = "Apache-2.0";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";
@@ -62,18 +62,26 @@
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
           (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
+          (hsPkgs."async" or (errorHandler.buildDepError "async"))
+          (hsPkgs."base16-bytestring" or (errorHandler.buildDepError "base16-bytestring"))
+          (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
+          (hsPkgs."cryptohash-sha1" or (errorHandler.buildDepError "cryptohash-sha1"))
           (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."gitrev" or (errorHandler.buildDepError "gitrev"))
           (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
+          (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
+          (hsPkgs."hiedb" or (errorHandler.buildDepError "hiedb"))
           (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))
           (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
           (hsPkgs."optparse-simple" or (errorHandler.buildDepError "optparse-simple"))
           (hsPkgs."process" or (errorHandler.buildDepError "process"))
           (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
+          (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
+          (hsPkgs."sqlite-simple" or (errorHandler.buildDepError "sqlite-simple"))
           (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
           ];
         buildable = true;
@@ -94,9 +102,12 @@
             (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
             (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
+            (hsPkgs."async" or (errorHandler.buildDepError "async"))
+            (hsPkgs."base16-bytestring" or (errorHandler.buildDepError "base16-bytestring"))
             (hsPkgs."binary" or (errorHandler.buildDepError "binary"))
             (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
+            (hsPkgs."cryptohash-sha1" or (errorHandler.buildDepError "cryptohash-sha1"))
             (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
             (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
             (hsPkgs."ghc-boot-th" or (errorHandler.buildDepError "ghc-boot-th"))
@@ -104,6 +115,8 @@
             (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
             (hsPkgs."haskell-language-server" or (errorHandler.buildDepError "haskell-language-server"))
             (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
+            (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
+            (hsPkgs."hiedb" or (errorHandler.buildDepError "hiedb"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
             (hsPkgs."regex-tdfa" or (errorHandler.buildDepError "regex-tdfa"))
             (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))
@@ -112,6 +125,7 @@
             (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
             (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
             (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
+            (hsPkgs."sqlite-simple" or (errorHandler.buildDepError "sqlite-simple"))
             (hsPkgs."temporary" or (errorHandler.buildDepError "temporary"))
             (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
             (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))

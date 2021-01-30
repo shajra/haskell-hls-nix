@@ -13,9 +13,9 @@
       specVersion = "2.2";
       identifier = { name = "hls-plugin-api"; version = "0.6.0.0"; };
       license = "Apache-2.0";
-      copyright = "Alan Zimmerman";
-      maintainer = "alan.zimm@gmail.com (for now)";
-      author = "Many,TBD when we release";
+      copyright = "The Haskell IDE Team";
+      maintainer = "alan.zimm@gmail.com";
+      author = "The Haskell IDE Team";
       homepage = "https://github.com/haskell/haskell-language-server/hls-plugin-api";
       url = "";
       synopsis = "Haskell Language Server API for plugin communication";
