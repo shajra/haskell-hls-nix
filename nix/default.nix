@@ -1,6 +1,5 @@
 { sources ? import ./sources
 , config ? import ../config.nix
-, useMaterialization ? config.haskell-nix.useMaterialization
 , checkMaterialization ? config.haskell-nix.checkMaterialization
 , nixpkgs-pin ? config.haskell-nix.nixpkgs-pin
 , index-state ? config.haskell-nix.hackage.index.state
@@ -41,22 +40,13 @@ let
     planConfigFor = name: compiler-nix-name: modules:
         let needsNewName = name == "hls-${stability}";
             newName = if needsNewName then "${name}-${ghcVersion}" else name;
-            plan-sha256 = config.haskell-nix.plan."${newName}".sha256 or null;
-            materialized = ./materialized + "/${newName}";
-            isMaterialized = useMaterialization;
-            check = config.haskell-nix.plan."${newName}".check
-                or checkMaterialization;
         in {
-            inherit name modules index-state index-sha256 compiler-nix-name;
+	    inherit name modules index-state index-sha256 compiler-nix-name
+                checkMaterialization;
             configureArgs = "--disable-benchmarks";
             lookupSha256 = {location, ...}:
                 config.haskell-nix.lookupSha256."${stability}"."${location}" or null;
-            ${if plan-sha256 != null then "plan-sha256" else null} =
-                plan-sha256;
-            ${if isMaterialized then "materialized" else null} =
-                materialized;
-            ${if isMaterialized then "checkMaterialization" else null} =
-                check;
+            materialized = ./materialized + "/${newName}";
         };
 
     allExes = pkg: pkg.components.exes;
