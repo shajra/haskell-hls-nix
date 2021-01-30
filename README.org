@@ -647,10 +647,10 @@
   #+RESULTS: shell-hls-cabal
   : (haskell-language-server)Ghcide setup tester in /home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal.
   : Report bugs at https://github.com/haskell/haskell-language-server/issues
-  :
+  : 
   : …
   : Completed (5 files worked, 0 files failed)
-  : [INFO] finish: User TypeCheck (took 0.06s)
+  : [INFO] finish: User TypeCheck (took 0.04s)
 
   The same command can test HLS working with our Stack example project:
 
@@ -663,10 +663,10 @@
   #+RESULTS: shell-hls-stack
   : (haskell-language-server)Ghcide setup tester in /home/tnks/src/shajra/nix-haskell-hls/examples/example-stack.
   : Report bugs at https://github.com/haskell/haskell-language-server/issues
-  :
+  : 
   : …
   : Completed (3 files worked, 0 files failed)
-  : [INFO] finish: User TypeCheck (took 0.04s)
+  : [INFO] finish: User TypeCheck (took 0.03s)
 
 * Editor integration with Nix shells
 
@@ -757,7 +757,7 @@
    #+RESULTS: example-cabal-pkg-list
    : /nix/store/nnyyw87jsjarg2fkgprjlpa7nb5jpv4y-ghc-8.10.3-with-packages/lib/ghc-8.10.3/package.conf.d
    :     text-icu-0.7.0.1
-   :
+   : 
 
    We can similarly look at the GHC instance for the Stack example project to
    see that it doesn't provide third-party Haskell dependencies:

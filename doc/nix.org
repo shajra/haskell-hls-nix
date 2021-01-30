@@ -341,7 +341,7 @@
    #+END_SRC
 
    #+RESULTS: nix-build-link
-   : /nix/store/rifmadwjjjg0kcis8dpkq9iwjkakxwn0-haskell-language-server-ghc884-renamed
+   : /nix/store/a3b3sfp3dblq3vigb0h66zracqsicaqr-haskell-language-server-ghc884-renamed
 
    Following these symlinks, we can see the files the project provides:
 
@@ -370,7 +370,7 @@
    #+END_SRC
 
    #+RESULTS: nix-build-path
-   : /nix/store/rifmadwjjjg0kcis8dpkq9iwjkakxwn0-haskell-language-server-ghc884-renamed
+   : /nix/store/a3b3sfp3dblq3vigb0h66zracqsicaqr-haskell-language-server-ghc884-renamed
 
 ** Running commands
 
