@@ -8,6 +8,8 @@ let
         #++ [(get ghcVersion true).hls]
         ;
 in
+    # DESIGN: Support same GHC versions as IOHK:
+    # https://input-output-hk.github.io/haskell.nix/reference/supported-ghc-versions/
     []
     ++ (getBoth "ghc865")
     #++ (getBoth "ghc883")

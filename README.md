@@ -173,7 +173,7 @@ The Nix expression provided by this project ([./default.nix](./default.nix)) eva
 
 For this project's Nix expression, the following overrides can be done:
 
--   `--argstr ghcVersion ${GHC_VERSION}` sets the GHC version used for the build (the default is otherwise `ghc884`). The format for this string follows a convention in Nix of dropping periods and prefixing with "ghc".
+-   `--argstr ghcVersion ${GHC_VERSION}` sets the GHC version used for the build (the default is otherwise `ghc8103`). The format for this string follows a convention in Nix of dropping periods and prefixing with "ghc".
 -   `--arg hlsUnstable ${BOOLEAN_VALUE}` when set to `true` picks a recent commit from the "master" branch for the HLS packages (defaulting otherwise to `false`, which selects the 0.9.0 release of HLS).
 
 We can see the package derivations provided with the following `nix` calls:
@@ -195,11 +195,11 @@ nix search --no-cache --file .
     * ghc (ghc)
       The Glasgow Haskell Compiler
     
-    * hls (haskell-language-server-ghc884)
-      Haskell Language Server (HLS) for GHC 8.8.4
+    * hls (haskell-language-server-ghc8103)
+      Haskell Language Server (HLS) for GHC 8.10.3
     
-    * hls-renamed (haskell-language-server-ghc884-renamed)
-      Haskell Language Server (HLS) for GHC 8.8.4, renamed binary
+    * hls-renamed (haskell-language-server-ghc8103-renamed)
+      Haskell Language Server (HLS) for GHC 8.10.3, renamed binary
     
     * hls-wrapper (haskell-language-server-wrapper)
       Haskell Language Server (HLS) wrapper
@@ -221,11 +221,11 @@ nix search --no-cache --file .
 
 Note, when loading a directory with `--file`, a Nix expression is assumed to be in the directory's `default.nix` file. Also, the call of `nix show-derivation` is only needed one time to get search results as discussed in [the provided documentation on Nix](doc/nix.md).
 
-The search results of `nix search` tell us the *attribute paths* we can use to select out the package derivations from our Nix expression. Above we got the default 0.9.0 version of HLS packages compiled for GHC 8.8.4. We could have explicitly called `nix search` above with `--argstr ghcVersion ghc884` and `--arg hlsUnstable false` and have gotten the same default results.
+The search results of `nix search` tell us the *attribute paths* we can use to select out the package derivations from our Nix expression. Above we got the default 0.9.0 version of HLS packages compiled for GHC 8.10.3. We could have explicitly called `nix search` above with `--argstr ghcVersion ghc8103` and `--arg hlsUnstable false` and have gotten the same default results.
 
 The `hls` package is provided for completeness, but its usage is not generally recommended. It provides the unmodified output of the upstream HLS project, specifically a binary named "haskell-language-server". You can only install one of these to your `PATH`. Because the version of GHC we compile HLS against must match the version of GHC for the project we wish to use HLS with, using `hls` would limit all of our projects to just one version of GHC. The `hls-renamed`, `hls-wrapper`, and `hls-wrapper-nix` packages help work around this limitation, and are recommended.
 
-To install multiple instances of HLS to your `PATH`, use the `hls-renamed` attribute path. This suffixes the provided binary's filename with the version of GHC the instance of HLS has been compiled with. For example, when compiled with GHC 8.8.4, the binary is named "haskell-language-server-8.8.4".
+To install multiple instances of HLS to your `PATH`, use the `hls-renamed` attribute path. This suffixes the provided binary's filename with the version of GHC the instance of HLS has been compiled with. For example, when compiled with GHC 8.10.3, the binary is named "haskell-language-server-8.10.3".
 
 The `hls-wrapper` attribute path provides the upstream HLS wrapper binary named "haskell-language-server-wrapper". When the wrapper is run in a root directory of a Haskell project, it detects which GHC version is needed by the project, and scans the `PATH` to call the instance of the renamed HLS binary compiled for the version of GHC needed by the project. It doesn't really matter which version of GHC you compile the wrapper itself against (`--argstr ghcVersion`). It's just a thin wrapper that is not GHC-sensitive.
 
@@ -278,12 +278,12 @@ To install programs into the user-level `PATH` with Nix, we generally use `nix-e
 To illustrate installing with `nix-env` let's consider installing the following:
 
 -   this project's drop-in replacement for the HLS wrapper
--   the latest release of HLS (0.9.0) targeting 8.8.4
+-   the latest release of HLS (0.9.0) targeting 8.10.3
 -   useful recent stable versions of Cabal, Stack, `gen-hie`, Direnv, and Lorelei
 -   GHC 8.10.3
--   a recent "master" branch version of HLS targeting GHC 8.10.3.
+-   a recent "master" branch version of HLS targeting GHC 8.8.4.
 
-We can install the first three in one step relying on defaults of the Nix expression:
+We can install the first four in one step relying on defaults of the Nix expression:
 
 ```shell
 nix-env --install --file . \
@@ -293,18 +293,18 @@ nix-env --install --file . \
     --attr stack \
     --attr implicit-hie \
     --attr direnv \
-    --attr direnv-nix-lorelei
+    --attr direnv-nix-lorelei \
+    --attr ghc
 ```
 
 Note, because we want multiple instances of HLS on our `PATH` we use `hls-renamed` instead of `hls`.
 
-Next we can install another version of GHC as well as an instance of HLS targeting it using `--argstr ghcVersion`, and with `--arg hlsUnstable` we can select a recent "master" branch version of HLS:
+Next we can install an instance of HLS targeting an alternate version of GHC (8.8.4) using `--argstr ghcVersion`, and with `--arg hlsUnstable` we can select a recent "master" branch version of HLS:
 
 ```shell
 nix-env --install --file . \
-    --argstr ghcVersion ghc8103 \
+    --argstr ghcVersion ghc884 \
     --arg hlsUnstable true \
-    --attr ghc \
     --attr hls-renamed
 ```
 
@@ -404,8 +404,7 @@ nix-shell --pure --run 'haskell-language-server-wrapper'
     Report bugs at https://github.com/haskell/haskell-language-server/issues
     
     …
-    Completed (5 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.04s)
+    [INFO] finish: User TypeCheck (took 0.03s)Completed (5 files worked, 0 files failed)
 
 The same command can test HLS working with our Stack example project:
 

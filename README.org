@@ -27,9 +27,9 @@
 ** Macros for text
 
    #+MACRO: version-hls-latest 0.9.0
-   #+MACRO: version-ghc-default 8.8.4
-   #+MACRO: version-ghc-latest 8.10.3
-   #+MACRO: ghcVersion-default $1ghc884$2
+   #+MACRO: version-ghc-default 8.10.3
+   #+MACRO: version-ghc-alt 8.8.4
+   #+MACRO: ghcVersion-default $1ghc8103$2
 
 ** Setup action
 
@@ -314,11 +314,11 @@
   ,* ghc (ghc)
     The Glasgow Haskell Compiler
 
-  ,* hls (haskell-language-server-ghc884)
-    Haskell Language Server (HLS) for GHC 8.8.4
+  ,* hls (haskell-language-server-ghc8103)
+    Haskell Language Server (HLS) for GHC 8.10.3
 
-  ,* hls-renamed (haskell-language-server-ghc884-renamed)
-    Haskell Language Server (HLS) for GHC 8.8.4, renamed binary
+  ,* hls-renamed (haskell-language-server-ghc8103-renamed)
+    Haskell Language Server (HLS) for GHC 8.10.3, renamed binary
 
   ,* hls-wrapper (haskell-language-server-wrapper)
     Haskell Language Server (HLS) wrapper
@@ -469,11 +469,11 @@
      {{{version-ghc-default}}}
    - useful recent stable versions of Cabal, Stack, =gen-hie=, Direnv, and
      Lorelei
-   - GHC {{{version-ghc-latest}}}
+   - GHC {{{version-ghc-default}}}
    - a recent "master" branch version of HLS targeting GHC
-     {{{version-ghc-latest}}}.
+     {{{version-ghc-alt}}}.
 
-   We can install the first three in one step relying on defaults of the Nix
+   We can install the first four in one step relying on defaults of the Nix
    expression:
 
    #+NAME: nix-env-install-most
@@ -485,22 +485,22 @@
          --attr stack \
          --attr implicit-hie \
          --attr direnv \
-         --attr direnv-nix-lorelei
+         --attr direnv-nix-lorelei \
+         --attr ghc
    #+END_SRC
 
    Note, because we want multiple instances of HLS on our =PATH= we use
    =hls-renamed= instead of =hls=.
 
-   Next we can install another version of GHC as well as an instance of HLS
-   targeting it using ~--argstr ghcVersion~, and with ~--arg hlsUnstable~ we can
-   select a recent "master" branch version of HLS:
+   Next we can install an instance of HLS targeting an alternate version of GHC
+   ({{{version-ghc-alt}}}) using ~--argstr ghcVersion~, and with ~--arg
+   hlsUnstable~ we can select a recent "master" branch version of HLS:
 
    #+NAME: nix-env-install-rest
    #+BEGIN_SRC shell :session env :results output silent
      nix-env --install --file . \
-         --argstr ghcVersion ghc8103 \
+         --argstr ghcVersion ghc884 \
          --arg hlsUnstable true \
-         --attr ghc \
          --attr hls-renamed
    #+END_SRC
 
@@ -649,8 +649,8 @@
   : Report bugs at https://github.com/haskell/haskell-language-server/issues
   : 
   : …
-  : Completed (5 files worked, 0 files failed)
-  : [INFO] finish: User TypeCheck (took 0.04s)
+  : [INFO] finish: User TypeCheck (took 0.03s)Completed (5 files worked, 0 files failed)
+  : 
 
   The same command can test HLS working with our Stack example project:
 
