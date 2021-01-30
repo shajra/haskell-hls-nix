@@ -16,7 +16,3 @@ main = do
     template =
         "Answer to the Ultimate Question of Life,\n\
         \    the Universe, and Everything: %d"
-
--- Local Variables:
--- +haskell-backend: dante
--- End:
