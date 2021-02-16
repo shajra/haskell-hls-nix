@@ -84,6 +84,7 @@ let
         "ghc8101" = "8.10.1";
         "ghc8102" = "8.10.2";
         "ghc8103" = "8.10.3";
+        "ghc8104" = "8.10.4";
     }."${ghcVersion}" or (throw "unsupported GHC Version: ${ghcVersion}");
 
     longDesc = suffix: ''

@@ -10,10 +10,8 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         ghc:
           [ "ghc865"
-          , "ghc883"
           , "ghc884"
-          , "ghc8102"
-          , "ghc8103"
+          , "ghc8104"
           ]
         unstable: [true, false]
     name: "${{ matrix.os }}, ${{ matrix.ghc }}, unstable=${{ matrix.unstable }}"

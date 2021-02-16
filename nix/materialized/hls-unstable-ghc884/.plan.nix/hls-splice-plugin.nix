@@ -11,11 +11,11 @@
     flags = {};
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-splice-plugin"; version = "0.1.0.0"; };
+      identifier = { name = "hls-splice-plugin"; version = "0.4.0.0"; };
       license = "Apache-2.0";
       copyright = "";
-      maintainer = "konn.jinro_at_gmail.com";
-      author = "Hiromi ISHII";
+      maintainer = "https://github.com/haskell/haskell-language-server/contributors";
+      author = "https://github.com/haskell/haskell-language-server/contributors";
       homepage = "";
       url = "";
       synopsis = "HLS Plugin to expand TemplateHaskell Splices and QuasiQuotes";
@@ -37,7 +37,7 @@
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
           (hsPkgs."foldl" or (errorHandler.buildDepError "foldl"))
-          (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
@@ -50,6 +50,7 @@
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
           (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
+          (hsPkgs."unliftio-core" or (errorHandler.buildDepError "unliftio-core"))
           ];
         buildable = true;
         modules = [ "Ide/Plugin/Splice/Types" "Ide/Plugin/Splice" ];

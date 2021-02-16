@@ -71,7 +71,7 @@
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."gitrev" or (errorHandler.buildDepError "gitrev"))
-          (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
           (hsPkgs."hiedb" or (errorHandler.buildDepError "hiedb"))
@@ -114,7 +114,7 @@
             (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
             (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
             (hsPkgs."haskell-language-server" or (errorHandler.buildDepError "haskell-language-server"))
-            (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
+            (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
             (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
             (hsPkgs."hiedb" or (errorHandler.buildDepError "hiedb"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
@@ -183,7 +183,7 @@
             (hsPkgs."blaze-markup" or (errorHandler.buildDepError "blaze-markup"))
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
             (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
-            (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
+            (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
             (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
             (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
             (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))
@@ -204,11 +204,13 @@
             (hsPkgs."tasty-ant-xml" or (errorHandler.buildDepError "tasty-ant-xml"))
             (hsPkgs."tasty-golden" or (errorHandler.buildDepError "tasty-golden"))
             (hsPkgs."tasty-rerun" or (errorHandler.buildDepError "tasty-rerun"))
+            (hsPkgs."megaparsec" or (errorHandler.buildDepError "megaparsec"))
+            (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
             (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
             ];
           build-tools = [
-            (hsPkgs.buildPackages.haskell-language-server or (pkgs.buildPackages.haskell-language-server or (errorHandler.buildToolDepError "haskell-language-server")))
-            (hsPkgs.buildPackages.ghcide or (pkgs.buildPackages.ghcide or (errorHandler.buildToolDepError "ghcide")))
+            (hsPkgs.buildPackages.haskell-language-server.components.exes.haskell-language-server or (pkgs.buildPackages.haskell-language-server or (errorHandler.buildToolDepError "haskell-language-server:haskell-language-server")))
+            (hsPkgs.buildPackages.ghcide.components.exes.ghcide-test-preprocessor or (pkgs.buildPackages.ghcide-test-preprocessor or (errorHandler.buildToolDepError "ghcide:ghcide-test-preprocessor")))
             ];
           buildable = true;
           modules = [
@@ -238,6 +240,7 @@
             "HaddockComments"
             "Ide/Plugin/Splice/Types"
             "Ide/Plugin/Tactic/TestTypes"
+            "Ide/Plugin/Eval/Types"
             ];
           hsSourceDirs = [
             "test/utils"
@@ -245,6 +248,7 @@
             "plugins/hls-tactics-plugin/src"
             "plugins/hls-eval-plugin/test"
             "plugins/hls-splice-plugin/src"
+            "plugins/hls-eval-plugin/src"
             ];
           mainPath = [ "Main.hs" ];
           };
@@ -259,7 +263,7 @@
             (hsPkgs."blaze-markup" or (errorHandler.buildDepError "blaze-markup"))
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
             (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
-            (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
+            (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
             (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
             (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
             (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))
@@ -281,7 +285,7 @@
             (hsPkgs."tasty-rerun" or (errorHandler.buildDepError "tasty-rerun"))
             ];
           build-tools = [
-            (hsPkgs.buildPackages.haskell-language-server or (pkgs.buildPackages.haskell-language-server or (errorHandler.buildToolDepError "haskell-language-server")))
+            (hsPkgs.buildPackages.haskell-language-server.components.exes.haskell-language-server-wrapper or (pkgs.buildPackages.haskell-language-server-wrapper or (errorHandler.buildToolDepError "haskell-language-server:haskell-language-server-wrapper")))
             ];
           buildable = true;
           modules = [ "Test/Hls/Util" ];

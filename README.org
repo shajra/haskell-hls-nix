@@ -27,9 +27,9 @@
 ** Macros for text
 
    #+MACRO: version-hls-latest 0.9.0
-   #+MACRO: version-ghc-default 8.10.3
+   #+MACRO: version-ghc-default 8.10.4
    #+MACRO: version-ghc-alt 8.8.4
-   #+MACRO: ghcVersion-default $1ghc8103$2
+   #+MACRO: ghcVersion-default $1ghc8104$2
 
 ** Setup action
 
@@ -99,13 +99,14 @@
 
   To use HLS with a Haskell project, you must have an instance of HLS compiled
   with the same version of GHC used to compile your project.  To meet the needs
-  of a broad spectrum of users, we build both versions of HLS listed above
-  against all of the following versions of GHC:
+  of different users, we build both versions of HLS listed above against all of
+  the following versions of GHC:
   - 8.6.5
-  - 8.8.3
   - 8.8.4
-  - 8.10.2
-  - 8.10.3
+  - 8.10.4
+
+  These versions of GHC match what's [[haskell.nix-ghc][built, tested, and cached by the
+  Haskell.nix project]].
 
   [[github-actions][This project's continuous integration (using GitHub Actions)]] caches all ten of
   these builds at [[cachix][Cachix]], a service for caching pre-built Nix packages. If you
@@ -314,11 +315,11 @@
   ,* ghc (ghc)
     The Glasgow Haskell Compiler
 
-  ,* hls (haskell-language-server-ghc8103)
-    Haskell Language Server (HLS) for GHC 8.10.3
+  ,* hls (haskell-language-server-ghc8104)
+    Haskell Language Server (HLS) for GHC 8.10.4
 
-  ,* hls-renamed (haskell-language-server-ghc8103-renamed)
-    Haskell Language Server (HLS) for GHC 8.10.3, renamed binary
+  ,* hls-renamed (haskell-language-server-ghc8104-renamed)
+    Haskell Language Server (HLS) for GHC 8.10.4, renamed binary
 
   ,* hls-wrapper (haskell-language-server-wrapper)
     Haskell Language Server (HLS) wrapper
@@ -516,8 +517,8 @@
    : cabal-install-3.2.0.0
    : direnv-2.22.0
    : direnv-nix-lorelei
-   : ghc-8.10.3
-   : haskell-language-server-ghc8103-renamed
+   : ghc-8.10.4
+   : haskell-language-server-ghc8104-renamed
    : haskell-language-server-ghc884-renamed
    : hls-wrapper-nix
    : implicit-hie-0.1.2.5
@@ -533,7 +534,7 @@
    #+END_SRC
 
    #+RESULTS: nix-env-versions
-   : The Glorious Glasgow Haskell Compilation System, version 8.10.3
+   : The Glorious Glasgow Haskell Compilation System, version 8.10.4
 
    Without using =nix-shell=, Cabal and Stack will both manage Haskell
    dependencies of projects.  In this case, for Cabal you need to at least once
@@ -610,7 +611,7 @@
 
   #+RESULTS: shell-build-cabal
   : Resolving dependencies...
-  : Build profile: -w ghc-8.10.3 -O1
+  : Build profile: -w ghc-8.10.4 -O1
   : In order, the following will be built (use -v for more details):
   : …
   : Answer to the Ultimate Question of Life,
@@ -755,7 +756,7 @@
    #+END_SRC
 
    #+RESULTS: example-cabal-pkg-list
-   : /nix/store/nnyyw87jsjarg2fkgprjlpa7nb5jpv4y-ghc-8.10.3-with-packages/lib/ghc-8.10.3/package.conf.d
+   : /nix/store/nnyyw87jsjarg2fkgprjlpa7nb5jpv4y-ghc-8.10.4-with-packages/lib/ghc-8.10.4/package.conf.d
    :     text-icu-0.7.0.1
    : 
 
@@ -769,7 +770,7 @@
    #+END_SRC
 
    #+RESULTS: example-stack-pkg-list
-   : /nix/store/4igazfl1z3vrc7cq2zs0yxwrnhsl1igf-ghc-8.10.3/lib/ghc-8.10.3/package.conf.d
+   : /nix/store/4igazfl1z3vrc7cq2zs0yxwrnhsl1igf-ghc-8.10.4/lib/ghc-8.10.4/package.conf.d
    :     (no packages)
 
    This leads to a complication with Cabal projects when using Nix.  Changing

@@ -13,7 +13,7 @@
       specVersion = "2.2";
       identifier = {
         name = "hls-explicit-imports-plugin";
-        version = "0.1.0.0";
+        version = "0.1.0.1";
         };
       license = "Apache-2.0";
       copyright = "";
@@ -40,7 +40,8 @@
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
           (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
-          (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
+          (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))

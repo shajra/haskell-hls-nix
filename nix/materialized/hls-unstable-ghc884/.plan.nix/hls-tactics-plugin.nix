@@ -46,7 +46,7 @@
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
           (hsPkgs."ghc-source-gen" or (errorHandler.buildDepError "ghc-source-gen"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
-          (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
           (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
@@ -63,6 +63,7 @@
           "Ide/Plugin/Tactic"
           "Ide/Plugin/Tactic/Auto"
           "Ide/Plugin/Tactic/CodeGen"
+          "Ide/Plugin/Tactic/CodeGen/Utils"
           "Ide/Plugin/Tactic/Context"
           "Ide/Plugin/Tactic/Debug"
           "Ide/Plugin/Tactic/GHC"
@@ -72,6 +73,7 @@
           "Ide/Plugin/Tactic/Machinery"
           "Ide/Plugin/Tactic/Naming"
           "Ide/Plugin/Tactic/Range"
+          "Ide/Plugin/Tactic/Simplify"
           "Ide/Plugin/Tactic/Tactics"
           "Ide/Plugin/Tactic/Types"
           "Ide/Plugin/Tactic/TestTypes"
@@ -93,7 +95,7 @@
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
             ];
           build-tools = [
-            (hsPkgs.buildPackages.hspec-discover or (pkgs.buildPackages.hspec-discover or (errorHandler.buildToolDepError "hspec-discover")))
+            (hsPkgs.buildPackages.hspec-discover.components.exes.hspec-discover or (pkgs.buildPackages.hspec-discover or (errorHandler.buildToolDepError "hspec-discover:hspec-discover")))
             ];
           buildable = true;
           modules = [ "AutoTupleSpec" "UnificationSpec" ];

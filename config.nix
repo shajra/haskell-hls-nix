@@ -1,13 +1,12 @@
 {
-    ghcVersion = "ghc8103";
-    hackage.version.implicit-hie = "0.1.2.5";
+    ghcVersion = "ghc8104";
     hls.unstable = false;
 
     haskell-nix.checkMaterialization = false;
     # DESIGN: https://github.com/input-output-hk/hackage.nix/blob/master/index-state-hashes.nix
     haskell-nix.hackage.index = {
-        state = "2021-01-30T00:00:00Z";
-        sha256 = "fa890b301aa2e30eed8a0a62e87210eeb3179d97f184e5aaa338516cc07a8e4a";
+        state = "2021-02-16T00:00:00Z";
+        sha256 = "67d1661cda5dd2af00dbedca6bb09dbae67768bea97030a5ac111c6e80111572";
     };
     haskell-nix.nixpkgs-pin = "nixpkgs-2009";
 

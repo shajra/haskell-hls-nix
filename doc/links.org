@@ -18,6 +18,7 @@
 #+LINK: haskell-hls-issue-setuphs https://github.com/mpickering/hie-bios/issues/208
 #+LINK: haskell-hls-releases https://github.com/haskell/haskell-language-server/releases
 #+LINK: haskell.nix https://input-output-hk.github.io/haskell.nix/
+#+LINK: haskell.nix-ghc https://input-output-hk.github.io/haskell.nix/reference/supported-ghc-versions/#supported-ghc-versions
 #+LINK: haskell-stack https://docs.haskellstack.org/en/stable/README/
 #+LINK: haskell-stack-nix https://docs.haskellstack.org/en/stable/nix_integration/
 #+LINK: lsp https://microsoft.github.io/language-server-protocol

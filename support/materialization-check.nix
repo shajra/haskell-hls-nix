@@ -12,7 +12,5 @@ in
     # https://input-output-hk.github.io/haskell.nix/reference/supported-ghc-versions/
     []
     ++ (getBoth "ghc865")
-    #++ (getBoth "ghc883")
     #++ (getBoth "ghc884")
-    #++ (getBoth "ghc8102")
-    #++ (getBoth "ghc8103")
+    #++ (getBoth "ghc8104")
