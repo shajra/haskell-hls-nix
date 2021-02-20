@@ -72,9 +72,9 @@
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."gitrev" or (errorHandler.buildDepError "gitrev"))
           (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
-          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
           (hsPkgs."hiedb" or (errorHandler.buildDepError "hiedb"))
+          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))
           (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
           (hsPkgs."optparse-simple" or (errorHandler.buildDepError "optparse-simple"))
@@ -153,6 +153,7 @@
             (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
             (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
+            (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
             (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
             (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
             (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
@@ -239,6 +240,7 @@
             "Splice"
             "HaddockComments"
             "Ide/Plugin/Splice/Types"
+            "Ide/Plugin/Tactic/FeatureSet"
             "Ide/Plugin/Tactic/TestTypes"
             "Ide/Plugin/Eval/Types"
             ];

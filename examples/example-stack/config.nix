@@ -3,7 +3,7 @@
     # build, this version must match the version specified stack.yaml (generally
     # set by the resolver setting).
     #
-    ghcVersion = "ghc8103";
+    ghcVersion = "ghc8104";
 
     # If 'true', use recent commit of master branch for HLS, else the latest
     # official release

@@ -1,5 +1,5 @@
 # locks the versions of dependencies and GHC
-resolver: lts-17.0
+resolver: lts-17.4
 
 # Specifies where the Cabal packages for our project are located.
 packages:

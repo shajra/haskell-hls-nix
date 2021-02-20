@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-tactics-plugin"; version = "0.5.1.0"; };
+      identifier = { name = "hls-tactics-plugin"; version = "0.5.1.1"; };
       license = "Apache-2.0";
       copyright = "Sandy Maguire, Reed Mullanix";
       maintainer = "sandy@sandymaguire.me";
@@ -62,14 +62,18 @@
         modules = [
           "Ide/Plugin/Tactic"
           "Ide/Plugin/Tactic/Auto"
+          "Ide/Plugin/Tactic/CaseSplit"
           "Ide/Plugin/Tactic/CodeGen"
           "Ide/Plugin/Tactic/CodeGen/Utils"
           "Ide/Plugin/Tactic/Context"
           "Ide/Plugin/Tactic/Debug"
+          "Ide/Plugin/Tactic/FeatureSet"
           "Ide/Plugin/Tactic/GHC"
           "Ide/Plugin/Tactic/Judgements"
           "Ide/Plugin/Tactic/KnownStrategies"
           "Ide/Plugin/Tactic/KnownStrategies/QuickCheck"
+          "Ide/Plugin/Tactic/LanguageServer"
+          "Ide/Plugin/Tactic/LanguageServer/TacticProviders"
           "Ide/Plugin/Tactic/Machinery"
           "Ide/Plugin/Tactic/Naming"
           "Ide/Plugin/Tactic/Range"

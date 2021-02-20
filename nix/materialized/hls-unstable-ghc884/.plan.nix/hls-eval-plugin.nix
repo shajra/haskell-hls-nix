@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-eval-plugin"; version = "0.2.0.0"; };
+      identifier = { name = "hls-eval-plugin"; version = "0.2.0.1"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "https://github.com/haskell/haskell-language-server/contributors";

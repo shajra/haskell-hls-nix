@@ -8,7 +8,7 @@
   , config
   , ... }:
   {
-    flags = { ghc-lib = false; };
+    flags = { ghc-patched-unboxed-bytecode = false; };
     package = {
       specVersion = "1.20";
       identifier = { name = "ghcide"; version = "0.7.5.0"; };
@@ -43,7 +43,7 @@
       };
     components = {
       "library" = {
-        depends = ([
+        depends = [
           (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
           (hsPkgs."array" or (errorHandler.buildDepError "array"))
           (hsPkgs."async" or (errorHandler.buildDepError "async"))
@@ -102,22 +102,16 @@
           (hsPkgs."heapsize" or (errorHandler.buildDepError "heapsize"))
           (hsPkgs."unliftio" or (errorHandler.buildDepError "unliftio"))
           (hsPkgs."unliftio-core" or (errorHandler.buildDepError "unliftio-core"))
-          ] ++ (if flags.ghc-lib
-          then [
-            (hsPkgs."ghc-lib" or (errorHandler.buildDepError "ghc-lib"))
-            (hsPkgs."ghc-lib-parser" or (errorHandler.buildDepError "ghc-lib-parser"))
-            ]
-          else [
-            (hsPkgs."ghc-boot-th" or (errorHandler.buildDepError "ghc-boot-th"))
-            (hsPkgs."ghc-boot" or (errorHandler.buildDepError "ghc-boot"))
-            (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
-            (hsPkgs."ghc-check" or (errorHandler.buildDepError "ghc-check"))
-            (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
-            (hsPkgs."cryptohash-sha1" or (errorHandler.buildDepError "cryptohash-sha1"))
-            (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
-            (hsPkgs."implicit-hie-cradle" or (errorHandler.buildDepError "implicit-hie-cradle"))
-            (hsPkgs."base16-bytestring" or (errorHandler.buildDepError "base16-bytestring"))
-            ])) ++ (if system.isWindows
+          (hsPkgs."ghc-boot-th" or (errorHandler.buildDepError "ghc-boot-th"))
+          (hsPkgs."ghc-boot" or (errorHandler.buildDepError "ghc-boot"))
+          (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
+          (hsPkgs."ghc-check" or (errorHandler.buildDepError "ghc-check"))
+          (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
+          (hsPkgs."cryptohash-sha1" or (errorHandler.buildDepError "cryptohash-sha1"))
+          (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
+          (hsPkgs."implicit-hie-cradle" or (errorHandler.buildDepError "implicit-hie-cradle"))
+          (hsPkgs."base16-bytestring" or (errorHandler.buildDepError "base16-bytestring"))
+          ] ++ (if system.isWindows
           then [ (hsPkgs."Win32" or (errorHandler.buildDepError "Win32")) ]
           else [ (hsPkgs."unix" or (errorHandler.buildDepError "unix")) ]);
         buildable = true;
@@ -128,6 +122,7 @@
           "Development/IDE/LSP/Notifications"
           "Development/IDE/Plugin/CodeAction/PositionIndexed"
           "Development/IDE/Plugin/Completions/Logic"
+          "Development/IDE/Session/VersionCheck"
           "Development/IDE/Types/Action"
           "Development/IDE"
           "Development/IDE/Main"
@@ -154,6 +149,7 @@
           "Development/IDE/LSP/LanguageServer"
           "Development/IDE/LSP/Outline"
           "Development/IDE/LSP/Server"
+          "Development/IDE/Session"
           "Development/IDE/Spans/Common"
           "Development/IDE/Spans/Documentation"
           "Development/IDE/Spans/AtPoint"
@@ -175,14 +171,9 @@
           "Development/IDE/Plugin/HLS/GhcIde"
           "Development/IDE/Plugin/Test"
           "Development/IDE/Plugin/TypeLenses"
-          ] ++ (pkgs.lib).optionals (!flags.ghc-lib) [
-          "Development/IDE/Session/VersionCheck"
-          "Development/IDE/Session"
           ];
         cSources = (pkgs.lib).optional (!system.isWindows) "cbits/getmodtime.c";
-        hsSourceDirs = [
-          "src"
-          ] ++ (pkgs.lib).optional (!flags.ghc-lib) "session-loader";
+        hsSourceDirs = [ "src" "session-loader" ];
         includeDirs = [ "include" ];
         };
       exes = {
@@ -217,11 +208,11 @@
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
             (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
             ];
-          buildable = if flags.ghc-lib then false else true;
+          buildable = true;
           modules = [ "Arguments" "Paths_ghcide" ];
           hsSourceDirs = [ "exe" ];
           includeDirs = [ "include" ];
-          mainPath = [ "Main.hs" ] ++ (pkgs.lib).optional (flags.ghc-lib) "";
+          mainPath = [ "Main.hs" ];
           };
         "ghcide-bench" = {
           depends = [
@@ -295,7 +286,7 @@
             (hsPkgs.buildPackages.ghcide.components.exes.ghcide-test-preprocessor or (pkgs.buildPackages.ghcide-test-preprocessor or (errorHandler.buildToolDepError "ghcide:ghcide-test-preprocessor")))
             (hsPkgs.buildPackages.implicit-hie.components.exes.gen-hie or (pkgs.buildPackages.gen-hie or (errorHandler.buildToolDepError "implicit-hie:gen-hie")))
             ];
-          buildable = if flags.ghc-lib then false else true;
+          buildable = true;
           modules = [
             "Development/IDE/Test"
             "Development/IDE/Test/Runfiles"

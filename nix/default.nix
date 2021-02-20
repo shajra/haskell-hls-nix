@@ -28,10 +28,11 @@ let
             nixpkgsOrigArgs = hn.nixpkgsArgs;
             nixpkgsArgs = nixpkgsOrigArgs // {
                 config = {};
-                overlays = nixpkgsOrigArgs.overlays ++ [(self: super: {
-                    alex = super.haskellPackages.alex;
-                    happy = super.haskellPackages.happy;
-                })];
+                overlays = nixpkgsOrigArgs.overlays;
+                #overlays = nixpkgsOrigArgs.overlays ++ [(self: super: {
+                #    alex = super.haskellPackages.alex;
+                #    happy = super.haskellPackages.happy;
+                #})];
             };
         in import nixpkgsSrc nixpkgsArgs;
 
