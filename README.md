@@ -319,7 +319,7 @@ These packages have been installed in our Nix profile, which we can see by query
 nix-env --query
 ```
 
-    cabal-install-3.2.0.0
+    cabal-install-3.2.0.0-git
     direnv-2.22.0
     direnv-nix-lorelei
     ghc-8.10.4
@@ -423,8 +423,7 @@ nix-shell --pure --run 'haskell-language-server-wrapper'
     Report bugs at https://github.com/haskell/haskell-language-server/issues
     
     …
-    Completed (3 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.13s)
+    [INFO] finish: User TypeCheck (took 0.04s)Completed (3 files worked, 0 files failed)
 
 # Editor integration with Nix shells<a id="sec-9"></a>
 

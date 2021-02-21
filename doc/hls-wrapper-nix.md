@@ -95,7 +95,7 @@ hls-wrapper-nix --cwd examples/example-cabal
     …
     
     Completed (5 files worked, 0 files failed)
-    2021-02-20 12:15:12.596794849 [ThreadId 698] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-02-21 00:28:47.576769014 [ThreadId 564] INFO hls:	finish: GenerateCore (took 0.00s)
 
 And here we see that the script works for the Stack example project as well:
 
@@ -107,8 +107,8 @@ hls-wrapper-nix --cwd examples/example-stack
     Module "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack/a" is loaded by Cradle: Cradle {cradleRootDir = "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack", cradleOptsProg = CradleAction: Stack}
     Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 0.9.0.0 x86_64 ghc-8.10.4
     …
+    [INFO] Making new HscEnv[main,main]
     
-    [INFO] finish: User TypeCheck (took 0.11s)
     Completed (3 files worked, 0 files failed)
 
 # Command-line reference<a id="sec-7"></a>

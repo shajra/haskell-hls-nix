@@ -189,7 +189,7 @@ let
                 lib.attrByPath (lib.splitString "." path) (err path) pkgs;
         in builtins.map select packageNames;
 
-    cabal-install = nixpkgs-stable.cabal-install;
+    cabal-install = nixpkgs-unstable.cabal-install;
     direnv = nixpkgs-stable.direnv;
     ghc = nixpkgs-unstable.haskell.compiler."${ghcVersion}";
     implicit-hie = nixpkgs-unstable.haskellPackages.implicit-hie;
