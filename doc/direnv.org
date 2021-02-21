@@ -107,9 +107,8 @@
   When using =hls-wrapper-nix=, we encounter any slowdowns evaluating a Nix
   expressions when loading up HLS as a background process.  Even if only a
   one-time pause, it can still be annoying to wait several seconds before
-  getting editor feedback from HLS.  This pause isn't strictly one-time.  If you
-  don't leave your editor long-running, you'll face the pause each time you
-  restart your editor with a project using HLS.
+  getting editor feedback from HLS.  This pause isn't strictly one-time.  You'll
+  face this pause each time you restart HLS within a Nix Shell.
 
   Direnv allows us a way to dynamically load environment variables at the level
   of a directory.  Direnv is more general than both Haskell and Nix, and many

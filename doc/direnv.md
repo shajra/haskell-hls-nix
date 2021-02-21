@@ -28,7 +28,7 @@ To set up editors to invoke HLS we have two options to compare:
 
 The HLS Nix wrapper is relatively simple to set up. You configure an editor with LSP support to call `hls-wrapper-nix` instead of the official `haskell-language-server-wrapper` executable provided by the upstream HLS project. This wrapper then enters into a Nix shell for projects that require it to call HLS properly.
 
-When using `hls-wrapper-nix`, we encounter any slowdowns evaluating a Nix expressions when loading up HLS as a background process. Even if only a one-time pause, it can still be annoying to wait several seconds before getting editor feedback from HLS. This pause isn't strictly one-time. If you don't leave your editor long-running, you'll face the pause each time you restart your editor with a project using HLS.
+When using `hls-wrapper-nix`, we encounter any slowdowns evaluating a Nix expressions when loading up HLS as a background process. Even if only a one-time pause, it can still be annoying to wait several seconds before getting editor feedback from HLS. This pause isn't strictly one-time. You'll face this pause each time you restart HLS within a Nix Shell.
 
 Direnv allows us a way to dynamically load environment variables at the level of a directory. Direnv is more general than both Haskell and Nix, and many editors have support for Direnv. Once we have an editor configured with a Direnv plugin, when we open a file in a directory associated with a Direnv configuration file, environment variables are loaded as specified. These environment variables can be obtained from the project's Nix shell. With `haskell-language-server-wrapper` and all other required dependencies in the new environment, editors can just call the HLS wrapper directly to start the HLS service.
 
