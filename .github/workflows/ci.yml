@@ -36,9 +36,11 @@ jobs:
     - run: cat ~/.config/nix/nix.conf
     - run: |
         nix --print-build-logs build \
+            --arg checkMaterialization true \
             --argstr ghcVersion ${{ matrix.ghc }} \
             --arg hlsUnstable ${{ matrix.unstable }}
     - run: |
         nix --print-build-logs path-info \
+            --arg checkMaterialization true \
             --argstr ghcVersion ${{ matrix.ghc }} \
             --arg hlsUnstable ${{ matrix.unstable }}
