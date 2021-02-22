@@ -39,7 +39,10 @@ let
     haskell-nix = nixpkgs-hn.haskell-nix;
 
     planConfigFor = name: compiler-nix-name: modules:
-        let needsNewName = name == "hls-${stability}";
+        let isDarwin = builtins.elem builtins.currentSystem
+                nixpkgs-stable.lib.systems.doubles.darwin;
+            platformName = if isDarwin then "darwin" else "linux";
+            needsNewName = name == "hls-${stability}";
             newName = if needsNewName then "${name}-${ghcVersion}" else name;
         in {
 	    inherit name modules index-state index-sha256 compiler-nix-name
@@ -47,7 +50,7 @@ let
             configureArgs = "--disable-benchmarks";
             lookupSha256 = {location, ...}:
                 config.haskell-nix.lookupSha256."${stability}"."${location}" or null;
-            materialized = ./materialized + "/${newName}";
+            materialized = ./materialized + "-${platformName}/${newName}";
         };
 
     allExes = pkg: pkg.components.exes;
