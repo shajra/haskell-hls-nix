@@ -473,7 +473,7 @@ cd examples/example-cabal
 nix-shell --pure --run 'ghc-pkg list text-icu'
 ```
 
-    /nix/store/gg8yzr1d6k1fd81h6sldmkgb2hy35iam-ghc-8.10.4-with-packages/lib/ghc-8.10.4/package.conf.d
+    /nix/store/0d1i3dnm7hn8vr035c7xxscqfgfkhnzx-ghc-8.10.4-with-packages/lib/ghc-8.10.4/package.conf.d
         text-icu-0.7.0.1
 
 We can similarly look at the GHC instance for the Stack example project to see that it doesn't provide third-party Haskell dependencies:
@@ -483,7 +483,7 @@ cd examples/example-stack
 nix-shell --pure --run 'ghc-pkg list text-icu'
 ```
 
-    /nix/store/r94nwc7p8ds0nsnhlnp4ac1c0ri6p7hf-ghc-8.10.4/lib/ghc-8.10.4/package.conf.d
+    /nix/store/26zbw2cg6w0ih8gr5ab8vh670mccrd3v-ghc-8.10.4/lib/ghc-8.10.4/package.conf.d
         (no packages)
 
 This leads to a complication with Cabal projects when using Nix. Changing the dependencies of a Cabal file mean we need to rebuild the package database that our project's Nix shell provides.

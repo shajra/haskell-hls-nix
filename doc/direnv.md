@@ -138,7 +138,7 @@ direnv exec examples/example-stack \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (3 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.05s)
+    [INFO] finish: User TypeCheck (took 0.04s)
 
 # Suggested advanced configuration<a id="sec-7"></a>
 
