@@ -4,7 +4,7 @@ on:
   pull_request:
 jobs:
   build:
-    continue-on-error: false
+    continue-on-error: true
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
