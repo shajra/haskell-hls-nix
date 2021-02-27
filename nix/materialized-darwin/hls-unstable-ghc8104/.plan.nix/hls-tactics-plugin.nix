@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-tactics-plugin"; version = "0.5.1.1"; };
+      identifier = { name = "hls-tactics-plugin"; version = "1.0.0.0"; };
       license = "Apache-2.0";
       copyright = "Sandy Maguire, Reed Mullanix";
       maintainer = "sandy@sandymaguire.me";
@@ -84,25 +84,60 @@
           ];
         hsSourceDirs = [ "src" ];
         };
+      exes = {
+        "test-server" = {
+          depends = [
+            (hsPkgs."base" or (errorHandler.buildDepError "base"))
+            (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
+            (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
+            (hsPkgs."hls-tactics-plugin" or (errorHandler.buildDepError "hls-tactics-plugin"))
+            (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
+            (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
+            ];
+          buildable = true;
+          hsSourceDirs = [ "test" ];
+          mainPath = [ "Server.hs" ];
+          };
+        };
       tests = {
         "tests" = {
           depends = [
             (hsPkgs."QuickCheck" or (errorHandler.buildDepError "QuickCheck"))
+            (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
+            (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
             (hsPkgs."checkers" or (errorHandler.buildDepError "checkers"))
-            (hsPkgs."hspec" or (errorHandler.buildDepError "hspec"))
-            (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
-            (hsPkgs."hls-tactics-plugin" or (errorHandler.buildDepError "hls-tactics-plugin"))
-            (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
-            (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
-            (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
             (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
+            (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
+            (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
+            (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
+            (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
+            (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
+            (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
+            (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
+            (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
+            (hsPkgs."hls-tactics-plugin" or (errorHandler.buildDepError "hls-tactics-plugin"))
+            (hsPkgs."hspec" or (errorHandler.buildDepError "hspec"))
+            (hsPkgs."hspec-expectations" or (errorHandler.buildDepError "hspec-expectations"))
+            (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
+            (hsPkgs."lsp-test" or (errorHandler.buildDepError "lsp-test"))
+            (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
+            (hsPkgs."megaparsec" or (errorHandler.buildDepError "megaparsec"))
+            (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
+            (hsPkgs."tasty" or (errorHandler.buildDepError "tasty"))
+            (hsPkgs."tasty-ant-xml" or (errorHandler.buildDepError "tasty-ant-xml"))
+            (hsPkgs."tasty-expected-failure" or (errorHandler.buildDepError "tasty-expected-failure"))
+            (hsPkgs."tasty-golden" or (errorHandler.buildDepError "tasty-golden"))
+            (hsPkgs."tasty-hunit" or (errorHandler.buildDepError "tasty-hunit"))
+            (hsPkgs."tasty-rerun" or (errorHandler.buildDepError "tasty-rerun"))
+            (hsPkgs."text" or (errorHandler.buildDepError "text"))
             ];
           build-tools = [
             (hsPkgs.buildPackages.hspec-discover.components.exes.hspec-discover or (pkgs.buildPackages.hspec-discover or (errorHandler.buildToolDepError "hspec-discover:hspec-discover")))
+            (hsPkgs.buildPackages.hls-tactics-plugin.components.exes.test-server or (pkgs.buildPackages.test-server or (errorHandler.buildToolDepError "hls-tactics-plugin:test-server")))
             ];
           buildable = true;
-          modules = [ "AutoTupleSpec" "UnificationSpec" ];
+          modules = [ "AutoTupleSpec" "GoldenSpec" "UnificationSpec" ];
           hsSourceDirs = [ "test" ];
           mainPath = [ "Main.hs" ];
           };

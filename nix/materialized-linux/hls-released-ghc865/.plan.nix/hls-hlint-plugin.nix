@@ -11,7 +11,7 @@
     flags = { pedantic = false; ghc-lib = false; };
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-hlint-plugin"; version = "0.1.0.0"; };
+      identifier = { name = "hls-hlint-plugin"; version = "1.0.0.0"; };
       license = "Apache-2.0";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";
@@ -48,7 +48,7 @@
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
-          (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."hlint" or (errorHandler.buildDepError "hlint"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))

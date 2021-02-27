@@ -31,7 +31,7 @@
       };
     package = {
       specVersion = "2.2";
-      identifier = { name = "haskell-language-server"; version = "0.9.0.0"; };
+      identifier = { name = "haskell-language-server"; version = "1.0.0.0"; };
       license = "Apache-2.0";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";
@@ -236,12 +236,9 @@
             "Rename"
             "Symbol"
             "TypeDefinition"
-            "Tactic"
             "Splice"
             "HaddockComments"
             "Ide/Plugin/Splice/Types"
-            "Ide/Plugin/Tactic/FeatureSet"
-            "Ide/Plugin/Tactic/TestTypes"
             "Ide/Plugin/Eval/Types"
             ];
           hsSourceDirs = [

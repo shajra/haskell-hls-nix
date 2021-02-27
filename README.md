@@ -40,7 +40,7 @@ Nix is a package manager we can use not only to build and install HLS, but also 
 
 The [Nix expression provided by this project](./default.nix) builds two versions of HLS
 
--   the latest release (0.9.0)
+-   the latest release (1.0.0)
 -   a recent commit from the "master" branch of HLS on GitHub.
 
 To use HLS with a Haskell project, you must have an instance of HLS compiled with the same version of GHC used to compile your project. To meet the needs of different users, we build both versions of HLS listed above against all of the following versions of GHC:
@@ -179,7 +179,7 @@ The [Nix expression provided by this project](./default.nix) evaluates to a func
 For this project's Nix expression, the following overrides can be done:
 
 -   `--argstr ghcVersion ${GHC_VERSION}` sets the GHC version used for the build (the default is otherwise `ghc8104`). The format for this string follows a convention in Nix of dropping periods and prefixing with "ghc".
--   `--arg hlsUnstable ${BOOLEAN_VALUE}` when set to `true` picks a recent commit from the "master" branch for the HLS packages (defaulting otherwise to `false`, which selects the 0.9.0 release of HLS).
+-   `--arg hlsUnstable ${BOOLEAN_VALUE}` when set to `true` picks a recent commit from the "master" branch for the HLS packages (defaulting otherwise to `false`, which selects the 1.0.0 release of HLS).
 
 We can see the package derivations provided with the following `nix` calls:
 
@@ -226,7 +226,7 @@ nix search --no-cache --file .
 
 Note, when loading a directory with `--file`, a Nix expression is assumed to be in the directory's `default.nix` file. Also, the call of `nix show-derivation` is only needed one time to get search results as discussed in [the provided documentation on Nix](doc/nix.md).
 
-The search results of `nix search` tell us the *attribute paths* we can use to select out the package derivations from our Nix expression. Above we got the default 0.9.0 version of HLS packages compiled for GHC 8.10.4. We could have explicitly called `nix search` above with `--argstr ghcVersion ghc8104` and `--arg hlsUnstable false` and have gotten the same default results.
+The search results of `nix search` tell us the *attribute paths* we can use to select out the package derivations from our Nix expression. Above we got the default 1.0.0 version of HLS packages compiled for GHC 8.10.4. We could have explicitly called `nix search` above with `--argstr ghcVersion ghc8104` and `--arg hlsUnstable false` and have gotten the same default results.
 
 The `hls` package is provided for completeness, but its usage is not generally recommended. It provides the unmodified output of the upstream HLS project, specifically a binary named "haskell-language-server". You can only install one of these to your `PATH`. Because the version of GHC we compile HLS against must match the version of GHC for the project we wish to use HLS with, using `hls` would limit all of our projects to just one version of GHC. The `hls-renamed`, `hls-wrapper`, and `hls-wrapper-nix` packages help work around this limitation, and are recommended.
 
@@ -283,7 +283,7 @@ To install programs into the user-level `PATH` with Nix, we generally use `nix-e
 To illustrate installing with `nix-env` let's consider installing the following:
 
 -   this project's drop-in replacement for the HLS wrapper
--   the latest release of HLS (0.9.0) targeting 8.10.4
+-   the latest release of HLS (1.0.0) targeting 8.10.4
 -   useful recent stable versions of Cabal, Stack, `gen-hie`, Direnv, and Lorelei
 -   GHC 8.10.4
 -   a recent "master" branch version of HLS targeting GHC 8.8.4.
@@ -419,11 +419,12 @@ cd examples/example-stack
 nix-shell --pure --run 'haskell-language-server-wrapper'
 ```
 
-    (haskell-language-server)Ghcide setup tester in /home/tnks/src/shajra/nix-haskell-hls/examples/example-stack.
+    ghcide setup tester in /home/tnks/src/shajra/nix-haskell-hls/examples/example-stack.
     Report bugs at https://github.com/haskell/haskell-language-server/issues
     
     …
-    [INFO] finish: User TypeCheck (took 0.04s)Completed (3 files worked, 0 files failed)
+    
+    Completed (3 files worked, 0 files failed)
 
 # Editor integration with Nix shells<a id="sec-9"></a>
 

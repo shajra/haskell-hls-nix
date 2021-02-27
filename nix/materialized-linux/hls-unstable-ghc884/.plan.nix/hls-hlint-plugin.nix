@@ -11,7 +11,7 @@
     flags = { pedantic = false; ghc-lib = false; };
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-hlint-plugin"; version = "0.2.0.1"; };
+      identifier = { name = "hls-hlint-plugin"; version = "1.0.0.0"; };
       license = "Apache-2.0";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";

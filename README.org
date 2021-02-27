@@ -26,7 +26,7 @@
 
 ** Macros for text
 
-   #+MACRO: version-hls-latest 0.9.0
+   #+MACRO: version-hls-latest 1.0.0
    #+MACRO: version-ghc-default 8.10.4
    #+MACRO: version-ghc-alt 8.8.4
    #+MACRO: ghcVersion-default $1ghc8104$2
@@ -677,12 +677,12 @@
   #+END_SRC
 
   #+RESULTS: shell-hls-stack
-  : (haskell-language-server)Ghcide setup tester in /home/tnks/src/shajra/nix-haskell-hls/examples/example-stack.
+  : ghcide setup tester in /home/tnks/src/shajra/nix-haskell-hls/examples/example-stack.
   : Report bugs at https://github.com/haskell/haskell-language-server/issues
   : 
   : …
-  : [INFO] finish: User TypeCheck (took 0.04s)Completed (3 files worked, 0 files failed)
   : 
+  : Completed (3 files worked, 0 files failed)
 
 * Editor integration with Nix shells
 

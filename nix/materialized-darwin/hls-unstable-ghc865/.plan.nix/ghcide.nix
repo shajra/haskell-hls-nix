@@ -10,8 +10,8 @@
   {
     flags = { ghc-patched-unboxed-bytecode = false; };
     package = {
-      specVersion = "1.20";
-      identifier = { name = "ghcide"; version = "0.7.5.0"; };
+      specVersion = "2.2";
+      identifier = { name = "ghcide"; version = "1.0.0.0"; };
       license = "Apache-2.0";
       copyright = "Digital Asset and Ghcide contributors 2018-2020";
       maintainer = "Ghcide contributors";

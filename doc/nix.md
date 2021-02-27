@@ -144,7 +144,7 @@ After a successful call of `nix build`, you'll see one or more symlinks for each
 readlink result*
 ```
 
-    /nix/store/gp25p9ssninvgx889gqipb0ymbrljsb2-haskell-language-server-ghc8104-renamed
+    /nix/store/3z7djqswivhx1ainqvv295n024ma5qqh-haskell-language-server-ghc8104-renamed
 
 Following these symlinks, we can see the files the project provides:
 
@@ -166,7 +166,7 @@ It's common to configure these "result" symlinks as ignored in source control to
 nix path-info --file . hls-renamed
 ```
 
-    /nix/store/gp25p9ssninvgx889gqipb0ymbrljsb2-haskell-language-server-ghc8104-renamed
+    /nix/store/3z7djqswivhx1ainqvv295n024ma5qqh-haskell-language-server-ghc8104-renamed
 
 ## Running commands<a id="sec-4-3"></a>
 
@@ -186,7 +186,7 @@ nix run \
     haskell-language-server - GHC Haskell LSP server
     
     Usage: haskell-language-server [--version | --numeric-version | --probe-tools | 
-                                     [--lsp] [--cwd DIR] [FILES/DIRS...] 
+                                     COMMAND | [--lsp] [--cwd DIR] [FILES/DIRS...] 
                                      [--shake-profiling DIR] [--test] [--example] 
     …
 

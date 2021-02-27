@@ -11,7 +11,7 @@
     flags = { ghc-lib = false; };
     package = {
       specVersion = "1.22";
-      identifier = { name = "hie-compat"; version = "0.1.0.0"; };
+      identifier = { name = "hie-compat"; version = "1.0.0.0"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "zubin.duggal@gmail.com";

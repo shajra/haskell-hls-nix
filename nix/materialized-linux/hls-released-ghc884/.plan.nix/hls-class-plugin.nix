@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-class-plugin"; version = "0.1.0.1"; };
+      identifier = { name = "hls-class-plugin"; version = "1.0.0.0"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "jjc9310@gmail.com";
@@ -36,7 +36,7 @@
           (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
-          (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))

@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-eval-plugin"; version = "0.1.0.1"; };
+      identifier = { name = "hls-eval-plugin"; version = "1.0.0.0"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "https://github.com/haskell/haskell-language-server/contributors";
@@ -39,6 +39,7 @@
           (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
           (hsPkgs."Diff" or (errorHandler.buildDepError "Diff"))
           (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
+          (hsPkgs."dlist" or (errorHandler.buildDepError "dlist"))
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
           (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
@@ -46,9 +47,12 @@
           (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
-          (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
-          (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
+          (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
+          (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
+          (hsPkgs."megaparsec" or (errorHandler.buildDepError "megaparsec"))
+          (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
           (hsPkgs."parser-combinators" or (errorHandler.buildDepError "parser-combinators"))
           (hsPkgs."pretty-simple" or (errorHandler.buildDepError "pretty-simple"))
           (hsPkgs."QuickCheck" or (errorHandler.buildDepError "QuickCheck"))
@@ -59,16 +63,15 @@
           (hsPkgs."time" or (errorHandler.buildDepError "time"))
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
           (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
+          (hsPkgs."unliftio" or (errorHandler.buildDepError "unliftio"))
           ];
         buildable = true;
         modules = [
           "Ide/Plugin/Eval/Code"
           "Ide/Plugin/Eval/CodeLens"
           "Ide/Plugin/Eval/GHC"
+          "Ide/Plugin/Eval/Parse/Comments"
           "Ide/Plugin/Eval/Parse/Option"
-          "Ide/Plugin/Eval/Parse/Parser"
-          "Ide/Plugin/Eval/Parse/Section"
-          "Ide/Plugin/Eval/Parse/Token"
           "Ide/Plugin/Eval/Types"
           "Ide/Plugin/Eval/Util"
           "Ide/Plugin/Eval"

@@ -138,7 +138,7 @@ direnv exec examples/example-stack \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (3 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.04s)
+    2021-02-27 11:29:30.541686791 [ThreadId 570] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Suggested advanced configuration<a id="sec-7"></a>
 

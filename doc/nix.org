@@ -341,7 +341,7 @@
    #+END_SRC
 
    #+RESULTS: nix-build-link
-   : /nix/store/gp25p9ssninvgx889gqipb0ymbrljsb2-haskell-language-server-ghc8104-renamed
+   : /nix/store/3z7djqswivhx1ainqvv295n024ma5qqh-haskell-language-server-ghc8104-renamed
 
    Following these symlinks, we can see the files the project provides:
 
@@ -370,7 +370,7 @@
    #+END_SRC
 
    #+RESULTS: nix-build-path
-   : /nix/store/gp25p9ssninvgx889gqipb0ymbrljsb2-haskell-language-server-ghc8104-renamed
+   : /nix/store/3z7djqswivhx1ainqvv295n024ma5qqh-haskell-language-server-ghc8104-renamed
 
 ** Running commands
 
@@ -398,7 +398,7 @@
    : haskell-language-server - GHC Haskell LSP server
    : 
    : Usage: haskell-language-server [--version | --numeric-version | --probe-tools | 
-   :                                  [--lsp] [--cwd DIR] [FILES/DIRS...] 
+   :                                  COMMAND | [--lsp] [--cwd DIR] [FILES/DIRS...] 
    :                                  [--shake-profiling DIR] [--test] [--example] 
    : …
 

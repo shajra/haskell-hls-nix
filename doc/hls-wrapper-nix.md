@@ -93,9 +93,9 @@ hls-wrapper-nix --cwd examples/example-cabal
     Found "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/a"
     Module "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/a" is loaded by Cradle: Cradle {cradleRootDir = "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal", cradleOptsProg = CradleAction: Multi}
     …
-    2021-02-22 03:00:47.552530042 [ThreadId 705] INFO hls:	finish: GenerateCore (took 0.00s)
     
     Completed (5 files worked, 0 files failed)
+    2021-02-27 11:28:34.591679285 [ThreadId 1011] INFO hls:	finish: GenerateCore (took 0.00s)
 
 And here we see that the script works for the Stack example project as well:
 
@@ -105,11 +105,11 @@ hls-wrapper-nix --cwd examples/example-stack
 
     INFO: Entering pure Nix shell
     Module "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack/a" is loaded by Cradle: Cradle {cradleRootDir = "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack", cradleOptsProg = CradleAction: Stack}
-    Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 0.9.0.0 x86_64 ghc-8.10.4
+    Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 1.0.0.0 x86_64 ghc-8.10.4
     …
     
     Completed (3 files worked, 0 files failed)
-    [INFO] finish: User TypeCheck (took 0.04s)
+    2021-02-27 11:29:12.164351979 [ThreadId 556] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Command-line reference<a id="sec-7"></a>
 
@@ -157,3 +157,6 @@ For reference, here's the output of running `hls-wrapper-nix --help`:
         -l,--logfile LOGFILE     File to log to, defaults to stdout
         -j NUM                   Number of threads (0: automatic) (default: 0)
         --project-ghc-version    Work out the project GHC version and print it
+    
+      Available commands:
+        hiedb                    Query .hie files

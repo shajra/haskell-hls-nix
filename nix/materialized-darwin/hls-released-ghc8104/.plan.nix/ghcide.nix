@@ -8,10 +8,10 @@
   , config
   , ... }:
   {
-    flags = { ghc-lib = false; };
+    flags = { ghc-patched-unboxed-bytecode = false; };
     package = {
-      specVersion = "1.20";
-      identifier = { name = "ghcide"; version = "0.7.2.0"; };
+      specVersion = "2.2";
+      identifier = { name = "ghcide"; version = "1.0.0.0"; };
       license = "Apache-2.0";
       copyright = "Digital Asset and Ghcide contributors 2018-2020";
       maintainer = "Ghcide contributors";
@@ -43,7 +43,7 @@
       };
     components = {
       "library" = {
-        depends = ([
+        depends = [
           (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
           (hsPkgs."array" or (errorHandler.buildDepError "array"))
           (hsPkgs."async" or (errorHandler.buildDepError "async"))
@@ -55,6 +55,8 @@
           (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
           (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
           (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
+          (hsPkgs."dependent-map" or (errorHandler.buildDepError "dependent-map"))
+          (hsPkgs."dependent-sum" or (errorHandler.buildDepError "dependent-sum"))
           (hsPkgs."dlist" or (errorHandler.buildDepError "dlist"))
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
           (hsPkgs."fuzzy" or (errorHandler.buildDepError "fuzzy"))
@@ -64,11 +66,12 @@
           (hsPkgs."Glob" or (errorHandler.buildDepError "Glob"))
           (hsPkgs."haddock-library" or (errorHandler.buildDepError "haddock-library"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
-          (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
-          (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
           (hsPkgs."hie-compat" or (errorHandler.buildDepError "hie-compat"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
+          (hsPkgs."hiedb" or (errorHandler.buildDepError "hiedb"))
+          (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
           (hsPkgs."network-uri" or (errorHandler.buildDepError "network-uri"))
           (hsPkgs."parallel" or (errorHandler.buildDepError "parallel"))
@@ -82,6 +85,7 @@
           (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
           (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
           (hsPkgs."sorted-list" or (errorHandler.buildDepError "sorted-list"))
+          (hsPkgs."sqlite-simple" or (errorHandler.buildDepError "sqlite-simple"))
           (hsPkgs."stm" or (errorHandler.buildDepError "stm"))
           (hsPkgs."syb" or (errorHandler.buildDepError "syb"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
@@ -91,42 +95,37 @@
           (hsPkgs."utf8-string" or (errorHandler.buildDepError "utf8-string"))
           (hsPkgs."vector" or (errorHandler.buildDepError "vector"))
           (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))
+          (hsPkgs."Diff" or (errorHandler.buildDepError "Diff"))
+          (hsPkgs."vector" or (errorHandler.buildDepError "vector"))
+          (hsPkgs."bytestring-encoding" or (errorHandler.buildDepError "bytestring-encoding"))
           (hsPkgs."opentelemetry" or (errorHandler.buildDepError "opentelemetry"))
           (hsPkgs."heapsize" or (errorHandler.buildDepError "heapsize"))
-          ] ++ (if flags.ghc-lib
-          then [
-            (hsPkgs."ghc-lib" or (errorHandler.buildDepError "ghc-lib"))
-            (hsPkgs."ghc-lib-parser" or (errorHandler.buildDepError "ghc-lib-parser"))
-            ]
-          else [
-            (hsPkgs."ghc-boot-th" or (errorHandler.buildDepError "ghc-boot-th"))
-            (hsPkgs."ghc-boot" or (errorHandler.buildDepError "ghc-boot"))
-            (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
-            (hsPkgs."ghc-check" or (errorHandler.buildDepError "ghc-check"))
-            (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
-            (hsPkgs."cryptohash-sha1" or (errorHandler.buildDepError "cryptohash-sha1"))
-            (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
-            (hsPkgs."implicit-hie-cradle" or (errorHandler.buildDepError "implicit-hie-cradle"))
-            (hsPkgs."base16-bytestring" or (errorHandler.buildDepError "base16-bytestring"))
-            ])) ++ (if system.isWindows
+          (hsPkgs."unliftio" or (errorHandler.buildDepError "unliftio"))
+          (hsPkgs."unliftio-core" or (errorHandler.buildDepError "unliftio-core"))
+          (hsPkgs."ghc-boot-th" or (errorHandler.buildDepError "ghc-boot-th"))
+          (hsPkgs."ghc-boot" or (errorHandler.buildDepError "ghc-boot"))
+          (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
+          (hsPkgs."ghc-check" or (errorHandler.buildDepError "ghc-check"))
+          (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
+          (hsPkgs."cryptohash-sha1" or (errorHandler.buildDepError "cryptohash-sha1"))
+          (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
+          (hsPkgs."implicit-hie-cradle" or (errorHandler.buildDepError "implicit-hie-cradle"))
+          (hsPkgs."base16-bytestring" or (errorHandler.buildDepError "base16-bytestring"))
+          ] ++ (if system.isWindows
           then [ (hsPkgs."Win32" or (errorHandler.buildDepError "Win32")) ]
           else [ (hsPkgs."unix" or (errorHandler.buildDepError "unix")) ]);
         buildable = true;
         modules = [
-          "Development/IDE/Core/Compile"
           "Development/IDE/Core/FileExists"
           "Development/IDE/GHC/CPP"
           "Development/IDE/GHC/Warnings"
-          "Development/IDE/Import/FindImports"
           "Development/IDE/LSP/Notifications"
           "Development/IDE/Plugin/CodeAction/PositionIndexed"
-          "Development/IDE/Plugin/CodeAction/Rules"
-          "Development/IDE/Plugin/CodeAction/RuleTypes"
           "Development/IDE/Plugin/Completions/Logic"
-          "Development/IDE/Plugin/Completions/Types"
-          "Development/IDE/Plugin/HLS/Formatter"
+          "Development/IDE/Session/VersionCheck"
           "Development/IDE/Types/Action"
           "Development/IDE"
+          "Development/IDE/Main"
           "Development/IDE/Core/Debouncer"
           "Development/IDE/Core/FileStore"
           "Development/IDE/Core/IdeConfiguration"
@@ -139,22 +138,25 @@
           "Development/IDE/Core/Shake"
           "Development/IDE/Core/Tracing"
           "Development/IDE/GHC/Compat"
+          "Development/IDE/Core/Compile"
           "Development/IDE/GHC/Error"
           "Development/IDE/GHC/ExactPrint"
           "Development/IDE/GHC/Orphans"
           "Development/IDE/GHC/Util"
           "Development/IDE/Import/DependencyInformation"
+          "Development/IDE/Import/FindImports"
           "Development/IDE/LSP/HoverDefinition"
           "Development/IDE/LSP/LanguageServer"
           "Development/IDE/LSP/Outline"
-          "Development/IDE/LSP/Protocol"
           "Development/IDE/LSP/Server"
+          "Development/IDE/Session"
           "Development/IDE/Spans/Common"
           "Development/IDE/Spans/Documentation"
           "Development/IDE/Spans/AtPoint"
           "Development/IDE/Spans/LocalBindings"
           "Development/IDE/Types/Diagnostics"
           "Development/IDE/Types/Exports"
+          "Development/IDE/Types/HscEnvEq"
           "Development/IDE/Types/KnownTargets"
           "Development/IDE/Types/Location"
           "Development/IDE/Types/Logger"
@@ -162,20 +164,16 @@
           "Development/IDE/Types/Shake"
           "Development/IDE/Plugin"
           "Development/IDE/Plugin/Completions"
+          "Development/IDE/Plugin/Completions/Types"
           "Development/IDE/Plugin/CodeAction"
           "Development/IDE/Plugin/CodeAction/ExactPrint"
           "Development/IDE/Plugin/HLS"
           "Development/IDE/Plugin/HLS/GhcIde"
           "Development/IDE/Plugin/Test"
           "Development/IDE/Plugin/TypeLenses"
-          ] ++ (pkgs.lib).optionals (!flags.ghc-lib) [
-          "Development/IDE/Session/VersionCheck"
-          "Development/IDE/Session"
           ];
         cSources = (pkgs.lib).optional (!system.isWindows) "cbits/getmodtime.c";
-        hsSourceDirs = [
-          "src"
-          ] ++ (pkgs.lib).optional (!flags.ghc-lib) "session-loader";
+        hsSourceDirs = [ "src" "session-loader" ];
         includeDirs = [ "include" ];
         };
       exes = {
@@ -187,6 +185,7 @@
           };
         "ghcide" = {
           depends = [
+            (hsPkgs."hiedb" or (errorHandler.buildDepError "hiedb"))
             (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
             (hsPkgs."data-default" or (errorHandler.buildDepError "data-default"))
@@ -194,9 +193,11 @@
             (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
             (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
             (hsPkgs."gitrev" or (errorHandler.buildDepError "gitrev"))
+            (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
+            (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
             (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
-            (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
-            (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
+            (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
+            (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
             (hsPkgs."heapsize" or (errorHandler.buildDepError "heapsize"))
             (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
             (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
@@ -207,10 +208,11 @@
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
             (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
             ];
-          buildable = if flags.ghc-lib then false else true;
+          buildable = true;
           modules = [ "Arguments" "Paths_ghcide" ];
           hsSourceDirs = [ "exe" ];
-          mainPath = [ "Main.hs" ] ++ (pkgs.lib).optional (flags.ghc-lib) "";
+          includeDirs = [ "include" ];
+          mainPath = [ "Main.hs" ];
           };
         "ghcide-bench" = {
           depends = [
@@ -255,8 +257,8 @@
             (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
             (hsPkgs."ghc-typelits-knownnat" or (errorHandler.buildDepError "ghc-typelits-knownnat"))
             (hsPkgs."haddock-library" or (errorHandler.buildDepError "haddock-library"))
-            (hsPkgs."haskell-lsp" or (errorHandler.buildDepError "haskell-lsp"))
-            (hsPkgs."haskell-lsp-types" or (errorHandler.buildDepError "haskell-lsp-types"))
+            (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
+            (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
             (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
             (hsPkgs."network-uri" or (errorHandler.buildDepError "network-uri"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
@@ -282,8 +284,9 @@
           build-tools = [
             (hsPkgs.buildPackages.ghcide.components.exes.ghcide or (pkgs.buildPackages.ghcide or (errorHandler.buildToolDepError "ghcide:ghcide")))
             (hsPkgs.buildPackages.ghcide.components.exes.ghcide-test-preprocessor or (pkgs.buildPackages.ghcide-test-preprocessor or (errorHandler.buildToolDepError "ghcide:ghcide-test-preprocessor")))
+            (hsPkgs.buildPackages.implicit-hie.components.exes.gen-hie or (pkgs.buildPackages.gen-hie or (errorHandler.buildToolDepError "implicit-hie:gen-hie")))
             ];
-          buildable = if flags.ghc-lib then false else true;
+          buildable = true;
           modules = [
             "Development/IDE/Test"
             "Development/IDE/Test/Runfiles"
@@ -302,7 +305,9 @@
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
             (hsPkgs."shake-bench" or (errorHandler.buildDepError "shake-bench"))
             (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
+            (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
             (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
+            (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
             (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
             (hsPkgs."yaml" or (errorHandler.buildDepError "yaml"))
@@ -310,6 +315,7 @@
           build-tools = [
             (hsPkgs.buildPackages.ghcide.components.exes.ghcide-bench or (pkgs.buildPackages.ghcide-bench or (errorHandler.buildToolDepError "ghcide:ghcide-bench")))
             (hsPkgs.buildPackages.hp2pretty.components.exes.hp2pretty or (pkgs.buildPackages.hp2pretty or (errorHandler.buildToolDepError "hp2pretty:hp2pretty")))
+            (hsPkgs.buildPackages.implicit-hie.components.exes.gen-hie or (pkgs.buildPackages.gen-hie or (errorHandler.buildToolDepError "implicit-hie:gen-hie")))
             ];
           buildable = true;
           modules = [ "Experiments/Types" ];
