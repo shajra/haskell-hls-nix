@@ -61,7 +61,6 @@ let
     # This function selects out packages for our example project from a set of
     # all Haskell packages.
     #
-    #
     selectPackages = hsPkgs: with hsPkgs; {
         inherit
         example-haskell-app
@@ -85,7 +84,7 @@ let
         # the package database provided with GHC, with the exception of the
         # packages themselves.
         #
-        # For instance, we we only selected out example-haskell-app, but not
+        # For instance, if we only selected out example-haskell-app, but not
         # example-haskell-lib, then example-haskell-lib would end up in the
         # package database.  However, this would be inconsequential unless we
         # removed example-haskell-lib's building from the cabal.project file.
