@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-retrie-plugin"; version = "1.0.0.0"; };
+      identifier = { name = "hls-retrie-plugin"; version = "1.0.0.2"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "pepeiborra@gmail.com";
@@ -26,7 +26,7 @@
       licenseFiles = [ "LICENSE" ];
       dataDir = ".";
       dataFiles = [];
-      extraSrcFiles = [ "LICENSE" "include/ghc-api-version.h" ];
+      extraSrcFiles = [ "include/ghc-api-version.h" "LICENSE" ];
       extraTmpFiles = [];
       extraDocFiles = [];
       };
@@ -39,12 +39,12 @@
           (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
           (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
-          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
-          (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
-          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
+          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
+          (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
           (hsPkgs."retrie" or (errorHandler.buildDepError "retrie"))
           (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
           (hsPkgs."shake" or (errorHandler.buildDepError "shake"))

@@ -10,10 +10,10 @@
   {
     flags = {};
     package = {
-      specVersion = "2.2";
+      specVersion = "2.4";
       identifier = {
         name = "hls-haddock-comments-plugin";
-        version = "1.0.0.0";
+        version = "1.0.0.1";
         };
       license = "Apache-2.0";
       copyright = "";
@@ -29,7 +29,7 @@
       licenseFiles = [ "LICENSE" ];
       dataDir = ".";
       dataFiles = [];
-      extraSrcFiles = [];
+      extraSrcFiles = [ "LICENSE" "test/testdata/*.hs" ];
       extraTmpFiles = [];
       extraDocFiles = [];
       };
@@ -41,14 +41,28 @@
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
-          (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
+          (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
           ];
         buildable = true;
         modules = [ "Ide/Plugin/HaddockComments" ];
         hsSourceDirs = [ "src" ];
+        };
+      tests = {
+        "tests" = {
+          depends = [
+            (hsPkgs."base" or (errorHandler.buildDepError "base"))
+            (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
+            (hsPkgs."hls-haddock-comments-plugin" or (errorHandler.buildDepError "hls-haddock-comments-plugin"))
+            (hsPkgs."hls-test-utils" or (errorHandler.buildDepError "hls-test-utils"))
+            (hsPkgs."text" or (errorHandler.buildDepError "text"))
+            ];
+          buildable = true;
+          hsSourceDirs = [ "test" ];
+          mainPath = [ "Main.hs" ];
+          };
         };
       };
     } // rec {

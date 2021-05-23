@@ -95,7 +95,7 @@ hls-wrapper-nix --cwd examples/example-cabal
     …
     
     Completed (5 files worked, 0 files failed)
-    2021-02-27 11:28:34.591679285 [ThreadId 1011] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-05-22 23:46:08.359303126 [ThreadId 558] INFO hls:	finish: GenerateCore (took 0.00s)
 
 And here we see that the script works for the Stack example project as well:
 
@@ -105,11 +105,11 @@ hls-wrapper-nix --cwd examples/example-stack
 
     INFO: Entering pure Nix shell
     Module "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack/a" is loaded by Cradle: Cradle {cradleRootDir = "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack", cradleOptsProg = CradleAction: Stack}
-    Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 1.0.0.0 x86_64 ghc-8.10.4
+    Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 1.1.0.0 x86_64 ghc-8.10.4
     …
     
     Completed (3 files worked, 0 files failed)
-    2021-02-27 11:29:12.164351979 [ThreadId 556] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-05-22 23:46:48.179177955 [ThreadId 475] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Command-line reference<a id="sec-7"></a>
 
@@ -157,6 +157,14 @@ For reference, here's the output of running `hls-wrapper-nix --help`:
         -l,--logfile LOGFILE     File to log to, defaults to stdout
         -j NUM                   Number of threads (0: automatic) (default: 0)
         --project-ghc-version    Work out the project GHC version and print it
+        --vscode-extension-schema
+    			     Print generic config schema for plugins (used in the
+    			     package.json of haskell vscode extension)
+        --generate-default-config
+    			     Print config supported by the server with default
+    			     values
     
       Available commands:
+        typecheck                Used as a test bed to check your IDE will work
         hiedb                    Query .hie files
+        lsp                      Start talking to an LSP client

@@ -111,15 +111,16 @@ We can use the provided example projects to illustrate this test. Here we use `d
 ```shell
 direnv allow examples/example-cabal
 direnv exec examples/example-cabal \
-    haskell-language-server-wrapper --cwd "$(pwd)/examples/example-cabal"
+    haskell-language-server-wrapper \
+    --cwd "$(pwd)/examples/example-cabal" 2>&1
 ```
 
-    ghcide setup tester in /home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal.
-    Report bugs at https://github.com/haskell/haskell-language-server/issues
-    
+    direnv: loading ~/src/shajra/nix-haskell-hls/examples/example-cabal/.envrc
+    direnv: using user-provided direnv-nix-lorelei
+    direnv: not modified: application/example-haskell-app.cabal
     …
-    
     Completed (5 files worked, 0 files failed)
+    2021-05-22 23:47:01.095300042 [ThreadId 813] INFO hls:	finish: GenerateCore (took 0.00s)
 
 Before we can use Direnv with the example, we have to run `direnv allow` on it to permit running code from the `.envrc` file.
 
@@ -130,7 +131,8 @@ And here we see that the same test works for the Stack example project as well:
 ```shell
 direnv allow examples/example-stack
 direnv exec examples/example-stack \
-    haskell-language-server-wrapper --cwd "$(pwd)/examples/example-stack" 2>&1
+    haskell-language-server-wrapper \
+    --cwd "$(pwd)/examples/example-stack" 2>&1
 ```
 
     direnv: loading ~/src/shajra/nix-haskell-hls/examples/example-stack/.envrc
@@ -138,7 +140,7 @@ direnv exec examples/example-stack \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (3 files worked, 0 files failed)
-    2021-02-27 11:29:30.541686791 [ThreadId 570] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-05-22 23:47:08.803391556 [ThreadId 605] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Suggested advanced configuration<a id="sec-7"></a>
 

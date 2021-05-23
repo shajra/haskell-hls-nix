@@ -10,8 +10,8 @@
   {
     flags = {};
     package = {
-      specVersion = "2.2";
-      identifier = { name = "hls-class-plugin"; version = "1.0.0.0"; };
+      specVersion = "2.4";
+      identifier = { name = "hls-class-plugin"; version = "1.0.0.1"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "jjc9310@gmail.com";
@@ -26,7 +26,7 @@
       licenseFiles = [ "LICENSE" ];
       dataDir = ".";
       dataFiles = [];
-      extraSrcFiles = [];
+      extraSrcFiles = [ "LICENSE" "test/testdata/*.hs" ];
       extraTmpFiles = [];
       extraDocFiles = [];
       };
@@ -36,20 +36,33 @@
           (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
-          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
-          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
+          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
-          (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
-          (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
           ];
         buildable = true;
         modules = [ "Ide/Plugin/Class" ];
         hsSourceDirs = [ "src" ];
+        };
+      tests = {
+        "tests" = {
+          depends = [
+            (hsPkgs."base" or (errorHandler.buildDepError "base"))
+            (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
+            (hsPkgs."hls-class-plugin" or (errorHandler.buildDepError "hls-class-plugin"))
+            (hsPkgs."hls-test-utils" or (errorHandler.buildDepError "hls-test-utils"))
+            (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
+            (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
+            ];
+          buildable = true;
+          hsSourceDirs = [ "test" ];
+          mainPath = [ "Main.hs" ];
+          };
         };
       };
     } // rec { src = (pkgs.lib).mkDefault .././plugins/hls-class-plugin; }

@@ -11,7 +11,7 @@
     flags = { pedantic = false; ghc-lib = false; };
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-hlint-plugin"; version = "1.0.0.0"; };
+      identifier = { name = "hls-hlint-plugin"; version = "1.0.0.2"; };
       license = "Apache-2.0";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";
@@ -48,18 +48,18 @@
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
-          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."hlint" or (errorHandler.buildDepError "hlint"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))
           (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."regex-tdfa" or (errorHandler.buildDepError "regex-tdfa"))
           (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
           (hsPkgs."temporary" or (errorHandler.buildDepError "temporary"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
           (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
-          ] ++ (if !flags.ghc-lib && (compiler.isGhc && (compiler.version).ge "8.10.1") && (compiler.isGhc && (compiler.version).lt "8.11.0")
+          ] ++ (if !flags.ghc-lib && (compiler.isGhc && (compiler.version).ge "8.10.1") && (compiler.isGhc && (compiler.version).lt "9.0.0")
           then [ (hsPkgs."ghc" or (errorHandler.buildDepError "ghc")) ]
           else [
             (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))

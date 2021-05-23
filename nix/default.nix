@@ -67,9 +67,11 @@ let
         let planConfig = planConfigFor name ghcVersion defaultModules // {
                 src = sources."${name}";
                 # DESIGN: needed before, might be useful in the future
-                #${if ! hlsUnstable then "cabalProjectLocal" else null} = ''
-                #    constraints: apply-refact < 0.9.0.0
-                #'';
+                #constraints: apply-refact < 0.9.0.0
+                #max-backjumps: 10000
+                ${if hlsUnstable then "cabalProjectLocal" else null} = ''
+                    reorder-goals: True
+                '';
             };
         in allExes (haskell-nix.cabalProject planConfig).haskell-language-server;
 
@@ -194,7 +196,7 @@ let
 
     cabal-install = nixpkgs-unstable.cabal-install;
     direnv = nixpkgs-stable.direnv;
-    ghc = nixpkgs-unstable.haskell.compiler."${ghcVersion}";
+    ghc = nixpkgs-stable.haskell.compiler."${ghcVersion}";
     implicit-hie = nixpkgs-unstable.haskellPackages.implicit-hie;
 
 in {

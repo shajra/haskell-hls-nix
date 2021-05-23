@@ -10,8 +10,8 @@
   {
     flags = { pedantic = false; };
     package = {
-      specVersion = "2.2";
-      identifier = { name = "hls-eval-plugin"; version = "1.0.0.0"; };
+      specVersion = "2.4";
+      identifier = { name = "hls-eval-plugin"; version = "1.1.0.0"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "https://github.com/haskell/haskell-language-server/contributors";
@@ -26,7 +26,15 @@
       licenseFiles = [ "LICENSE" ];
       dataDir = ".";
       dataFiles = [];
-      extraSrcFiles = [ "LICENSE" "README.md" ];
+      extraSrcFiles = [
+        "LICENSE"
+        "README.md"
+        "test/testdata/*.cabal"
+        "test/testdata/*.hs"
+        "test/testdata/*.lhs"
+        "test/testdata/*.yaml"
+        "test/testdata/cabal.project"
+        ];
       extraTmpFiles = [];
       extraDocFiles = [];
       };
@@ -47,23 +55,22 @@
           (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
-          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
-          (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
+          (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
           (hsPkgs."megaparsec" or (errorHandler.buildDepError "megaparsec"))
           (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
           (hsPkgs."parser-combinators" or (errorHandler.buildDepError "parser-combinators"))
           (hsPkgs."pretty-simple" or (errorHandler.buildDepError "pretty-simple"))
           (hsPkgs."QuickCheck" or (errorHandler.buildDepError "QuickCheck"))
           (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
-          (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
           (hsPkgs."temporary" or (errorHandler.buildDepError "temporary"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."time" or (errorHandler.buildDepError "time"))
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
-          (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
           (hsPkgs."unliftio" or (errorHandler.buildDepError "unliftio"))
+          (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
           ];
         buildable = true;
         modules = [
@@ -72,11 +79,29 @@
           "Ide/Plugin/Eval/GHC"
           "Ide/Plugin/Eval/Parse/Comments"
           "Ide/Plugin/Eval/Parse/Option"
-          "Ide/Plugin/Eval/Types"
           "Ide/Plugin/Eval/Util"
           "Ide/Plugin/Eval"
+          "Ide/Plugin/Eval/Types"
           ];
         hsSourceDirs = [ "src" ];
+        };
+      tests = {
+        "tests" = {
+          depends = [
+            (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
+            (hsPkgs."base" or (errorHandler.buildDepError "base"))
+            (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
+            (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
+            (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
+            (hsPkgs."hls-eval-plugin" or (errorHandler.buildDepError "hls-eval-plugin"))
+            (hsPkgs."hls-test-utils" or (errorHandler.buildDepError "hls-test-utils"))
+            (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
+            (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
+            ];
+          buildable = true;
+          hsSourceDirs = [ "test" ];
+          mainPath = [ "Main.hs" ];
+          };
         };
       };
     } // rec { src = (pkgs.lib).mkDefault .././plugins/hls-eval-plugin; }

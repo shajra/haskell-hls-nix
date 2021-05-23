@@ -13,7 +13,7 @@
       specVersion = "2.2";
       identifier = {
         name = "hls-explicit-imports-plugin";
-        version = "1.0.0.0";
+        version = "1.0.0.2";
         };
       license = "Apache-2.0";
       copyright = "";
@@ -29,7 +29,7 @@
       licenseFiles = [ "LICENSE" ];
       dataDir = ".";
       dataFiles = [];
-      extraSrcFiles = [ "LICENSE" "include/ghc-api-version.h" ];
+      extraSrcFiles = [ "LICENSE" ];
       extraTmpFiles = [];
       extraDocFiles = [];
       };
@@ -40,19 +40,17 @@
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
           (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
-          (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
-          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
-          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
-          (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
+          (hsPkgs."hls-graph" or (errorHandler.buildDepError "hls-graph"))
+          (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
+          (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
           ];
         buildable = true;
         modules = [ "Ide/Plugin/ExplicitImports" ];
         hsSourceDirs = [ "src" ];
-        includeDirs = [ "include" ];
         };
       };
     } // rec {

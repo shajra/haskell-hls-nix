@@ -26,7 +26,7 @@
 
 ** Macros for text
 
-   #+MACRO: version-hls-latest 1.0.0
+   #+MACRO: version-hls-latest 1.1.0
    #+MACRO: version-ghc-default 8.10.4
    #+MACRO: version-ghc-alt 8.8.4
    #+MACRO: ghcVersion-default $1ghc8104$2
@@ -526,7 +526,7 @@
    #+END_SRC
 
    #+RESULTS: nix-env-query
-   : cabal-install-3.2.0.0-git
+   : cabal-install-3.4.0.0
    : direnv-2.22.0
    : direnv-nix-lorelei
    : ghc-8.10.4
@@ -534,7 +534,7 @@
    : haskell-language-server-ghc884-renamed
    : hls-wrapper-nix
    : implicit-hie-0.1.2.5
-   : stack-2.5.1.1
+   : stack-2.7.1
 
    If we've set up the =bin= directory of our Nix profile in our =PATH=, we
    should be able to see what we've installed as available.  For instance, we
@@ -657,15 +657,15 @@
   #+NAME: shell-hls-cabal
   #+BEGIN_SRC shell :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
      cd examples/example-cabal
-     nix-shell --pure --run 'haskell-language-server-wrapper'
+     nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
   #+END_SRC
 
   #+RESULTS: shell-hls-cabal
-  : ghcide setup tester in /home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal.
-  : Report bugs at https://github.com/haskell/haskell-language-server/issues
-  : 
+  : warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
+  : Found "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/a"
+  : Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 1.1.0.1 x86_64 ghc-8.10.4
   : …
-  : 
+  : 2021-05-22 23:48:14.6545576 [ThreadId 659] INFO hls:	finish: GenerateCore (took 0.00s)
   : Completed (5 files worked, 0 files failed)
 
   The same command can test HLS working with our Stack example project:
@@ -673,16 +673,16 @@
   #+NAME: shell-hls-stack
   #+BEGIN_SRC shell :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
      cd examples/example-stack
-     nix-shell --pure --run 'haskell-language-server-wrapper'
+     nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
   #+END_SRC
 
   #+RESULTS: shell-hls-stack
-  : ghcide setup tester in /home/tnks/src/shajra/nix-haskell-hls/examples/example-stack.
-  : Report bugs at https://github.com/haskell/haskell-language-server/issues
-  : 
+  : warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
+  : Module "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack/a" is loaded by Cradle: Cradle {cradleRootDir = "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack", cradleOptsProg = CradleAction: Stack}
+  : Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 1.1.0.0 x86_64 ghc-8.10.4
   : …
-  : 
   : Completed (3 files worked, 0 files failed)
+  : 2021-05-22 23:48:25.989000546 [ThreadId 459] INFO hls:	finish: GenerateCore (took 0.00s)
 
 * Editor integration with Nix shells
 
@@ -771,7 +771,7 @@
    #+END_SRC
 
    #+RESULTS: example-cabal-pkg-list
-   : /nix/store/0d1i3dnm7hn8vr035c7xxscqfgfkhnzx-ghc-8.10.4-with-packages/lib/ghc-8.10.4/package.conf.d
+   : /nix/store/gk7bckv46bj818y9vi07g9wijjwlv6rh-ghc-8.10.4-with-packages/lib/ghc-8.10.4/package.conf.d
    :     text-icu-0.7.0.1
    : 
 
@@ -785,7 +785,7 @@
    #+END_SRC
 
    #+RESULTS: example-stack-pkg-list
-   : /nix/store/26zbw2cg6w0ih8gr5ab8vh670mccrd3v-ghc-8.10.4/lib/ghc-8.10.4/package.conf.d
+   : /nix/store/jyny464p3c2g9dkq5y2fw2g4jgfvkm33-ghc-8.10.4/lib/ghc-8.10.4/package.conf.d
    :     (no packages)
 
    This leads to a complication with Cabal projects when using Nix.  Changing

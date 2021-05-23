@@ -18,8 +18,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
-    - uses: cachix/install-nix-action@v12
-    - uses: cachix/cachix-action@v8
+    - uses: cachix/install-nix-action@v13
+    - uses: cachix/cachix-action@v10
       with:
         name: shajra
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
@@ -30,7 +30,7 @@ jobs:
             >> ~/.config/nix/nix.conf
         echo "trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" \
             >> ~/.config/nix/nix.conf
-    - uses: cachix/cachix-action@v8
+    - uses: cachix/cachix-action@v10
       with:
         name: iohk
     - run: cat ~/.config/nix/nix.conf

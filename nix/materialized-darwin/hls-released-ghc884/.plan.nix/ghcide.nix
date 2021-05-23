@@ -10,13 +10,13 @@
   {
     flags = { ghc-patched-unboxed-bytecode = false; };
     package = {
-      specVersion = "2.2";
-      identifier = { name = "ghcide"; version = "1.0.0.0"; };
+      specVersion = "2.4";
+      identifier = { name = "ghcide"; version = "1.2.0.2"; };
       license = "Apache-2.0";
       copyright = "Digital Asset and Ghcide contributors 2018-2020";
       maintainer = "Ghcide contributors";
       author = "Digital Asset and Ghcide contributors";
-      homepage = "https://github.com/haskell/ghcide#readme";
+      homepage = "https://github.com/haskell/haskell-language-server/tree/master/ghcide#readme";
       url = "";
       synopsis = "The core of an IDE";
       description = "A library for building Haskell IDE's on top of the GHC API.";
@@ -30,13 +30,11 @@
         "include/ghc-api-version.h"
         "README.md"
         "CHANGELOG.md"
-        "test/data/hover/*.hs"
-        "test/data/multi/cabal.project"
-        "test/data/multi/hie.yaml"
-        "test/data/multi/a/a.cabal"
-        "test/data/multi/a/*.hs"
-        "test/data/multi/b/b.cabal"
-        "test/data/multi/b/*.hs"
+        "test/data/**/*.project"
+        "test/data/**/*.cabal"
+        "test/data/**/*.yaml"
+        "test/data/**/*.hs"
+        "test/data/**/*.hs-boot"
         ];
       extraTmpFiles = [];
       extraDocFiles = [];
@@ -63,6 +61,7 @@
           (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
           (hsPkgs."fingertree" or (errorHandler.buildDepError "fingertree"))
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
+          (hsPkgs."ghc-trace-events" or (errorHandler.buildDepError "ghc-trace-events"))
           (hsPkgs."Glob" or (errorHandler.buildDepError "Glob"))
           (hsPkgs."haddock-library" or (errorHandler.buildDepError "haddock-library"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
@@ -74,6 +73,7 @@
           (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
           (hsPkgs."network-uri" or (errorHandler.buildDepError "network-uri"))
+          (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
           (hsPkgs."parallel" or (errorHandler.buildDepError "parallel"))
           (hsPkgs."prettyprinter-ansi-terminal" or (errorHandler.buildDepError "prettyprinter-ansi-terminal"))
           (hsPkgs."prettyprinter-ansi-terminal" or (errorHandler.buildDepError "prettyprinter-ansi-terminal"))
@@ -121,11 +121,14 @@
           "Development/IDE/GHC/Warnings"
           "Development/IDE/LSP/Notifications"
           "Development/IDE/Plugin/CodeAction/PositionIndexed"
+          "Development/IDE/Plugin/CodeAction/Args"
           "Development/IDE/Plugin/Completions/Logic"
           "Development/IDE/Session/VersionCheck"
           "Development/IDE/Types/Action"
+          "Control/Concurrent/Strict"
           "Development/IDE"
           "Development/IDE/Main"
+          "Development/IDE/Core/Actions"
           "Development/IDE/Core/Debouncer"
           "Development/IDE/Core/FileStore"
           "Development/IDE/Core/IdeConfiguration"
@@ -137,6 +140,7 @@
           "Development/IDE/Core/Service"
           "Development/IDE/Core/Shake"
           "Development/IDE/Core/Tracing"
+          "Development/IDE/Core/UseStale"
           "Development/IDE/GHC/Compat"
           "Development/IDE/Core/Compile"
           "Development/IDE/GHC/Error"
@@ -207,6 +211,7 @@
             (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
             (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
+            (hsPkgs."aeson-pretty" or (errorHandler.buildDepError "aeson-pretty"))
             ];
           buildable = true;
           modules = [ "Arguments" "Paths_ghcide" ];
@@ -245,6 +250,7 @@
         "ghcide-tests" = {
           depends = [
             (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
+            (hsPkgs."async" or (errorHandler.buildDepError "async"))
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
             (hsPkgs."binary" or (errorHandler.buildDepError "binary"))
             (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
@@ -268,6 +274,7 @@
             (hsPkgs."QuickCheck" or (errorHandler.buildDepError "QuickCheck"))
             (hsPkgs."quickcheck-instances" or (errorHandler.buildDepError "quickcheck-instances"))
             (hsPkgs."rope-utf16-splay" or (errorHandler.buildDepError "rope-utf16-splay"))
+            (hsPkgs."regex-tdfa" or (errorHandler.buildDepError "regex-tdfa"))
             (hsPkgs."safe" or (errorHandler.buildDepError "safe"))
             (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
             (hsPkgs."shake" or (errorHandler.buildDepError "shake"))

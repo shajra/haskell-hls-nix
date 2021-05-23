@@ -60,7 +60,7 @@ in nixpkgs.haskell.lib.buildStackProject {
     # Here we specify non-Haskell dependencies.  They are not automatically
     # detected/guessed, and we must list them out explicitly.
     #
-    # buildInputs = [nixpkgs.icu];
+    # buildInputs = [nixpkgs.icu67];
     buildInputs = hls.stackNixPackages ./stack.yaml nixpkgs;
 
     # It's recommended to always filter source to just what's needed.  This way,
