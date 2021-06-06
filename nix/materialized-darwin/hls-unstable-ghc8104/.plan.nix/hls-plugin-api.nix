@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-plugin-api"; version = "1.1.0.1"; };
+      identifier = { name = "hls-plugin-api"; version = "1.1.0.2"; };
       license = "Apache-2.0";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";
@@ -42,6 +42,7 @@
           (hsPkgs."Diff" or (errorHandler.buildDepError "Diff"))
           (hsPkgs."dlist" or (errorHandler.buildDepError "dlist"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
+          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
           (hsPkgs."hslogger" or (errorHandler.buildDepError "hslogger"))
           (hsPkgs."lens" or (errorHandler.buildDepError "lens"))

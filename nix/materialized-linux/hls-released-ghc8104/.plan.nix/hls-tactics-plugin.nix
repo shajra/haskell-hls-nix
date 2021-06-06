@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-tactics-plugin"; version = "1.1.0.0"; };
+      identifier = { name = "hls-tactics-plugin"; version = "1.2.0.0"; };
       license = "Apache-2.0";
       copyright = "Sandy Maguire, Reed Mullanix";
       maintainer = "sandy@sandymaguire.me";
@@ -29,7 +29,6 @@
       extraSrcFiles = [
         "README.md"
         "test/golden/*.cabal"
-        "test/golden/*.expected"
         "test/golden/*.hs"
         "test/golden/*.yaml"
         ];
@@ -53,13 +52,17 @@
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
           (hsPkgs."ghc-source-gen" or (errorHandler.buildDepError "ghc-source-gen"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
+          (hsPkgs."hls-graph" or (errorHandler.buildDepError "hls-graph"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
+          (hsPkgs."hyphenation" or (errorHandler.buildDepError "hyphenation"))
           (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
           (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
+          (hsPkgs."megaparsec" or (errorHandler.buildDepError "megaparsec"))
           (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
+          (hsPkgs."parser-combinators" or (errorHandler.buildDepError "parser-combinators"))
+          (hsPkgs."prettyprinter" or (errorHandler.buildDepError "prettyprinter"))
           (hsPkgs."refinery" or (errorHandler.buildDepError "refinery"))
           (hsPkgs."retrie" or (errorHandler.buildDepError "retrie"))
-          (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
           (hsPkgs."syb" or (errorHandler.buildDepError "syb"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
@@ -74,7 +77,7 @@
           "Wingman/CodeGen/Utils"
           "Wingman/Context"
           "Wingman/Debug"
-          "Wingman/FeatureSet"
+          "Wingman/EmptyCase"
           "Wingman/GHC"
           "Wingman/Judgements"
           "Wingman/Judgements/SYB"
@@ -82,12 +85,18 @@
           "Wingman/KnownStrategies"
           "Wingman/KnownStrategies/QuickCheck"
           "Wingman/LanguageServer"
+          "Wingman/LanguageServer/Metaprogram"
           "Wingman/LanguageServer/TacticProviders"
           "Wingman/Machinery"
+          "Wingman/Metaprogramming/Lexer"
+          "Wingman/Metaprogramming/Parser"
+          "Wingman/Metaprogramming/Parser/Documentation"
+          "Wingman/Metaprogramming/ProofState"
           "Wingman/Naming"
           "Wingman/Plugin"
           "Wingman/Range"
           "Wingman/Simplify"
+          "Wingman/StaticPlugin"
           "Wingman/Tactics"
           "Wingman/Types"
           ];
@@ -125,10 +134,13 @@
             "AutoTupleSpec"
             "CodeAction/AutoSpec"
             "CodeAction/DestructAllSpec"
+            "CodeAction/DestructPunSpec"
             "CodeAction/DestructSpec"
             "CodeAction/IntrosSpec"
             "CodeAction/RefineSpec"
+            "CodeAction/RunMetaprogramSpec"
             "CodeAction/UseDataConSpec"
+            "CodeLens/EmptyCaseSpec"
             "ProviderSpec"
             "Spec"
             "UnificationSpec"

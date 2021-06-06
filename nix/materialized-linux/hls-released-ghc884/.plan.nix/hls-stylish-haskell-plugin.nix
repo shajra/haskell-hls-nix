@@ -13,7 +13,7 @@
       specVersion = "2.4";
       identifier = {
         name = "hls-stylish-haskell-plugin";
-        version = "1.0.0.0";
+        version = "1.0.0.1";
         };
       license = "Apache-2.0";
       copyright = "The Haskell IDE Team";
@@ -44,7 +44,6 @@
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
-          (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
           (hsPkgs."stylish-haskell" or (errorHandler.buildDepError "stylish-haskell"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           ];
@@ -56,10 +55,9 @@
         "tests" = {
           depends = [
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
-            (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
+            (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
             (hsPkgs."hls-stylish-haskell-plugin" or (errorHandler.buildDepError "hls-stylish-haskell-plugin"))
             (hsPkgs."hls-test-utils" or (errorHandler.buildDepError "hls-test-utils"))
-            (hsPkgs."text" or (errorHandler.buildDepError "text"))
             ];
           buildable = true;
           hsSourceDirs = [ "test" ];

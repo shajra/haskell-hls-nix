@@ -11,7 +11,7 @@
     flags = { ghc-patched-unboxed-bytecode = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "ghcide"; version = "1.2.0.2"; };
+      identifier = { name = "ghcide"; version = "1.4.0.0"; };
       license = "Apache-2.0";
       copyright = "Digital Asset and Ghcide contributors 2018-2020";
       maintainer = "Ghcide contributors";
@@ -27,7 +27,6 @@
       dataDir = ".";
       dataFiles = [];
       extraSrcFiles = [
-        "include/ghc-api-version.h"
         "README.md"
         "CHANGELOG.md"
         "test/data/**/*.project"
@@ -76,14 +75,13 @@
           (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
           (hsPkgs."parallel" or (errorHandler.buildDepError "parallel"))
           (hsPkgs."prettyprinter-ansi-terminal" or (errorHandler.buildDepError "prettyprinter-ansi-terminal"))
-          (hsPkgs."prettyprinter-ansi-terminal" or (errorHandler.buildDepError "prettyprinter-ansi-terminal"))
           (hsPkgs."prettyprinter" or (errorHandler.buildDepError "prettyprinter"))
           (hsPkgs."regex-tdfa" or (errorHandler.buildDepError "regex-tdfa"))
           (hsPkgs."retrie" or (errorHandler.buildDepError "retrie"))
           (hsPkgs."rope-utf16-splay" or (errorHandler.buildDepError "rope-utf16-splay"))
           (hsPkgs."safe" or (errorHandler.buildDepError "safe"))
           (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
-          (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
+          (hsPkgs."hls-graph" or (errorHandler.buildDepError "hls-graph"))
           (hsPkgs."sorted-list" or (errorHandler.buildDepError "sorted-list"))
           (hsPkgs."sqlite-simple" or (errorHandler.buildDepError "sqlite-simple"))
           (hsPkgs."stm" or (errorHandler.buildDepError "stm"))
@@ -107,6 +105,7 @@
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghc-check" or (errorHandler.buildDepError "ghc-check"))
           (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
+          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."cryptohash-sha1" or (errorHandler.buildDepError "cryptohash-sha1"))
           (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
           (hsPkgs."implicit-hie-cradle" or (errorHandler.buildDepError "implicit-hie-cradle"))
@@ -126,6 +125,7 @@
           "Development/IDE/Session/VersionCheck"
           "Development/IDE/Types/Action"
           "Control/Concurrent/Strict"
+          "Generics/SYB/GHC"
           "Development/IDE"
           "Development/IDE/Main"
           "Development/IDE/Core/Actions"
@@ -135,6 +135,7 @@
           "Development/IDE/Core/OfInterest"
           "Development/IDE/Core/PositionMapping"
           "Development/IDE/Core/Preprocessor"
+          "Development/IDE/Core/ProgressReporting"
           "Development/IDE/Core/Rules"
           "Development/IDE/Core/RuleTypes"
           "Development/IDE/Core/Service"
@@ -176,9 +177,7 @@
           "Development/IDE/Plugin/Test"
           "Development/IDE/Plugin/TypeLenses"
           ];
-        cSources = (pkgs.lib).optional (!system.isWindows) "cbits/getmodtime.c";
         hsSourceDirs = [ "src" "session-loader" ];
-        includeDirs = [ "include" ];
         };
       exes = {
         "ghcide-test-preprocessor" = {
@@ -208,7 +207,7 @@
             (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
             (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
-            (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
+            (hsPkgs."hls-graph" or (errorHandler.buildDepError "hls-graph"))
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
             (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
             (hsPkgs."aeson-pretty" or (errorHandler.buildDepError "aeson-pretty"))
@@ -216,7 +215,6 @@
           buildable = true;
           modules = [ "Arguments" "Paths_ghcide" ];
           hsSourceDirs = [ "exe" ];
-          includeDirs = [ "include" ];
           mainPath = [ "Main.hs" ];
           };
         "ghcide-bench" = {
@@ -233,6 +231,7 @@
             (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
             (hsPkgs."process" or (errorHandler.buildDepError "process"))
             (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
+            (hsPkgs."hls-graph" or (errorHandler.buildDepError "hls-graph"))
             (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
             ];
@@ -242,7 +241,6 @@
           buildable = true;
           modules = [ "Experiments" "Experiments/Types" ];
           hsSourceDirs = [ "bench/lib" "bench/exe" ];
-          includeDirs = [ "include" ];
           mainPath = [ "Main.hs" ];
           };
         };
@@ -278,12 +276,14 @@
             (hsPkgs."safe" or (errorHandler.buildDepError "safe"))
             (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
             (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
+            (hsPkgs."hls-graph" or (errorHandler.buildDepError "hls-graph"))
             (hsPkgs."tasty" or (errorHandler.buildDepError "tasty"))
             (hsPkgs."tasty-expected-failure" or (errorHandler.buildDepError "tasty-expected-failure"))
             (hsPkgs."tasty-hunit" or (errorHandler.buildDepError "tasty-hunit"))
             (hsPkgs."tasty-quickcheck" or (errorHandler.buildDepError "tasty-quickcheck"))
             (hsPkgs."tasty-rerun" or (errorHandler.buildDepError "tasty-rerun"))
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
+            (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
             ] ++ (pkgs.lib).optionals (compiler.isGhc && (compiler.version).ge "8.6") [
             (hsPkgs."record-dot-preprocessor" or (errorHandler.buildDepError "record-dot-preprocessor"))
             (hsPkgs."record-hasfield" or (errorHandler.buildDepError "record-hasfield"))
@@ -299,9 +299,9 @@
             "Development/IDE/Test/Runfiles"
             "Experiments"
             "Experiments/Types"
+            "Progress"
             ];
           hsSourceDirs = [ "test/cabal" "test/exe" "test/src" "bench/lib" ];
-          includeDirs = [ "include" ];
           mainPath = [ "Main.hs" ];
           };
         };

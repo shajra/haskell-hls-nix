@@ -196,7 +196,10 @@ let
 
     cabal-install = nixpkgs-unstable.cabal-install;
     direnv = nixpkgs-stable.direnv;
-    ghc = nixpkgs-stable.haskell.compiler."${ghcVersion}";
+    ghc =
+        if nixpkgs-stable.haskell.compiler ?  "${ghcVersion}"
+        then nixpkgs-stable.haskell.compiler."${ghcVersion}"
+        else nixpkgs-hn.haskell.compiler."${ghcVersion}";
     implicit-hie = nixpkgs-unstable.haskellPackages.implicit-hie;
 
 in {

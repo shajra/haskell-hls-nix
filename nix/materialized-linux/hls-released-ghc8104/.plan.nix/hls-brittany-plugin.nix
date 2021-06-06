@@ -53,10 +53,9 @@
         "tests" = {
           depends = [
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
-            (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
+            (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
             (hsPkgs."hls-brittany-plugin" or (errorHandler.buildDepError "hls-brittany-plugin"))
             (hsPkgs."hls-test-utils" or (errorHandler.buildDepError "hls-test-utils"))
-            (hsPkgs."text" or (errorHandler.buildDepError "text"))
             ];
           buildable = true;
           hsSourceDirs = [ "test" ];

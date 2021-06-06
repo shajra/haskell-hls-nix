@@ -320,7 +320,7 @@ nix-env --query
 ```
 
     cabal-install-3.4.0.0
-    direnv-2.22.0
+    direnv-2.28.0
     direnv-nix-lorelei
     ghc-8.10.4
     haskell-language-server-ghc8104-renamed
@@ -405,12 +405,12 @@ cd examples/example-cabal
 nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
 ```
 
+    trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
+    trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
     warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
-    Found "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/a"
-    Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 1.1.0.1 x86_64 ghc-8.10.4
     …
-    2021-05-22 23:48:14.6545576 [ThreadId 659] INFO hls:	finish: GenerateCore (took 0.00s)
     Completed (5 files worked, 0 files failed)
+    2021-06-27 00:48:24.894015533 [ThreadId 541] INFO hls:	finish: GenerateCore (took 0.00s)
 
 The same command can test HLS working with our Stack example project:
 
@@ -419,12 +419,12 @@ cd examples/example-stack
 nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
 ```
 
+    trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
+    trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
     warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
-    Module "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack/a" is loaded by Cradle: Cradle {cradleRootDir = "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack", cradleOptsProg = CradleAction: Stack}
-    Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 1.1.0.0 x86_64 ghc-8.10.4
     …
     Completed (3 files worked, 0 files failed)
-    2021-05-22 23:48:25.989000546 [ThreadId 459] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-06-27 00:49:04.576062848 [ThreadId 451] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Editor integration with Nix shells<a id="sec-9"></a>
 
@@ -474,8 +474,8 @@ cd examples/example-cabal
 nix-shell --pure --run 'ghc-pkg list text-icu'
 ```
 
-    /nix/store/gk7bckv46bj818y9vi07g9wijjwlv6rh-ghc-8.10.4-with-packages/lib/ghc-8.10.4/package.conf.d
-        text-icu-0.7.0.1
+    /nix/store/0ajd6yrbz1jh6nz9qvl31fz0kn17gcpf-ghc-8.10.4-with-packages/lib/ghc-8.10.4/package.conf.d
+        text-icu-0.7.1.0
 
 We can similarly look at the GHC instance for the Stack example project to see that it doesn't provide third-party Haskell dependencies:
 
@@ -484,7 +484,7 @@ cd examples/example-stack
 nix-shell --pure --run 'ghc-pkg list text-icu'
 ```
 
-    /nix/store/jyny464p3c2g9dkq5y2fw2g4jgfvkm33-ghc-8.10.4/lib/ghc-8.10.4/package.conf.d
+    /nix/store/grlxbq0nsq0ms5wn1qc8f5wfk0z6xr79-ghc-8.10.4/lib/ghc-8.10.4/package.conf.d
         (no packages)
 
 This leads to a complication with Cabal projects when using Nix. Changing the dependencies of a Cabal file mean we need to rebuild the package database that our project's Nix shell provides.

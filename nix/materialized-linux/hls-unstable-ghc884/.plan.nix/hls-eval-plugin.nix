@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-eval-plugin"; version = "1.1.0.0"; };
+      identifier = { name = "hls-eval-plugin"; version = "1.1.1.0"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "https://github.com/haskell/haskell-language-server/contributors";
@@ -33,7 +33,9 @@
         "test/testdata/*.hs"
         "test/testdata/*.lhs"
         "test/testdata/*.yaml"
-        "test/testdata/cabal.project"
+        "test/info-util/*.cabal"
+        "test/info-util/*.hs"
+        "test/cabal.project"
         ];
       extraTmpFiles = [];
       extraDocFiles = [];
@@ -51,6 +53,7 @@
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
           (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
+          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."ghc-boot-th" or (errorHandler.buildDepError "ghc-boot-th"))
           (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))

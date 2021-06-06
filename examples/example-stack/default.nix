@@ -32,7 +32,7 @@ let
 in nixpkgs.haskell.lib.buildStackProject {
 
     # This name is just for Nix metadata.
-    name = "example-haskell-13";
+    name = "example-haskell-stack";
 
     # buildStackProject has explicit configuration for the GHC instance.
     #

@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-splice-plugin"; version = "1.0.0.1"; };
+      identifier = { name = "hls-splice-plugin"; version = "1.0.0.3"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "https://github.com/haskell/haskell-language-server/contributors";
@@ -26,13 +26,7 @@
       licenseFiles = [ "LICENSE" ];
       dataDir = ".";
       dataFiles = [];
-      extraSrcFiles = [
-        "LICENSE"
-        "test/testdata/*.error"
-        "test/testdata/*.expected"
-        "test/testdata/*.hs"
-        "test/testdata/*.yaml"
-        ];
+      extraSrcFiles = [ "LICENSE" "test/testdata/*.hs" "test/testdata/*.yaml" ];
       extraTmpFiles = [];
       extraDocFiles = [];
       };
@@ -52,7 +46,6 @@
           (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
           (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."retrie" or (errorHandler.buildDepError "retrie"))
-          (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
           (hsPkgs."syb" or (errorHandler.buildDepError "syb"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
@@ -67,8 +60,6 @@
         "tests" = {
           depends = [
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
-            (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
-            (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
             (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
             (hsPkgs."hls-splice-plugin" or (errorHandler.buildDepError "hls-splice-plugin"))
             (hsPkgs."hls-test-utils" or (errorHandler.buildDepError "hls-test-utils"))

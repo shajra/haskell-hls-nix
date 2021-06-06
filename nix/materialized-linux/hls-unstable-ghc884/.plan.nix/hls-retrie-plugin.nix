@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-retrie-plugin"; version = "1.0.0.2"; };
+      identifier = { name = "hls-retrie-plugin"; version = "1.0.1.0"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "pepeiborra@gmail.com";
@@ -40,6 +40,7 @@
           (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
+          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))

@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-test-utils"; version = "1.0.0.0"; };
+      identifier = { name = "hls-test-utils"; version = "1.0.1.0"; };
       license = "Apache-2.0";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";
@@ -44,6 +44,7 @@
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
           (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
+          (hsPkgs."hls-graph" or (errorHandler.buildDepError "hls-graph"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."hspec" or (errorHandler.buildDepError "hspec"))
           (hsPkgs."hspec-core" or (errorHandler.buildDepError "hspec-core"))
@@ -51,7 +52,6 @@
           (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
           (hsPkgs."lsp-test" or (errorHandler.buildDepError "lsp-test"))
           (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
-          (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
           (hsPkgs."tasty" or (errorHandler.buildDepError "tasty"))
           (hsPkgs."tasty-expected-failure" or (errorHandler.buildDepError "tasty-expected-failure"))
           (hsPkgs."tasty-golden" or (errorHandler.buildDepError "tasty-golden"))

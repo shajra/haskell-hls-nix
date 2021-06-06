@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-eval-plugin"; version = "1.1.0.0"; };
+      identifier = { name = "hls-eval-plugin"; version = "1.1.1.0"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "https://github.com/haskell/haskell-language-server/contributors";
@@ -30,10 +30,10 @@
         "LICENSE"
         "README.md"
         "test/testdata/*.cabal"
-        "test/testdata/*.expected"
         "test/testdata/*.hs"
         "test/testdata/*.lhs"
         "test/testdata/*.yaml"
+        "test/testdata/cabal.project"
         ];
       extraTmpFiles = [];
       extraDocFiles = [];
@@ -51,6 +51,7 @@
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
           (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
+          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."ghc-boot-th" or (errorHandler.buildDepError "ghc-boot-th"))
           (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
@@ -65,7 +66,6 @@
           (hsPkgs."pretty-simple" or (errorHandler.buildDepError "pretty-simple"))
           (hsPkgs."QuickCheck" or (errorHandler.buildDepError "QuickCheck"))
           (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
-          (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
           (hsPkgs."temporary" or (errorHandler.buildDepError "temporary"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."time" or (errorHandler.buildDepError "time"))
@@ -97,9 +97,7 @@
             (hsPkgs."hls-eval-plugin" or (errorHandler.buildDepError "hls-eval-plugin"))
             (hsPkgs."hls-test-utils" or (errorHandler.buildDepError "hls-test-utils"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
-            (hsPkgs."lsp-test" or (errorHandler.buildDepError "lsp-test"))
             (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
-            (hsPkgs."text" or (errorHandler.buildDepError "text"))
             ];
           buildable = true;
           hsSourceDirs = [ "test" ];

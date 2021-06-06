@@ -341,7 +341,7 @@
    #+END_SRC
 
    #+RESULTS: nix-build-link
-   : /nix/store/dxx6bffdd693zlpaglrl8l16zkl1ndd8-haskell-language-server-ghc8104-renamed
+   : /nix/store/lmrb4mjc7ywzx52s0hr2f81gyj5yglm6-haskell-language-server-ghc8104-renamed
 
    Following these symlinks, we can see the files the project provides:
 
@@ -370,7 +370,7 @@
    #+END_SRC
 
    #+RESULTS: nix-build-path
-   : /nix/store/dxx6bffdd693zlpaglrl8l16zkl1ndd8-haskell-language-server-ghc8104-renamed
+   : /nix/store/lmrb4mjc7ywzx52s0hr2f81gyj5yglm6-haskell-language-server-ghc8104-renamed
 
 ** Running commands
 
@@ -398,8 +398,8 @@
    : haskell-language-server - GHC Haskell LSP server
    : 
    : Usage: haskell-language-server [--version | --numeric-version | --probe-tools | 
+   :                                  --print-cradle | 
    :                                  [COMMAND | --lsp | FILES/DIRS...] [--cwd DIR] 
-   :                                  [--shake-profiling DIR] [--test] [--example] 
    : …
 
    Thus far, the argument of the =--file= switch has always referenced a Nix
@@ -464,6 +464,8 @@
 
    #+RESULTS: nix-env-install
    : installing 'haskell-language-server-ghc8104-renamed'
+   : trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
+   : trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
 
    We can see this installation by querying what's been installed:
 

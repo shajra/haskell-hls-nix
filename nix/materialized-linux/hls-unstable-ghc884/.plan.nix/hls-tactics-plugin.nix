@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-tactics-plugin"; version = "1.1.0.1"; };
+      identifier = { name = "hls-tactics-plugin"; version = "1.2.0.0"; };
       license = "Apache-2.0";
       copyright = "Sandy Maguire, Reed Mullanix";
       maintainer = "sandy@sandymaguire.me";
@@ -78,7 +78,6 @@
           "Wingman/Context"
           "Wingman/Debug"
           "Wingman/EmptyCase"
-          "Wingman/FeatureSet"
           "Wingman/GHC"
           "Wingman/Judgements"
           "Wingman/Judgements/SYB"
@@ -91,6 +90,7 @@
           "Wingman/Machinery"
           "Wingman/Metaprogramming/Lexer"
           "Wingman/Metaprogramming/Parser"
+          "Wingman/Metaprogramming/Parser/Documentation"
           "Wingman/Metaprogramming/ProofState"
           "Wingman/Naming"
           "Wingman/Plugin"

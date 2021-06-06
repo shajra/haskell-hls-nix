@@ -50,7 +50,7 @@ If you followed the root-level README's section on a user-based installation, yo
 nix-env --install --file . --attr direnv --attr direnv-nix-lorelei
 ```
 
-    installing 'direnv-2.22.0'
+    installing 'direnv-2.28.0'
     installing 'direnv-nix-lorelei'
 
 Next, we need to configure Direnv with the Lorelei extension:
@@ -120,7 +120,7 @@ direnv exec examples/example-cabal \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (5 files worked, 0 files failed)
-    2021-05-22 23:47:01.095300042 [ThreadId 813] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-06-27 00:43:41.273226807 [ThreadId 686] INFO hls:	finish: GenerateCore (took 0.00s)
 
 Before we can use Direnv with the example, we have to run `direnv allow` on it to permit running code from the `.envrc` file.
 
@@ -140,7 +140,7 @@ direnv exec examples/example-stack \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (3 files worked, 0 files failed)
-    2021-05-22 23:47:08.803391556 [ThreadId 605] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-06-27 00:44:15.478788292 [ThreadId 455] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Suggested advanced configuration<a id="sec-7"></a>
 

@@ -11,7 +11,7 @@
     flags = { ghc-patched-unboxed-bytecode = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "ghcide"; version = "1.3.0.0"; };
+      identifier = { name = "ghcide"; version = "1.4.0.2"; };
       license = "Apache-2.0";
       copyright = "Digital Asset and Ghcide contributors 2018-2020";
       maintainer = "Ghcide contributors";
@@ -105,6 +105,7 @@
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghc-check" or (errorHandler.buildDepError "ghc-check"))
           (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
+          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."cryptohash-sha1" or (errorHandler.buildDepError "cryptohash-sha1"))
           (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
           (hsPkgs."implicit-hie-cradle" or (errorHandler.buildDepError "implicit-hie-cradle"))

@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-class-plugin"; version = "1.0.0.1"; };
+      identifier = { name = "hls-class-plugin"; version = "1.0.0.2"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "jjc9310@gmail.com";
@@ -37,15 +37,14 @@
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
+          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))
           (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
           (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
-          (hsPkgs."shake" or (errorHandler.buildDepError "shake"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
-          (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
           ];
         buildable = true;
         modules = [ "Ide/Plugin/Class" ];
@@ -55,14 +54,11 @@
         "tests" = {
           depends = [
             (hsPkgs."base" or (errorHandler.buildDepError "base"))
-            (hsPkgs."bytestring" or (errorHandler.buildDepError "bytestring"))
             (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
             (hsPkgs."hls-class-plugin" or (errorHandler.buildDepError "hls-class-plugin"))
             (hsPkgs."hls-test-utils" or (errorHandler.buildDepError "hls-test-utils"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
-            (hsPkgs."lsp-test" or (errorHandler.buildDepError "lsp-test"))
             (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
-            (hsPkgs."text" or (errorHandler.buildDepError "text"))
             ];
           buildable = true;
           hsSourceDirs = [ "test" ];

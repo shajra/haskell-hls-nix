@@ -23,7 +23,7 @@ nix run \
     pkgs.which \
     --command \
     org2gfm \
-    --ignore links.org \
+    --ignore 'links.org\|home-fake' \
     --nix "$(command -v nix)" \
     --evaluate \
     "$@"

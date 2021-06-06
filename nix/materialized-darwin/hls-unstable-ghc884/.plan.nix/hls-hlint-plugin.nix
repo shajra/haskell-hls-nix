@@ -8,10 +8,10 @@
   , config
   , ... }:
   {
-    flags = { pedantic = false; ghc-lib = false; };
+    flags = { pedantic = false; ghc-lib = false; hlint33 = true; };
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-hlint-plugin"; version = "1.0.0.2"; };
+      identifier = { name = "hls-hlint-plugin"; version = "1.0.1.0"; };
       license = "Apache-2.0";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";
@@ -58,13 +58,25 @@
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
           (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
-          ] ++ (if !flags.ghc-lib && (compiler.isGhc && (compiler.version).ge "8.10.1") && (compiler.isGhc && (compiler.version).lt "9.0.0")
-          then [ (hsPkgs."ghc" or (errorHandler.buildDepError "ghc")) ]
+          ] ++ (if flags.hlint33
+          then [
+            (hsPkgs."hlint" or (errorHandler.buildDepError "hlint"))
+            ] ++ (if !flags.ghc-lib && (compiler.isGhc && (compiler.version).ge "9.0.1") && (compiler.isGhc && (compiler.version).lt "9.1.0")
+            then [ (hsPkgs."ghc" or (errorHandler.buildDepError "ghc")) ]
+            else [
+              (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
+              (hsPkgs."ghc-lib" or (errorHandler.buildDepError "ghc-lib"))
+              (hsPkgs."ghc-lib-parser-ex" or (errorHandler.buildDepError "ghc-lib-parser-ex"))
+              ])
           else [
-            (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
-            (hsPkgs."ghc-lib" or (errorHandler.buildDepError "ghc-lib"))
-            (hsPkgs."ghc-lib-parser-ex" or (errorHandler.buildDepError "ghc-lib-parser-ex"))
-            ]);
+            (hsPkgs."hlint" or (errorHandler.buildDepError "hlint"))
+            ] ++ (if !flags.ghc-lib && (compiler.isGhc && (compiler.version).ge "8.10.1") && (compiler.isGhc && (compiler.version).lt "8.11.0")
+            then [ (hsPkgs."ghc" or (errorHandler.buildDepError "ghc")) ]
+            else [
+              (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
+              (hsPkgs."ghc-lib" or (errorHandler.buildDepError "ghc-lib"))
+              (hsPkgs."ghc-lib-parser-ex" or (errorHandler.buildDepError "ghc-lib-parser-ex"))
+              ]));
         buildable = true;
         modules = [ "Ide/Plugin/Hlint" ];
         hsSourceDirs = [ "src" ];

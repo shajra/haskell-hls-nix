@@ -158,26 +158,32 @@ integrate_args()
     then
         local config_file="''${CONFIG:-"$DEFAULT_CONFIG"}"
         log_info "using config file: $config_file"
-        if "${yq-go}/bin/yq" v "$config_file"
-        then config="$("${yq-go}/bin/yq" r "$config_file" ["$work_dir"])"
-        else die "config file malformed: $config_file"
-        fi
+        log_info "config file key: $work_dir"
+        validate_config_file "$config_file" "$work_dir"
+        config="$(
+            "${yq-go}/bin/yq" eval ".\"$work_dir\"" "$config_file"
+        )"
     fi
-
+    if [ -z "$config" ]
+    then
+        local default_yq='.mode |= "detect" | .pure |= true'
+        config="$("${yq-go}/bin/yq" --null-input eval "$default_yq")"
+    fi
     if [ -z "$SHELL_FILE" ]
     then SHELL_FILE="$(echo "$config" \
-            | "${yq-go}/bin/yq" r - "[shell_file]")"
-    fi
-    if [ -n "$SHELL_FILE" ]
-    then MODE=shell
+            | "${yq-go}/bin/yq" eval '.shell_file // ""' -)"
     fi
     if [ -z "$MODE" ]
-    then MODE="$(echo "$config" \
-            | "${yq-go}/bin/yq" r - "[mode]" --defaultValue detect)"
+    then MODE="$(echo "$config" | "${yq-go}/bin/yq" eval '.mode' -)"
+    fi
+    if [ "$MODE" = "null" ]
+    then MODE="detect"
     fi
     if [ -z "$NIX_PURE" ]
-    then NIX_PURE="$(echo "$config" \
-            | "${yq-go}/bin/yq" r - "[pure]" --defaultValue true)"
+    then NIX_PURE="$(echo "$config" | "${yq-go}/bin/yq" eval '.pure' -)"
+    fi
+    if [ "$NIX_PURE" = "null" ]
+    then NIX_PURE="true"
     fi
 }
 
@@ -185,14 +191,14 @@ validate_args()
 {
     case "$MODE" in
          detect|shell|bypass) ;;
-         *) die "'mode' not \"detect\" \"shell\" or \"bypass\": $MODE" ;;
+         *) die_helpless "'mode' not \"detect\", \"shell\", or \"bypass\": $MODE" ;;
     esac
     case "$NIX_PURE" in
          true|false) ;;
-         *) die "'pure' not \"true\" or \"false\": $NIX_PURE" ;;
+         *) die_helpless "'pure' not \"true\" or \"false\": $NIX_PURE" ;;
     esac
     if ! [ -r "$(shell_file)" ]
-    then die "shell file unreadable: $(shell_file)"
+    then die_helpless "shell file unreadable: $(shell_file)"
     fi
 }
 
@@ -253,6 +259,29 @@ shell_file()
     then echo "shell.nix"
     elif [ -f "default.nix" ]
     then echo "default.nix"
+    fi
+}
+
+validate_config_file()
+{
+    local config_file="$1"
+    local work_dir="$2"
+    local yq_expr
+    local yq_res
+    if ! "${yq-go}/bin/yq" eval true "$config_file" > /dev/null
+    then die_helpless "config file malformed: $config_file"
+    fi
+    yq_res="$("${yq-go}/bin/yq" eval "tag" "$config_file")"
+    if [ -z "$yq_res" ]  # DESIGN: empty config file
+    then return 0
+    fi
+    if ! [ "$yq_res" = "!!map" ]
+    then die_helpless "config file not a YAML map"
+    fi
+    yq_expr=".\"$work_dir\" | tag"
+    yq_res="$("${yq-go}/bin/yq" eval "$yq_expr" "$config_file")"
+    if ! [ "$yq_res" = "!!map" ] && ! [ "$yq_res" = "!!null" ]
+    then die_helpless "config entry for '$work_dir' not a map"
     fi
 }
 

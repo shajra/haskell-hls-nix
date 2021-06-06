@@ -107,7 +107,35 @@
   #+END_SRC
 
   #+RESULTS: nix-env-install
-  : installing 'hls-wrapper-nix'
+  #+begin_example
+  installing 'hls-wrapper-nix'
+  trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
+  hint: Using 'master' as the name for the initial branch. This default branch name
+  hint: is subject to change. To configure the initial branch name to use in all
+  hint: of your new repositories, which will suppress this warning, call:
+  hint:
+  hint: 
+  hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+  hint: 'development'. The just-created branch can be renamed via this command:
+  hint:
+  warning: refname '8fee87eac97a538dbe81ff1ab18cff10f2f9fa15' is ambiguous.
+  Git normally never creates a ref that ends with 40 hex characters
+  because it will be ignored when you just specify 40-hex. These refs
+  may be created by mistake. For example,
+  br $(git rev-parse ...)
+  br" is somehow empty and a 40-hex ref is created. Please
+  examine these refs and maybe delete them. Turn this message off by
+  running "git config advice.objectNameWarning false"
+  warning: refname '8fee87eac97a538dbe81ff1ab18cff10f2f9fa15' is ambiguous.
+  Git normally never creates a ref that ends with 40 hex characters
+  because it will be ignored when you just specify 40-hex. These refs
+  may be created by mistake. For example,
+  br $(git rev-parse ...)
+  br" is somehow empty and a 40-hex ref is created. Please
+  examine these refs and maybe delete them. Turn this message off by
+  running "git config advice.objectNameWarning false"
+  trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
+  #+end_example
 
 * Editor configuration
 
@@ -195,12 +223,12 @@
 
   #+RESULTS: test-cabal
   : INFO: Entering pure Nix shell
-  : Found "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/a"
-  : Module "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal/a" is loaded by Cradle: Cradle {cradleRootDir = "/home/tnks/src/shajra/nix-haskell-hls/examples/example-cabal", cradleOptsProg = CradleAction: Multi}
+  : trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
+  : trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
   : …
   : 
   : Completed (5 files worked, 0 files failed)
-  : 2021-05-22 23:46:08.359303126 [ThreadId 558] INFO hls:	finish: GenerateCore (took 0.00s)
+  : 2021-06-27 00:34:11.692360311 [ThreadId 583] INFO hls:	finish: GenerateCore (took 0.00s)
 
   And here we see that the script works for the Stack example project as well:
 
@@ -211,12 +239,12 @@
 
   #+RESULTS: test-stack
   : INFO: Entering pure Nix shell
-  : Module "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack/a" is loaded by Cradle: Cradle {cradleRootDir = "/home/tnks/src/shajra/nix-haskell-hls/examples/example-stack", cradleOptsProg = CradleAction: Stack}
-  : Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 1.1.0.0 x86_64 ghc-8.10.4
+  : trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
+  : trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
   : …
   : 
   : Completed (3 files worked, 0 files failed)
-  : 2021-05-22 23:46:48.179177955 [ThreadId 475] INFO hls:	finish: GenerateCore (took 0.00s)
+  : 2021-06-27 00:42:50.570671891 [ThreadId 525] INFO hls:	finish: GenerateCore (took 0.00s)
 
 * Command-line reference
 
@@ -264,6 +292,7 @@
 			       haskell-language-server-wrapper
       --probe-tools            Show haskell-language-server-wrapper version and
 			       other tools of interest
+      --print-cradle           Print the project cradle type
       --lsp                    Start talking to an LSP server
       --cwd DIR                Change to this directory
       --shake-profiling DIR    Dump profiling reports to this directory

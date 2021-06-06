@@ -6,4 +6,4 @@
  (run-attr      . "hls-renamed")
  (run-name      . "haskell-language-server-ghc8104-renamed")
  (run-target    . "haskell-language-server-8.10.4")
- (nixos-release . "nixos-20.09"))
+ (nixos-release . "nixos-21.05"))

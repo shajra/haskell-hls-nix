@@ -144,7 +144,7 @@ After a successful call of `nix build`, you'll see one or more symlinks for each
 readlink result*
 ```
 
-    /nix/store/dxx6bffdd693zlpaglrl8l16zkl1ndd8-haskell-language-server-ghc8104-renamed
+    /nix/store/lmrb4mjc7ywzx52s0hr2f81gyj5yglm6-haskell-language-server-ghc8104-renamed
 
 Following these symlinks, we can see the files the project provides:
 
@@ -166,7 +166,7 @@ It's common to configure these "result" symlinks as ignored in source control to
 nix path-info --file . hls-renamed
 ```
 
-    /nix/store/dxx6bffdd693zlpaglrl8l16zkl1ndd8-haskell-language-server-ghc8104-renamed
+    /nix/store/lmrb4mjc7ywzx52s0hr2f81gyj5yglm6-haskell-language-server-ghc8104-renamed
 
 ## Running commands<a id="sec-4-3"></a>
 
@@ -186,11 +186,11 @@ nix run \
     haskell-language-server - GHC Haskell LSP server
     
     Usage: haskell-language-server [--version | --numeric-version | --probe-tools | 
+                                     --print-cradle | 
                                      [COMMAND | --lsp | FILES/DIRS...] [--cwd DIR] 
-                                     [--shake-profiling DIR] [--test] [--example] 
     …
 
-Thus far, the argument of the `--file` switch has always referenced a Nix file on our local filesystem. However, it's possible to reference a Nix expression downloaded from the internet. The Nix ecosystem is supported by a giant GitHub repository of Nix expressions called [Nixpkgs](https://github.com/NixOS/nixpkgs). Special branches of this repository are considered *channels* in the Nix ecosystem. A Nixpkgs branch of "nixos-20.09" can be referenced by "channel:nixos-20.09" for `nix` subcommands that accept a `--file` switch.
+Thus far, the argument of the `--file` switch has always referenced a Nix file on our local filesystem. However, it's possible to reference a Nix expression downloaded from the internet. The Nix ecosystem is supported by a giant GitHub repository of Nix expressions called [Nixpkgs](https://github.com/NixOS/nixpkgs). Special branches of this repository are considered *channels* in the Nix ecosystem. A Nixpkgs branch of "nixos-21.05" can be referenced by "channel:nixos-21.05" for `nix` subcommands that accept a `--file` switch.
 
 Again, as with `nix build` attribute paths are specified as positional arguments to select packages.
 
@@ -223,6 +223,8 @@ nix-env --install --file . --attr hls-renamed 2>&1
 ```
 
     installing 'haskell-language-server-ghc8104-renamed'
+    trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
+    trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
 
 We can see this installation by querying what's been installed:
 
