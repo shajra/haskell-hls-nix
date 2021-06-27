@@ -3,19 +3,57 @@ on:
   push:
   pull_request:
 jobs:
-  build:
-    continue-on-error: true
+  linux:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
         ghc:
           [ "ghc865"
           , "ghc884"
           , "ghc8104"
           ]
         unstable: [true, false]
-    name: "${{ matrix.os }}, ${{ matrix.ghc }}, unstable=${{ matrix.unstable }}"
-    runs-on: ${{ matrix.os }}
+    name: "linux: ${{ matrix.ghc }}: unstable=${{ matrix.unstable }}"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: cachix/install-nix-action@v13
+    - uses: cachix/cachix-action@v10
+      with:
+        name: shajra
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+    - run: |
+        mkdir -p ~/.config/nix
+        touch ~/.config/nix/nix.conf
+        echo "substituters = https://hydra.iohk.io" \
+            >> ~/.config/nix/nix.conf
+        echo "trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" \
+            >> ~/.config/nix/nix.conf
+    - uses: cachix/cachix-action@v10
+      with:
+        name: iohk
+    - run: cat ~/.config/nix/nix.conf
+    - run: |
+        nix --print-build-logs build \
+            --arg checkMaterialization true \
+            --argstr ghcVersion ${{ matrix.ghc }} \
+            --arg hlsUnstable ${{ matrix.unstable }}
+    - run: |
+        nix --print-build-logs path-info \
+            --arg checkMaterialization true \
+            --argstr ghcVersion ${{ matrix.ghc }} \
+            --arg hlsUnstable ${{ matrix.unstable }}
+  darwin:
+    strategy:
+      matrix:
+        ghc:
+          [ "ghc865"
+          , "ghc884"
+          , "ghc8104"
+          ]
+        unstable: [true, false]
+    name: "darwin: ${{ matrix.ghc }}: unstable=${{ matrix.unstable }}"
+    needs: [linux]
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v13
