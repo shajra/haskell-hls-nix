@@ -17,20 +17,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v13
+      with:
+        extra_nix_config: |
+          trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=
+          trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+          substituters = https://hydra.iohk.io https://cache.nixos.org/
     - uses: cachix/cachix-action@v10
       with:
         name: shajra
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
-    - run: |
-        mkdir -p ~/.config/nix
-        touch ~/.config/nix/nix.conf
-        echo "substituters = https://hydra.iohk.io" \
-            >> ~/.config/nix/nix.conf
-        echo "trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" \
-            >> ~/.config/nix/nix.conf
-    - uses: cachix/cachix-action@v10
-      with:
-        name: iohk
     - run: cat ~/.config/nix/nix.conf
     - run: |
         nix --print-build-logs build \
@@ -57,20 +52,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v13
+      with:
+        extra_nix_config: |
+          trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=
+          trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+          substituters = https://hydra.iohk.io https://cache.nixos.org/
     - uses: cachix/cachix-action@v10
       with:
         name: shajra
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
-    - run: |
-        mkdir -p ~/.config/nix
-        touch ~/.config/nix/nix.conf
-        echo "substituters = https://hydra.iohk.io" \
-            >> ~/.config/nix/nix.conf
-        echo "trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" \
-            >> ~/.config/nix/nix.conf
-    - uses: cachix/cachix-action@v10
-      with:
-        name: iohk
     - run: cat ~/.config/nix/nix.conf
     - run: |
         nix --print-build-logs build \
