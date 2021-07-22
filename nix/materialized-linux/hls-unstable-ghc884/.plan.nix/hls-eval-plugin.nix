@@ -29,13 +29,13 @@
       extraSrcFiles = [
         "LICENSE"
         "README.md"
+        "test/cabal.project"
+        "test/info-util/*.cabal"
+        "test/info-util/*.hs"
         "test/testdata/*.cabal"
         "test/testdata/*.hs"
         "test/testdata/*.lhs"
         "test/testdata/*.yaml"
-        "test/info-util/*.cabal"
-        "test/info-util/*.hs"
-        "test/cabal.project"
         ];
       extraTmpFiles = [];
       extraDocFiles = [];
@@ -100,6 +100,7 @@
             (hsPkgs."hls-test-utils" or (errorHandler.buildDepError "hls-test-utils"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
             (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
+            (hsPkgs."text" or (errorHandler.buildDepError "text"))
             ];
           buildable = true;
           hsSourceDirs = [ "test" ];

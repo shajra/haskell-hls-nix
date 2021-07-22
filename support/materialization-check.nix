@@ -11,6 +11,7 @@ in
     # DESIGN: Support same GHC versions as IOHK:
     # https://input-output-hk.github.io/haskell.nix/reference/supported-ghc-versions/
     []
-    ++ (getBoth "ghc8104")
-    ++ (getBoth "ghc884")
-    ++ (getBoth "ghc865")
+    ++ (getBoth "8.10.5")
+    ++ (getBoth "8.10.4")
+    ++ (getBoth "8.8.4")
+    ++ (getBoth "8.6.5")

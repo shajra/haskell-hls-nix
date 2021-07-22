@@ -9,7 +9,7 @@ let
     # instead of a version that happens to be in the environment's `NIX_PATH`.
     #
     sources = import ../../nix/sources;
-    nixpkgs = (import sources.nixpkgs-unstable) {
+    nixpkgs = (import sources.nixpkgs-stable) {
         # We don't want user configuration affecting this build.  This is
         # recommended boilerplate when importing Nixpkgs.
         config   = {};  # to avoid picking up ~/.config/nixpkgs/config.nix
@@ -19,7 +19,7 @@ let
     # This is the build of HLS for this project.
     #
     hls = import ../.. {
-        ghcVersion  = config.ghcVersion;
+        ghcVersion  = config.hlsGhcVersion;
         hlsUnstable = config.hlsUnstable;
     };
 
@@ -36,7 +36,7 @@ in nixpkgs.haskell.lib.buildStackProject {
 
     # buildStackProject has explicit configuration for the GHC instance.
     #
-    ghc = nixpkgs.haskell.compiler.${config.ghcVersion};
+    ghc = nixpkgs.haskell.compiler.${config.nixpkgsGhcVersion};
 
     # buildStackProject also has explicit configuration for the Stack instance.
     # To allow Stack invocations and HLS invocations to work within the
