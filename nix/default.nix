@@ -1,11 +1,36 @@
+let
+
+    hnGhc = ghcVersion: {
+        "8.6.1"  = "ghc861";
+        "8.6.2"  = "ghc862";
+        "8.6.3"  = "ghc863";
+        "8.6.4"  = "ghc864";
+        "8.6.5"  = "ghc865";
+        "8.8.1"  = "ghc881";
+        "8.8.2"  = "ghc882";
+        "8.8.3"  = "ghc883";
+        "8.8.4"  = "ghc884";
+        "8.10.1" = "ghc8101";
+        "8.10.2" = "ghc8102";
+        "8.10.3" = "ghc8103";
+        #"8.10.4" = "ghc810420210212";
+        "8.10.4" = "ghc8104";
+        "8.10.5" = "ghc8105";
+        "9.0.1"  = "ghc901";
+    }."${ghcVersion}" or (throw "unsupported GHC Version: ${ghcVersion}");
+
+    npGhc = builtins.replaceStrings ["."] [""];
+
+in
+
 { sources ? import ./sources
 , config ? import ../config.nix
 , checkMaterialization ? config.haskell-nix.checkMaterialization
-, nixpkgs-pin ? config.haskell-nix.nixpkgs-pin
 , index-state ? config.haskell-nix.hackage.index.state
 , index-sha256 ? config.haskell-nix.hackage.index.sha256
 , ghcVersion ? config.ghcVersion
 , hlsUnstable ? config.hls.unstable
+, nixpkgs-pin ? config.haskell-nix.nixpkgs-pin."${hnGhc ghcVersion}" or "nixpkgs-unstable"
 }:
 
 let
@@ -43,7 +68,7 @@ let
                 nixpkgs-stable.lib.systems.doubles.darwin;
             platformName = if isDarwin then "darwin" else "linux";
             needsNewName = name == "hls-${stability}";
-            newName = if needsNewName then "${name}-${ghcVersion}" else name;
+            newName = if needsNewName then "${name}-${compiler-nix-name}" else name;
         in {
 	    inherit name modules index-state index-sha256 compiler-nix-name
                 checkMaterialization;
@@ -64,7 +89,7 @@ let
         in allExes (haskell-nix.hackage-package planConfig);
 
     fromSource = name:
-        let planConfig = planConfigFor name ghcVersion defaultModules // {
+        let planConfig = planConfigFor name (hnGhc ghcVersion) defaultModules // {
                 src = sources."${name}";
                 # DESIGN: needed before, might be useful in the future
                 #constraints: apply-refact < 0.9.0.0
@@ -76,22 +101,6 @@ let
         in allExes (haskell-nix.cabalProject planConfig).haskell-language-server;
 
     build = fromSource "hls-${stability}";
-
-    trueVersion = {
-        "ghc861" = "8.6.1";
-        "ghc862" = "8.6.2";
-        "ghc863" = "8.6.3";
-        "ghc864" = "8.6.4";
-        "ghc865" = "8.6.5";
-        "ghc881" = "8.8.1";
-        "ghc882" = "8.8.2";
-        "ghc883" = "8.8.3";
-        "ghc884" = "8.8.4";
-        "ghc8101" = "8.10.1";
-        "ghc8102" = "8.10.2";
-        "ghc8103" = "8.10.3";
-        "ghc8104" = "8.10.4";
-    }."${ghcVersion}" or (throw "unsupported GHC Version: ${ghcVersion}");
 
     longDesc = suffix: ''
         Haskell Language Server (HLS) is the latest attempt make an IDE-like
@@ -109,13 +118,13 @@ let
     '';
 
     hls = build.haskell-language-server.overrideAttrs (old: {
-        name = "haskell-language-server-${ghcVersion}";
+        name = "haskell-language-server-${hnGhc ghcVersion}";
         meta = old.meta // {
             description =
-                "Haskell Language Server (HLS) for GHC ${trueVersion}";
+                "Haskell Language Server (HLS) for GHC ${ghcVersion}";
             longDescription = longDesc ''
         This package provides the server executable compiled against
-        ${trueVersion}.  It has the name original name of
+        ${ghcVersion}.  It has the name original name of
         "haskell-language-server," which may clash with versions compiled for
         other compilers.
         '';
@@ -123,7 +132,7 @@ let
     });
 
     hls-renamed = nixpkgs-hn.stdenv.mkDerivation {
-        name = "haskell-language-server-${ghcVersion}-renamed";
+        name = "haskell-language-server-${hnGhc ghcVersion}-renamed";
         version = hls.version;
         phases = ["installPhase"];
         nativeBuildInputs = [nixpkgs-hn.makeWrapper];
@@ -131,14 +140,14 @@ let
             mkdir --parents $out/bin
             makeWrapper \
                 "${hls}/bin/haskell-language-server" \
-                "$out/bin/haskell-language-server-${trueVersion}"
+                "$out/bin/haskell-language-server-${ghcVersion}"
         '';
         meta = hls.meta // {
             description =
-                "Haskell Language Server (HLS) for GHC ${trueVersion}, renamed binary";
+                "Haskell Language Server (HLS) for GHC ${ghcVersion}, renamed binary";
             longDescription = longDesc ''
         This package provides the server executable compiled against
-        ${trueVersion}.  The binary has been renamed from
+        ${ghcVersion}.  The binary has been renamed from
         "haskell-language-server" to "haskell-language-server-${ghcVersion}" to
         allow Nix to install multiple versions to the same profile for those
         that wish to use the HLS wrapper.
@@ -196,10 +205,11 @@ let
 
     cabal-install = nixpkgs-unstable.cabal-install;
     direnv = nixpkgs-stable.direnv;
-    ghc =
-        if nixpkgs-stable.haskell.compiler ?  "${ghcVersion}"
-        then nixpkgs-stable.haskell.compiler."${ghcVersion}"
-        else nixpkgs-hn.haskell.compiler."${ghcVersion}";
+    ghc = nixpkgs-stable.haskell.compiler."${npGhc ghcVersion}"
+        or nixpkgs-unstable.haskell.compiler."${npGhc ghcVersion}"
+        or nixpkgs-stable.haskell.compiler."${npGhc ghcVersion}Binary"
+        or nixpkgs-unstable.haskell.compiler."${npGhc ghcVersion}Binary"
+        or nixpkgs-hn.haskell-nix.compiler."${hnGhc ghcVersion}";
     implicit-hie = nixpkgs-unstable.haskellPackages.implicit-hie;
 
 in {

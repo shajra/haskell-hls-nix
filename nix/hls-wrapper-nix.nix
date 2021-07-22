@@ -16,6 +16,14 @@ in
 nix-project-lib.writeShellCheckedExe name
 {
     inherit meta;
+    pathPure = false;
+    path = [
+        coreutils
+        gnugrep
+        gnused
+        hls-wrapper
+        yq-go
+    ];
 }
 ''
 set -eu
@@ -34,10 +42,10 @@ HLS_ARGS=()
 
 print_usage()
 {
-    "${coreutils}/bin/cat" - <<EOF
-USAGE: $("${coreutils}/bin/basename" "$0") [OPTION]... [HLS_OPTIONS]...
-       $("${coreutils}/bin/basename" "$0") --show-path PATH
-       $("${coreutils}/bin/basename" "$0") --help
+    cat - <<EOF
+USAGE: $(basename "$0") [OPTION]... [HLS_OPTIONS]...
+       $(basename "$0") --show-path PATH
+       $(basename "$0") --help
 
 DESCRIPTION:
 
@@ -79,7 +87,7 @@ main()
             if [ -z "$to_show" ]
             then die "$1 requires argument"
             fi
-            "${coreutils}/bin/readlink" -f "$to_show"
+            readlink -f "$to_show"
             exit 0
             ;;
         --config)
@@ -151,7 +159,7 @@ integrate_args()
 {
     local work_dir
     work_dir="$(pwd)"
-    work_dir="$("${coreutils}/bin/readlink" -f "$work_dir")"
+    work_dir="$(readlink -f "$work_dir")"
 
     local config=""
     if test -r "$DEFAULT_CONFIG" || test -n "$CONFIG"
@@ -160,27 +168,25 @@ integrate_args()
         log_info "using config file: $config_file"
         log_info "config file key: $work_dir"
         validate_config_file "$config_file" "$work_dir"
-        config="$(
-            "${yq-go}/bin/yq" eval ".\"$work_dir\"" "$config_file"
-        )"
+        config="$(yq eval ".\"$work_dir\"" "$config_file")"
     fi
     if [ -z "$config" ]
     then
         local default_yq='.mode |= "detect" | .pure |= true'
-        config="$("${yq-go}/bin/yq" --null-input eval "$default_yq")"
+        config="$(yq --null-input eval "$default_yq")"
     fi
     if [ -z "$SHELL_FILE" ]
     then SHELL_FILE="$(echo "$config" \
-            | "${yq-go}/bin/yq" eval '.shell_file // ""' -)"
+            | yq eval '.shell_file // ""' -)"
     fi
     if [ -z "$MODE" ]
-    then MODE="$(echo "$config" | "${yq-go}/bin/yq" eval '.mode' -)"
+    then MODE="$(echo "$config" | yq eval '.mode' -)"
     fi
     if [ "$MODE" = "null" ]
     then MODE="detect"
     fi
     if [ -z "$NIX_PURE" ]
-    then NIX_PURE="$(echo "$config" | "${yq-go}/bin/yq" eval '.pure' -)"
+    then NIX_PURE="$(echo "$config" | yq eval '.pure' -)"
     fi
     if [ "$NIX_PURE" = "null" ]
     then NIX_PURE="true"
@@ -239,16 +245,14 @@ call_with_shell()
         --run \
         "
         $(declare -p HLS_ARGS)
-        exec \"${hls-wrapper}/bin/haskell-language-server-wrapper\" \
-            \"\''${HLS_ARGS[@]}\"
+        exec haskell-language-server-wrapper \"\''${HLS_ARGS[@]}\"
         "
 }
 
 call_without_shell()
 {
     log_info "Not entering Nix shell"
-    exec "${hls-wrapper}/bin/haskell-language-server-wrapper" \
-        "''${HLS_ARGS[@]}"
+    exec haskell-language-server-wrapper "''${HLS_ARGS[@]}"
 }
 
 shell_file()
@@ -268,10 +272,10 @@ validate_config_file()
     local work_dir="$2"
     local yq_expr
     local yq_res
-    if ! "${yq-go}/bin/yq" eval true "$config_file" > /dev/null
+    if ! yq eval true "$config_file" > /dev/null
     then die_helpless "config file malformed: $config_file"
     fi
-    yq_res="$("${yq-go}/bin/yq" eval "tag" "$config_file")"
+    yq_res="$(yq eval "tag" "$config_file")"
     if [ -z "$yq_res" ]  # DESIGN: empty config file
     then return 0
     fi
@@ -279,7 +283,7 @@ validate_config_file()
     then die_helpless "config file not a YAML map"
     fi
     yq_expr=".\"$work_dir\" | tag"
-    yq_res="$("${yq-go}/bin/yq" eval "$yq_expr" "$config_file")"
+    yq_res="$(yq eval "$yq_expr" "$config_file")"
     if ! [ "$yq_res" = "!!map" ] && ! [ "$yq_res" = "!!null" ]
     then die_helpless "config entry for '$work_dir' not a map"
     fi
@@ -287,9 +291,9 @@ validate_config_file()
 
 hls_options()
 {
-    "${hls-wrapper}/bin/haskell-language-server-wrapper" --help \
-    | "${gnugrep}/bin/grep" -A99 options: \
-    | "${gnused}/bin/sed" '/options:/d;s/^/  /;/--help/d'
+    haskell-language-server-wrapper --help \
+    | grep -A99 options: \
+    | sed '/options:/d;s/^/  /;/--help/d'
 }
 
 log_info()

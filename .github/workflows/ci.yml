@@ -7,9 +7,10 @@ jobs:
     strategy:
       matrix:
         ghc:
-          [ "ghc865"
-          , "ghc884"
-          , "ghc8104"
+          [ "8.6.5"
+          , "8.8.4"
+          , "8.10.4"
+          , "8.10.5"
           ]
         unstable: [true, false]
     name: "linux: ${{ matrix.ghc }}: unstable=${{ matrix.unstable }}"
@@ -41,9 +42,10 @@ jobs:
     strategy:
       matrix:
         ghc:
-          [ "ghc865"
-          , "ghc884"
-          , "ghc8104"
+          [ "8.6.5"
+          , "8.8.4"
+          , "8.10.4"
+          , "8.10.5"
           ]
         unstable: [true, false]
     name: "darwin: ${{ matrix.ghc }}: unstable=${{ matrix.unstable }}"
