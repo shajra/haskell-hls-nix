@@ -70,7 +70,7 @@ let
             needsNewName = name == "hls-${stability}";
             newName = if needsNewName then "${name}-${compiler-nix-name}" else name;
         in {
-	    inherit name modules index-state index-sha256 compiler-nix-name
+                inherit name modules index-state index-sha256 compiler-nix-name
                 checkMaterialization;
             configureArgs = "--disable-benchmarks";
             lookupSha256 = {location, ...}:
@@ -124,7 +124,7 @@ let
                 "Haskell Language Server (HLS) for GHC ${ghcVersion}";
             longDescription = longDesc ''
         This package provides the server executable compiled against
-        ${ghcVersion}.  It has the name original name of
+        GHC ${ghcVersion}.  It has the name original name of
         "haskell-language-server," which may clash with versions compiled for
         other compilers.
         '';
@@ -147,7 +147,7 @@ let
                 "Haskell Language Server (HLS) for GHC ${ghcVersion}, renamed binary";
             longDescription = longDesc ''
         This package provides the server executable compiled against
-        ${ghcVersion}.  The binary has been renamed from
+        GHC ${ghcVersion}.  The binary has been renamed from
         "haskell-language-server" to "haskell-language-server-${ghcVersion}" to
         allow Nix to install multiple versions to the same profile for those
         that wish to use the HLS wrapper.
@@ -181,9 +181,9 @@ let
         version = stack.version;
         meta.description = "Haskell Stack with args: ${args}";
         meta.longDescription = ''
-	This package provides a wrapper script around the Haskell Stack
-        executable that tacks on `${args}` to every
-        call.  This forces disablment of Nix across all platforms.
+        This package provides a wrapper script around the Haskell Stack
+        executable that tacks on `${args}` to every call.  This forces
+        disablment of Nix across all platforms.
         '';
     };
 
