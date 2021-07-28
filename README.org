@@ -673,8 +673,8 @@
   : trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
   : warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
   : …
+  : 2021-07-27 21:46:48.899561112 [ThreadId 733] INFO hls:	finish: GenerateCore (took 0.00s)
   : Completed (5 files worked, 0 files failed)
-  : 2021-07-25 23:53:26.780857839 [ThreadId 553] INFO hls:	finish: GenerateCore (took 0.00s)
 
   The same command can test HLS working with our Stack example project:
 
@@ -690,7 +690,7 @@
   : warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
   : …
   : Completed (3 files worked, 0 files failed)
-  : 2021-07-25 23:54:04.826699814 [ThreadId 451] INFO hls:	finish: GenerateCore (took 0.00s)
+  : 2021-07-27 21:46:59.483354694 [ThreadId 641] INFO hls:	finish: GenerateCore (took 0.00s)
 
 * Editor integration with Nix shells
 

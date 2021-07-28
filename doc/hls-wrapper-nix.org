@@ -228,7 +228,7 @@
   : …
   : 
   : Completed (5 files worked, 0 files failed)
-  : 2021-07-25 23:42:59.522682003 [ThreadId 496] INFO hls:	finish: GenerateCore (took 0.00s)
+  : 2021-07-27 21:43:39.695152545 [ThreadId 684] INFO hls:	finish: GenerateCore (took 0.00s)
 
   And here we see that the script works for the Stack example project as well:
 
@@ -242,9 +242,9 @@
   : trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
   : trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
   : …
-  : 2021-07-25 23:49:06.978986401 [ThreadId 452] INFO hls:	finish: GenerateCore (took 0.00s)
   : 
   : Completed (3 files worked, 0 files failed)
+  : 2021-07-27 21:45:33.535742078 [ThreadId 526] INFO hls:	finish: GenerateCore (took 0.00s)
 
 * Command-line reference
 
