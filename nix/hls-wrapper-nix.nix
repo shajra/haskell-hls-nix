@@ -8,12 +8,12 @@
 }:
 
 let
-    name = "hls-wrapper-nix";
+    progName = "hls-wrapper-nix";
     meta.description =
         "Haskell Language Server (HLS) wrapper for Nix";
 in
 
-nix-project-lib.writeShellCheckedExe name
+nix-project-lib.writeShellCheckedExe progName
 {
     inherit meta;
     pathPure = false;
@@ -27,6 +27,7 @@ nix-project-lib.writeShellCheckedExe name
 }
 ''
 set -eu
+set -o pipefail
 
 DEFAULT_CONFIG="$HOME/.config/haskell-language-server/wrapper-nix.yaml"
 CONFIG=
@@ -43,9 +44,9 @@ HLS_ARGS=()
 print_usage()
 {
     cat - <<EOF
-USAGE: $(basename "$0") [OPTION]... [HLS_OPTIONS]...
-       $(basename "$0") --show-path PATH
-       $(basename "$0") --help
+USAGE: ${progName} [OPTION]... [HLS_OPTIONS]...
+       ${progName} --show-path PATH
+       ${progName} --help
 
 DESCRIPTION:
 
