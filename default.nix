@@ -1,5 +1,4 @@
-args@{ sources ? import nix/sources
-, config ? import ./config.nix
+args@{ config ? import ./config.nix
 , checkMaterialization ? config.haskell-nix.checkMaterialization
 , nixpkgs-pin ? config.haskell-nix.nixpkgs-pin
 , index-state ? config.haskell-nix.hackage.index.state

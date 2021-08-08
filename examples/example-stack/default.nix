@@ -8,8 +8,8 @@ let
     # `(import <nixpkgs> {})`.  This way we get a specific version of Nixpkgs
     # instead of a version that happens to be in the environment's `NIX_PATH`.
     #
-    sources = import ../../nix/sources;
-    nixpkgs = (import sources.nixpkgs-stable) {
+    external = import ../../nix/external;
+    nixpkgs = (import external.nixpkgs-stable) {
         # We don't want user configuration affecting this build.  This is
         # recommended boilerplate when importing Nixpkgs.
         config   = {};  # to avoid picking up ~/.config/nixpkgs/config.nix

@@ -3,328 +3,323 @@
 
 * About this documentation
 
-  This project discourages use of Stack's [[haskell-stack-nix][built-in Nix integration]].  This is not
-  done lightly.  It's okay to have multiple ways to accomplish a task, measuring
-  the benefits and liabilities of each.  But without some care using Stack's
-  built-in Nix integration can lead to undesirable properties.  Particularly
-  concerning is the possible loss of a repeatable build that's portable across
-  computers, which is a primary motivation use Nix in the first place.
+This project discourages use of Stack's [[haskell-stack-nix][built-in Nix integration]]. This is not
+done lightly. It's okay to have multiple ways to accomplish a task, measuring
+the benefits and liabilities of each. But without some care using Stack's
+built-in Nix integration can lead to undesirable properties. Particularly
+concerning is the possible loss of a repeatable build that's portable across
+computers, which is a primary motivation use Nix in the first place.
 
-  This document explores problems using Stack's built-in Nix integration.  The
-  goal is not to malign Stack as a project, but to save new users time
-  rediscovering the same conclusions through independent exploration.
+This document explores problems using Stack's built-in Nix integration. The goal
+is not to malign Stack as a project, but to save new users time rediscovering
+the same conclusions through independent exploration.
 
 * Desired properties
 
-  Here's a few ways with which to measure the strength of any approach we take
-  when building a Stack project with Nix:
+Here's a few ways with which to measure the strength of any approach we take
+when building a Stack project with Nix:
 
-  - Building the project, whether with Nix or Stack, should be as reproducible
-    and portable (pure) as possible.
+- Building the project, whether with Nix or Stack, should be as reproducible and
+  portable (pure) as possible.
 
-  - When we have both a Stack and Nix build, they should should be consistently
-    configured.  It's understandable that the compiled outputs are not
-    bit-for-bit identical, but we should be able to keep build inputs and
-    arguments consistent if we want to.
+- When we have both a Stack and Nix build, they should should be consistently
+  configured. It's understandable that the compiled outputs are not bit-for-bit
+  identical, but we should be able to keep build inputs and arguments consistent
+  if we want to.
 
-  - The user experience should work well with command-line defaults:
+- The user experience should work well with command-line defaults:
 
-      - When building with Stack, we should only need a simple ~stack build~
-        call (with the allowance of first entering a Nix shell with a simple
-        ~nix-shell~ call).
+  - When building with Stack, we should only need a simple ~stack build~ call
+    (with the allowance of first entering a Nix shell with a simple ~nix-shell~
+    call).
 
-      - When building with Nix, we should only need a simple ~nix build~ call.
+  - When building with Nix, we should only need a simple ~nix build~ call.
 
-      - We should be able to invoke HLS with no arguments (with the allowance
-        of first entering a Nix shell with a simple ~nix-shell~ call), and not
-        require users to generate an explicit =hie.yaml= file, if avoidable.
+  - We should be able to invoke HLS with no arguments (with the allowance of
+    first entering a Nix shell with a simple ~nix-shell~ call), and not require
+    users to generate an explicit =hie.yaml= file, if avoidable.
 
-  - There should not be special instructions due to a user's operating system.
-    Non-NixOS with a Nix installation should be the same as NixOS, whether MacOS
-    or otherwise.
+- There should not be special instructions due to a user's operating system.
+  Non-NixOS with a Nix installation should be the same as NixOS, whether MacOS
+  or otherwise.
 
-  - All configurations should have a declarative simplicity without hacks or
-    surprises for intermediate/expert users who know standard practices.
+- All configurations should have a declarative simplicity without hacks or
+  surprises for intermediate/expert users who know standard practices.
 
-  - We should avoid (or minimize) duplicate configuration between the Stack and
-    Nix builds that can become inconsistent accidentally.
+- We should avoid (or minimize) duplicate configuration between the Stack and
+  Nix builds that can become inconsistent accidentally.
 
-  - We should be able to call Stack commands for working on the project
-    from any directory, not just the root project directory.
+- We should be able to call Stack commands for working on the project from any
+  directory, not just the root project directory.
 
-  - The cost of evaluating a Nix shell with =nix-shell= to get environment
-    variables
-    - should be possible to eliminate with a tool like [[direnv][Direnv]]
-    - should still be reasonably low even if not using a tool like Direnv.
+- The cost of evaluating a Nix shell with =nix-shell= to get environment
+  variables
+  - should be possible to eliminate with a tool like [[direnv][Direnv]]
+  - should still be reasonably low even if not using a tool like Direnv.
 
 * About Stack's Nix integration
 
-  Stack manages Haskell dependencies, but does not control non-Haskell
-  dependencies, such as C libraries needed for FFI bindings.  Typically people
-  use traditional package managers to install these dependencies (such as APT,
-  RPM, or Homebrew).  However, these installations are generally system-wide,
-  which doesn't address the possibility that projects may need conflicting
-  versions of the same dependency.  Traditional package managers can only
-  install one version of a dependency.
+Stack manages Haskell dependencies, but does not control non-Haskell
+dependencies, such as C libraries needed for FFI bindings. Typically people use
+traditional package managers to install these dependencies (such as APT, RPM, or
+Homebrew). However, these installations are generally system-wide, which doesn't
+address the possibility that projects may need conflicting versions of the same
+dependency. Traditional package managers can only install one version of a
+dependency.
 
-  Fortunately, /Nix shells/ are able to provide project-local management of
-  non-Haskell dependencies.  These shells, generated by =nix-shell=,
-  download/build everything that's needed and sets up environment variables
-  (such as =PATH=) to point to these builds.  Commands can then be run either
-  interactively or non-interactively within these per-project environments.
+Fortunately, /Nix shells/ are able to provide project-local management of
+non-Haskell dependencies. These shells, generated by =nix-shell=, download/build
+everything that's needed and sets up environment variables (such as =PATH=) to
+point to these builds. Commands can then be run either interactively or
+non-interactively within these per-project environments.
 
-  Using Nix effectively, though, involves learning the Nix language, which is
-  more expressive than a configuration language like YAML.
+Using Nix effectively, though, involves learning the Nix language, which is more
+expressive than a configuration language like YAML.
 
-  So Stack starts with a simple YAML specification in a Stack project's
-  =stack.yaml= file, builds out the corresponding Nix expression, and invokes
-  =nix-shell= as necessary internally with each call of =stack=.
+So Stack starts with a simple YAML specification in a Stack project's
+=stack.yaml= file, builds out the corresponding Nix expression, and invokes
+=nix-shell= as necessary internally with each call of =stack=.
 
-  This way, the user can get the benefits of Nix without knowing anything about
-  the Nix language or how to call =nix-shell=.  The user just has to have Nix
-  installed, and put in a small YAML snippet into =stack.yaml=, such as the
-  following:
+This way, the user can get the benefits of Nix without knowing anything about
+the Nix language or how to call =nix-shell=. The user just has to have Nix
+installed, and put in a small YAML snippet into =stack.yaml=, such as the
+following:
 
-  #+BEGIN_SRC yaml :eval no
-    nix:
-        enable: true
-        packages: [icu]  # depends on the ICU C library
-  #+END_SRC
+#+BEGIN_SRC yaml :eval no
+  nix:
+      enable: true
+      packages: [icu]  # depends on the ICU C library
+#+END_SRC
 
-  To Stack's credit, this configuration is indeed simple and declarative.
+To Stack's credit, this configuration is indeed simple and declarative.
 
 * Concerns with Stack's built-in Nix integration
 
-  The next few sections covers problems we face when trying to manage
-  non-Haskell dependencies using Stack's built-in Nix integration.
+The next few sections covers problems we face when trying to manage non-Haskell
+dependencies using Stack's built-in Nix integration.
 
 ** Problems with Nix evaluation speed
 
-   Nix expressions are known to be to evaluate slowly (hopefully the
-   soon-to-release feature of Nix "flakes" can improve this slowness).
+Nix expressions are known to be to evaluate slowly (hopefully the
+soon-to-release feature of Nix "flakes" can improve this slowness).
 
-   We ultimately want to integrate with tools like HLS, which will call a
-   =stack= command several times for a multi-package project.  If a call of
-   =nix-shell= is hidden behind each invocation of =stack=, then we'll pay
-   multiple times the cost of evaluating a Nix expression.
+We ultimately want to integrate with tools like HLS, which will call a =stack=
+command several times for a multi-package project. If a call of =nix-shell= is
+hidden behind each invocation of =stack=, then we'll pay multiple times the cost
+of evaluating a Nix expression.
 
-   Additionally, tools like [[direnv][Direnv]] can completely eliminate the cost of
-   evaluating =nix-shell=, by caching the resultant environment variables we get
-   when invoking it.  But the caching benefits of Direnv can not be utilized by
-   these internal calls of =nix-shell= by Stack.
+Additionally, tools like [[direnv][Direnv]] can completely eliminate the cost of evaluating
+=nix-shell=, by caching the resultant environment variables we get when invoking
+it. But the caching benefits of Direnv can not be utilized by these internal
+calls of =nix-shell= by Stack.
 
-   These problems alone can make usage of Stack's built-in Nix integration a
-   non-starter for some.  The next few sections cover further problems.
+These problems alone can make usage of Stack's built-in Nix integration a
+non-starter for some. The next few sections cover further problems.
 
 ** Stack hides details of how it calls =nix-shell=
 
-   There are details about the Nix expression that Stack builds internally that
-   may surprise a Nix user.  The main way people discover these details is by
-   reading the source code of Stack.  Hiding these details wouldn't be as much
-   of a problem if the implementation had less need for special attention.
+There are details about the Nix expression that Stack builds internally that may
+surprise a Nix user. The main way people discover these details is by reading
+the source code of Stack. Hiding these details wouldn't be as much of a problem
+if the implementation had less need for special attention.
 
-   When enabling Stack's Nix integration with ~--nix~ and specifying a
-   non-Haskell dependency with, for example, ~--nix-packages icu~, we get the
-   following internally generated =nix-shell= invocation:
+When enabling Stack's Nix integration with ~--nix~ and specifying a non-Haskell
+dependency with, for example, ~--nix-packages icu~, we get the following
+internally generated =nix-shell= invocation:
 
-   #+BEGIN_SRC shell :eval no
-     /run/current-system/sw/bin/nix-shell \
-         --pure -E "
-            with (import <nixpkgs> {});
-             let inputs = [icu haskell.compiler.ghc884 git gcc gmp];
-                 libPath = lib.makeLibraryPath inputs;
-                 stackExtraArgs = lib.concatMap (pkg: [
-                     ''--extra-lib-dirs=${lib.getLib pkg}/lib''
-                     ''--extra-include-dirs=${lib.getDev pkg}/include''
-                 ]) inputs;
-             in runCommand ''myEnv'' {
-                 buildInputs = lib.optional stdenv.isLinux glibcLocales ++ inputs;
-                 STACK_PLATFORM_VARIANT=''nix'';
-                 STACK_IN_NIX_SHELL=1;
-                 LD_LIBRARY_PATH = libPath;
-                 STACK_IN_NIX_EXTRA_ARGS = stackExtraArgs;
-                 https://docs.haskellstack.org/en/stable/nix_integration/LANG=\"en_US.UTF-8\";
-                 } \"\"" \
-         --run
-             "'/path_to_stack_installation/bin/stack' \
-             $STACK_IN_NIX_EXTRA_ARGS \
-             '--internal-re-exec-version=2.5.1' \
-             '--verbose' \
-             'build'"
-   #+END_SRC
+#+BEGIN_SRC shell :eval no
+  /run/current-system/sw/bin/nix-shell \
+      --pure -E "
+          with (import <nixpkgs> {});
+          let inputs = [icu haskell.compiler.ghc884 git gcc gmp];
+              libPath = lib.makeLibraryPath inputs;
+              stackExtraArgs = lib.concatMap (pkg: [
+                  ''--extra-lib-dirs=${lib.getLib pkg}/lib''
+                  ''--extra-include-dirs=${lib.getDev pkg}/include''
+              ]) inputs;
+          in runCommand ''myEnv'' {
+              buildInputs = lib.optional stdenv.isLinux glibcLocales ++ inputs;
+              STACK_PLATFORM_VARIANT=''nix'';
+              STACK_IN_NIX_SHELL=1;
+              LD_LIBRARY_PATH = libPath;
+              STACK_IN_NIX_EXTRA_ARGS = stackExtraArgs;
+              https://docs.haskellstack.org/en/stable/nix_integration/LANG=\"en_US.UTF-8\";
+              } \"\"" \
+      --run "'/path_to_stack_installation/bin/stack' \
+      $STACK_IN_NIX_EXTRA_ARGS \
+      '--internal-re-exec-version=2.5.1' \
+      '--verbose' \
+      'build'"
+#+END_SRC
 
 ** Stack imports Nixpkgs in an impure way
 
-   The most critical surprise in Stack's internally generated Nix expression is
-   usage of ~import <nixpkgs> {}~.  There's two problems with this.
+The most critical surprise in Stack's internally generated Nix expression is
+usage of ~import <nixpkgs> {}~. There's two problems with this.
 
-   First the angle bracket syntax reads the value for =nixpkgs= from the
-   environment variable =NIX_PATH=.  This means that our Nix expression has the
-   potential to not evaluate consistently from machine to machine as this
-   setting of =nixpkgs= in this variable could change easily.
+First the angle bracket syntax reads the value for =nixpkgs= from the
+environment variable =NIX_PATH=. This means that our Nix expression has the
+potential to not evaluate consistently from machine to machine as this setting
+of =nixpkgs= in this variable could change easily.
 
-   Secondly, the default ~{}~ passed to ~import <nixpkgs>~ will configure an
-   impure lookup of both =~/.config/nixpkgs/config.nix= and
-   =~/.config/nixpkgs/overlays=.  Each user could differently configure and
-   modify the loading of Nixpkgs.  This access again threatens the reproducible
-   loading of Nix.
+Secondly, the default ~{}~ passed to ~import <nixpkgs>~ will configure an impure
+lookup of both =~/.config/nixpkgs/config.nix= and =~/.config/nixpkgs/overlays=.
+Each user could differently configure and modify the loading of Nixpkgs. This
+access again threatens the reproducible loading of Nix.
 
-   As a workaround, Stack offers a "path" field in =stack.yaml= to override
-   =NIX_PATH=.  We could set this to a URL of a stable version of Nixpkgs:
+As a workaround, Stack offers a "path" field in =stack.yaml= to override
+=NIX_PATH=. We could set this to a URL of a stable version of Nixpkgs:
 
-   #+BEGIN_SRC yaml :eval no
-     nix:
-         enable: true
-         packages: [icu]
-         path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/29e9c10750e2b35a0e47db55f36c685ef9219f4e.tar.gz
-   #+END_SRC
+#+BEGIN_SRC yaml :eval no
+  nix:
+      enable: true
+      packages: [icu]
+      path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/29e9c10750e2b35a0e47db55f36c685ef9219f4e.tar.gz
+#+END_SRC
 
-   But this wouldn't help us with the fact that passing ~{}~ to Nixpkgs makes
-   builds less reproducible.
+But this wouldn't help us with the fact that passing ~{}~ to Nixpkgs makes
+builds less reproducible.
 
-   One way to deal with this is to write our own Nix expression for Nixpkgs,
-   which we could then set as our path:
+One way to deal with this is to write our own Nix expression for Nixpkgs, which
+we could then set as our path:
 
-   #+BEGIN_SRC yaml :eval no
-     nix:
-         enable: true
-         packages: [icu]
-         path: nixpkgs=nixpkgs.nix
-   #+END_SRC
+#+BEGIN_SRC yaml :eval no
+  nix:
+      enable: true
+      packages: [icu]
+      path: nixpkgs=nixpkgs.nix
+#+END_SRC
 
-   In our =nixpkgs.nix= we could have something like:
+In our =nixpkgs.nix= we could have something like:
 
-   #+BEGIN_SRC nix :eval no
-     _ignored:  # ignore arguments, which might be impure
-     let url = https://github.com/NixOS/nixpkgs/archive/29e9c10750e2b35a0e47db55f36c685ef9219f4e.tar.gz;
-         nixpkgs = builtins.fetchTarball url;
-     in import nixpkgs { config = {}; overlays = []; }
-   #+END_SRC
+#+BEGIN_SRC nix :eval no
+  _ignored:  # ignore arguments, which might be impure
+  let url = https://github.com/NixOS/nixpkgs/archive/29e9c10750e2b35a0e47db55f36c685ef9219f4e.tar.gz;
+      nixpkgs = builtins.fetchTarball url;
+  in import nixpkgs { config = {}; overlays = []; }
+#+END_SRC
 
-   One annoyance with this is that we can only now call =stack= in the directory
-   where we have our nixpkgs.nix located.  This is because we specified it's
-   location as a relative path (~path: nixpkgs=nixpkgs.nix~).
+One annoyance with this is that we can only now call =stack= in the directory
+where we have our nixpkgs.nix located. This is because we specified it's
+location as a relative path (~path: nixpkgs=nixpkgs.nix~).
 
-   =stack.yaml= is generally checked into source control, so we wouldn't want to
-   use an absolute path for this file, because the filepath needs to be able to
-   vary across different users' computers.
+=stack.yaml= is generally checked into source control, so we wouldn't want to
+use an absolute path for this file, because the filepath needs to be able to
+vary across different users' computers.
 
-   We can correctly set an absolute path by calling =nix-shell= to set up
-   =NIX_PATH= (instead of using the "path" field).  But once we commit to having
-   the user make an explicit =nix-shell= call to address the problems listed
-   above, we must ask ourselves if having Stack call =nix-shell= again
-   internally gives us more any benefit.
+We can correctly set an absolute path by calling =nix-shell= to set up
+=NIX_PATH= (instead of using the "path" field). But once we commit to having the
+user make an explicit =nix-shell= call to address the problems listed above, we
+must ask ourselves if having Stack call =nix-shell= again internally gives us
+more any benefit.
 
-   One remaining benefit of Stack's built-in Nix integration is the concise
-   configuration syntax of specifying non-Haskell dependencies in a Stack YAML
-   file.  Maybe an upstream author maintains a list of these dependencies in the
-   provided =stack.yaml= file.  For example it may contain:
+One remaining benefit of Stack's built-in Nix integration is the concise
+configuration syntax of specifying non-Haskell dependencies in a Stack YAML
+file. Maybe an upstream author maintains a list of these dependencies in the
+provided =stack.yaml= file. For example it may contain:
 
-   #+BEGIN_SRC yaml :eval no
-     …
-     nix:
-         packages:
-         - icu
-   #+END_SRC
+#+BEGIN_SRC yaml :eval no
+  …
+  nix:
+      packages:
+      - icu
+#+END_SRC
 
-   Fortunately, it's not much code to parse a YAML file in a Nix expression so
-   we can leave this concise and declarative specification of non-Haskell
-   dependencies in Stack YAML files if we like.  This project provides a
-   =stackNixPackages= Nix function to do this parsing, and the included [[../examples/example-stack][example
-   Stack project]] illustrates how to use it.
+Fortunately, it's not much code to parse a YAML file in a Nix expression so we
+can leave this concise and declarative specification of non-Haskell dependencies
+in Stack YAML files if we like. This project provides a =stackNixPackages= Nix
+function to do this parsing, and the included [[../examples/example-stack][example Stack project]] illustrates
+how to use it.
 
-   So this means that if we are having the user call =nix-shell= explicitly to
-   establish some invariants for a reproducible build, then there's no remaining
-   motivation to have Stack call =nix-shell= again internally.  Doing so just
-   introduces unnecessary complexity.
+So this means that if we are having the user call =nix-shell= explicitly to
+establish some invariants for a reproducible build, then there's no remaining
+motivation to have Stack call =nix-shell= again internally. Doing so just
+introduces unnecessary complexity.
 
 ** Stack forces Nix integration for NixOS
 
-   Stack reads the file =/etc/os-release= to determine if the operating system
-   is NixOS.  If so, then Stack forcibly enables its Nix integration.  This
-   means that Nix users on NixOS will have a different experience than people
-   who have installed Nix on a non-NixOS operating system.  One or the other
-   will have to enable or disable Nix with Stack's =--nix= or =--no-nix=
-   switches.  This wouldn't be the case if a project's =stack.yaml= enabled Nix
-   for all users, but that seems very unlikely.  Nix is not that popular yet.
+Stack reads the file =/etc/os-release= to determine if the operating system is
+NixOS. If so, then Stack forcibly enables its Nix integration. This means that
+Nix users on NixOS will have a different experience than people who have
+installed Nix on a non-NixOS operating system. One or the other will have to
+enable or disable Nix with Stack's =--nix= or =--no-nix= switches. This wouldn't
+be the case if a project's =stack.yaml= enabled Nix for all users, but that
+seems very unlikely. Nix is not that popular yet.
 
-   What seems more likely is that project would provide multiple Stack YAML
-   files, but that just leads to annoying configuration duplication.
+What seems more likely is that project would provide multiple Stack YAML files,
+but that just leads to annoying configuration duplication.
 
-   Furthermore, note that HLS calls ~stack~ with no additional arguments.  We
-   can't yet have HLS pass a switch like ~--nix~ or ~--no-nix~ to Stack.  And
-   if HLS needs Stack to use an alternate Stack YAML file, we can only specify
-   that with an explicitly generated =hie.yaml= file.  We really don't want to
-   force a user to have to generate =hie.yaml= files for projects if it can be
-   avoided.
+Furthermore, note that HLS calls ~stack~ with no additional arguments. We can't
+yet have HLS pass a switch like ~--nix~ or ~--no-nix~ to Stack. And if HLS needs
+Stack to use an alternate Stack YAML file, we can only specify that with an
+explicitly generated =hie.yaml= file. We really don't want to force a user to
+have to generate =hie.yaml= files for projects if it can be avoided.
 
-   Ideally, we can take any project as it comes to use from an upstream author,
-   and put in a =default.nix= and =shell.nix= files, and get the benefits of
-   Nix.  Normal Stack users can just ignore these files.  Stack's builtin
-   integration creates a tension of what gets into =stack.yaml=.
+Ideally, we can take any project as it comes to use from an upstream author, and
+put in a =default.nix= and =shell.nix= files, and get the benefits of Nix.
+Normal Stack users can just ignore these files. Stack's builtin integration
+creates a tension of what gets into =stack.yaml=.
 
-   Note that if your operating system is NixOS, and you accidentally call
-   =stack= from outside a Nix shell, you could get a non-reproducible build.
-   By turning on the built-in integration automatically for NixOS, Stack is
-   defaulting users to build with Nix expressions containing the problematic
-   ~import <nixpkgs> {}~.  For this reason, you may prefer to disable Nix in
-   your =~/.stack/config.nix= file, especially if you're on NixOS.
+Note that if your operating system is NixOS, and you accidentally call =stack=
+from outside a Nix shell, you could get a non-reproducible build. By turning on
+the built-in integration automatically for NixOS, Stack is defaulting users to
+build with Nix expressions containing the problematic ~import <nixpkgs> {}~. For
+this reason, you may prefer to disable Nix in your =~/.stack/config.nix= file,
+especially if you're on NixOS.
 
 ** Stack configuration can deviate from a Nix build's configuration
 
-   There's three components of our projects that we'd like configured
-   consistently:
-   - HLS (tested by running ~haskell-language-server-wrapper~)
-   - The Stack build for local development (~stack build~)
-   - The Nix build of our project, if we have one (~nix build~)
+There's three components of our projects that we'd like configured consistently:
+- HLS (tested by running ~haskell-language-server-wrapper~)
+- The Stack build for local development (~stack build~)
+- The Nix build of our project, if we have one (~nix build~)
 
-   In particular, there's two pieces of configuration we need to make
-   consistent:
-   - the version of GHC to target
-   - the non-Haskell dependencies to be provided by Nix.
+In particular, there's two pieces of configuration we need to make consistent:
+- the version of GHC to target
+- the non-Haskell dependencies to be provided by Nix.
 
-   And there's two ways we can manage providing these components our
-   configurations:
-   - Stack YAML
-   - Nix expressions
+And there's two ways we can manage providing these components our
+configurations:
+- Stack YAML
+- Nix expressions
 
-   With a little parsing of the Stack YAML file, we can make Nix expressions
-   consistent with the YAML file with respect to non-Haskell dependencies
-   provided by Nix.  This project provides a small Nix expression called
-   =stackNixPackages= to assist with that.
+With a little parsing of the Stack YAML file, we can make Nix expressions
+consistent with the YAML file with respect to non-Haskell dependencies provided
+by Nix. This project provides a small Nix expression called =stackNixPackages=
+to assist with that.
 
-   Unfortunately, though the Stack YAML files configure a Stack resolver that
-   could be parsed from YAML, there's no convenient way to correlate the
-   resolver to a GHC version from within a Nix expression.
+Unfortunately, though the Stack YAML files configure a Stack resolver that could
+be parsed from YAML, there's no convenient way to correlate the resolver to a
+GHC version from within a Nix expression.
 
-   The means that the GHC version can be specified as follows:
+The means that the GHC version can be specified as follows:
 
-   | Component   | GHC from Stack resolver | GHC from Nix expressions    |
-   |-------------+-------------------------+-----------------------------|
-   | Stack build | ✓ (=--nix=)             | ✓ (=--no-nix --system-ghc=) |
-   | HLS         | 🗴                       | ✓                           |
-   | Nix build   | 🗴                       | ✓                           |
+| Component   | GHC from Stack resolver | GHC from Nix expressions    |
+|-------------+-------------------------+-----------------------------|
+| Stack build | ✓ (=--nix=)             | ✓ (=--no-nix --system-ghc=) |
+| HLS         | ✗                       | ✓                           |
+| Nix build   | ✗                       | ✓                           |
 
-   Users of Stack on non-NixOS systems are probably familiar with Stack's
-   ability to download instances of GHC.  This unfortunately doesn't work with
-   NixOS.  We definitely don't want to exclude NixOS users, so we don't consider
-   any options where GHC is downloaded directly by Stack.  Nix will always
-   provide GHC.  The only question is whether Stack selects this instance from
-   Nixpkgs with its =--nix= option or whether it delegates to Nix to have it
-   selected outside of Stack with =--no-nix --system-ghc=.
+Users of Stack on non-NixOS systems are probably familiar with Stack's ability
+to download instances of GHC. This unfortunately doesn't work with NixOS. We
+definitely don't want to exclude NixOS users, so we don't consider any options
+where GHC is downloaded directly by Stack. Nix will always provide GHC. The only
+question is whether Stack selects this instance from Nixpkgs with its =--nix=
+option or whether it delegates to Nix to have it selected outside of Stack with
+=--no-nix --system-ghc=.
 
-   Without abandoning Stack (say for Cabal), there's no way getting around
-   building with Stack for local development of a project.  But building with
-   Nix is optional.  If you do build with Nix, though, it makes sense that exact
-   instance of GHC we use for both should be the same.  And for this reason, the
-   =--no-nix --system-ghc= option is recommended.
+Without abandoning Stack (say for Cabal), there's no way getting around building
+with Stack for local development of a project. But building with Nix is
+optional. If you do build with Nix, though, it makes sense that exact instance
+of GHC we use for both should be the same. And for this reason, the =--no-nix
+--system-ghc= option is recommended.
 
-   Note, the resolver would still need to be consistent with the instance of GHC
-   selected by Nix.  It not, the Nix build would fail.  However, it is Nix
-   driving the actual selection of the GHC instance.
+Note, the resolver would still need to be consistent with the instance of GHC
+selected by Nix. It not, the Nix build would fail. However, it is Nix driving
+the actual selection of the GHC instance.
 
-   Furthermore, by not using =--nix= to have Stack select out an instance of GHC
-   from Nixpkgs, we avoid a slew of problems with impure Nix expressions
-   (particularly ~import <nixpkgs> {}~) discussed in previous sections.  It's
-   not that you couldn't work around these problems, but you accrue a lot of
-   incidental complexity for what appears to be no real benefit.
+Furthermore, by not using =--nix= to have Stack select out an instance of GHC
+from Nixpkgs, we avoid a slew of problems with impure Nix expressions
+(particularly ~import <nixpkgs> {}~) discussed in previous sections. It's not
+that you couldn't work around these problems, but you accrue a lot of incidental
+complexity for what appears to be no real benefit.

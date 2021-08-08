@@ -23,7 +23,7 @@ let
 
 in
 
-{ sources ? import ./sources
+{ externalOverrides ? {}
 , config ? import ../config.nix
 , checkMaterialization ? config.haskell-nix.checkMaterialization
 , index-state ? config.haskell-nix.hackage.index.state
@@ -35,20 +35,24 @@ in
 
 let
 
+    external = import ./external // externalOverrides;
+
+    nix-project = import external.nix-project;
+
     stability = if hlsUnstable then "unstable" else "released";
 
-    nixpkgs-stable = import sources.nixpkgs-stable {
+    nixpkgs-stable = import external.nixpkgs-stable {
         config = {};
         overlays = [];
     };
 
-    nixpkgs-unstable = import sources.nixpkgs-unstable {
+    nixpkgs-unstable = import external.nixpkgs-unstable {
         config = {};
         overlays = [];
     };
 
     nixpkgs-hn =
-        let hn = import sources."haskell.nix" {};
+        let hn = import external."haskell.nix" {};
             nixpkgsSrc = hn.sources."${nixpkgs-pin}";
             nixpkgsOrigArgs = hn.nixpkgsArgs;
             nixpkgsArgs = nixpkgsOrigArgs // {
@@ -90,7 +94,7 @@ let
 
     fromSource = name:
         let planConfig = planConfigFor name (hnGhc ghcVersion) defaultModules // {
-                src = sources."${name}";
+                src = external."${name}";
                 # DESIGN: needed before, might be useful in the future
                 #constraints: apply-refact < 0.9.0.0
                 #max-backjumps: 10000
@@ -165,11 +169,11 @@ let
 
     hls-wrapper-nix = nixpkgs-stable.callPackage ./hls-wrapper-nix.nix {
         inherit hls-wrapper;
-        nix-project-lib = (import sources.nix-project).nix-project-lib;
+        nix-project-lib = nix-project.nix-project-lib;
     };
 
     direnv-nix-lorelei =
-        (import sources.direnv-nix-lorelei).direnv-nix-lorelei;
+        (import external.direnv-nix-lorelei).direnv-nix-lorelei;
 
     stack = nixpkgs-unstable.stack;
 
@@ -212,7 +216,7 @@ let
         or nixpkgs-hn.haskell-nix.compiler."${hnGhc ghcVersion}";
     implicit-hie = nixpkgs-unstable.haskellPackages.implicit-hie;
 
-in {
+in nix-project // {
     inherit
         cabal-install
         direnv

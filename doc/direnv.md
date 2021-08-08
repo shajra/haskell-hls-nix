@@ -1,7 +1,7 @@
 - [Problems solved by Direnv and Lorelei](#sec-1)
 - [Comparing Direnv/Lorelei to the HLS Nix wrapper](#sec-2)
 - [Installing and configuring Direnv and Lorelei](#sec-3)
-- [Editor Configuration](#sec-4)
+- [Editor configuration](#sec-4)
 - [Configuring a project](#sec-5)
 - [Testing a project](#sec-6)
 - [Suggested advanced configuration](#sec-7)
@@ -62,7 +62,7 @@ ln --symbolic \
     ~/.config/direnv/lib
 ```
 
-# Editor Configuration<a id="sec-4"></a>
+# Editor configuration<a id="sec-4"></a>
 
 Please see the [official Direnv documentation on how to configure your editor](https://github.com/direnv/direnv/wiki#editor-integration). Most popular editors have a plugin/extension system, and in general you'll have to find the plugin that provides Direnv support. Some editors may have more than one such plugin.
 
@@ -100,7 +100,7 @@ direnv allow
 
 See the [official documentation for Lorelei](https://github.com/shajra/direnv-nix-lorelei) for more details on this configuration file.
 
-This project provides two example projects, [one that builds with Stack](../examples/example-stack) and [another that builds with Cabal](../examples/example-cabal). These projects both have `.envrc` files. You need to go into these directories and run `direnv allow`, and then if you have performed all the necessary steps discussed in this document, you should be able to load these projects in the editor of your choice to experience HLS.
+This project provides two example projects, [one that builds with Stack](../examples/example-stack) and another that builds with Cabal]]. These projects both have `.envrc` files. You need to go into these directories and run `direnv allow`, and then if you have performed all the necessary steps discussed in this document, you should be able to load these projects in the editor of your choice to experience HLS.
 
 # Testing a project<a id="sec-6"></a>
 
@@ -112,7 +112,7 @@ We can use the provided example projects to illustrate this test. Here we use `d
 direnv allow examples/example-cabal
 direnv exec examples/example-cabal \
     haskell-language-server-wrapper \
-    --cwd "$(pwd)/examples/example-cabal" 2>&1
+    --cwd "$PWD/examples/example-cabal" 2>&1
 ```
 
     direnv: loading ~/src/shajra/nix-haskell-hls/examples/example-cabal/.envrc
@@ -120,7 +120,7 @@ direnv exec examples/example-cabal \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (5 files worked, 0 files failed)
-    2021-07-27 21:45:43.775866972 [ThreadId 741] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-08-07 11:09:42.162596343 [ThreadId 792] INFO hls:	finish: GenerateCore (took 0.00s)
 
 Before we can use Direnv with the example, we have to run `direnv allow` on it to permit running code from the `.envrc` file.
 
@@ -140,7 +140,7 @@ direnv exec examples/example-stack \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (3 files worked, 0 files failed)
-    2021-07-27 21:45:49.813564513 [ThreadId 447] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-08-07 11:09:48.828057597 [ThreadId 589] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Suggested advanced configuration<a id="sec-7"></a>
 

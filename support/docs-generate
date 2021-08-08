@@ -7,20 +7,20 @@ nix run \
     --keep HOME \
     --keep LANG \
     --keep LOCALE_ARCHIVE \
-    --file support \
+    --file nix \
     nix-project-org2gfm \
-    pkgs.ansifilter \
-    pkgs.bash \
-    pkgs.coreutils \
-    pkgs.direnv \
-    pkgs.findutils \
-    pkgs.git \
-    pkgs.gnugrep \
-    pkgs.gnutar \
-    pkgs.gzip \
-    pkgs.stack \
-    pkgs.tree \
-    pkgs.which \
+    nixpkgs-stable.ansifilter \
+    nixpkgs-stable.bash \
+    nixpkgs-stable.coreutils \
+    nixpkgs-stable.direnv \
+    nixpkgs-stable.findutils \
+    nixpkgs-stable.git \
+    nixpkgs-stable.gnugrep \
+    nixpkgs-stable.gnutar \
+    nixpkgs-stable.gzip \
+    nixpkgs-stable.stack \
+    nixpkgs-stable.tree \
+    nixpkgs-stable.which \
     --command \
     org2gfm \
     --ignore 'links.org\|home-fake' \

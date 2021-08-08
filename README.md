@@ -52,7 +52,7 @@ To use HLS with a Haskell project, you must have an instance of HLS compiled wit
 
 These versions of GHC match what's [built, tested, and cached by the Haskell.nix project](https://input-output-hk.github.io/haskell.nix/reference/supported-ghc-versions/#supported-ghc-versions).
 
-[This project's continuous integration (using GitHub Actions)](https://github.com/shajra/nix-haskell-hls/actions) caches all eight of these builds at [Cachix](https://cachix.org/), a service for caching pre-built Nix packages. If you don't want to wait for a full local build when first using this project, setting up Cachix is recommended.
+This project's continuous integration (using GitHub Actions)]] caches all eight of these builds at [Cachix](https://cachix.org/), a service for caching pre-built Nix packages. If you don't want to wait for a full local build when first using this project, setting up Cachix is recommended.
 
 Note that not every commit of the HLS "master" branch is built and cached to Cachix, only versions referenced by the commits of this `nix-haskell-hls` project. Upgrading to the latest commit of HLS's "master" is done periodically, but still manually.
 
@@ -146,21 +146,30 @@ To use Nix at all, you first need to have it on your system.
 
 > **<span class="underline">NOTE:</span>** You don't need this step if you're running NixOS, which comes with Nix baked in.
 
-If you don't already have Nix, the official installation script should work on a variety of UNIX-like operating systems. The easiest way to run this installation script is to execute the following shell command as a user other than root:
+If you don't already have Nix, [the official installation script](https://nixos.org/learn.html) should work on a variety of UNIX-like operating systems:
 
 ```shell
-curl https://nixos.org/nix/install | sh
+sh <(curl -L https://nixos.org/nix/install) --daemon
 ```
 
-This script will download a distribution-independent binary tarball containing Nix and its dependencies, and unpack it in `/nix`.
+If you're on a recent release of MacOS, you will need an extra switch:
+
+```shell
+sh <(curl -L https://nixos.org/nix/install) --daemon \
+    --darwin-use-unencrypted-nix-store-volume
+```
+
+After installation, you may have to exit your terminal session and log back in to have environment variables configured to put Nix executables on your `PATH`.
+
+The `--daemon` switch installs Nix in the recommended multi-user mode. This requires the script to run commands with `sudo`. The script fairly verbosely reports everything it does and touches. If you later want to uninstall Nix, you can run the installation script again, and it will tell you what to do to get back to a clean state.
 
 The Nix manual describes [other methods of installing Nix](https://nixos.org/nix/manual/#chap-installation) that may suit you more.
 
 ## Cache setup<a id="sec-5-2"></a>
 
-It's recommended to configure Nix to use shajra.cachix.org as a Nix *substituter*. This project pushes built Nix packages to [Cachix](https://cachix.org/) as part of its continuous integration. Once configured, Nix will pull down these pre-built packages instead of building them locally.
+It's recommended to configure Nix to use shajra.cachix.org as a Nix *substitutor*. This project pushes built Nix packages to [Cachix](https://cachix.org/) as part of its continuous integration. Once configured, Nix will pull down these pre-built packages instead of building them locally (potentially saving a lot of time). This augments the default substitutor that pulls from cache.nixos.org.
 
-You can configure shajra.cachix.org as a substituter with the following command:
+You can configure shajra.cachix.org as a substitutor with the following command:
 
 ```shell
 nix run \
@@ -169,9 +178,13 @@ nix run \
     --command cachix use shajra
 ```
 
-This will perform user-local configuration of Nix at `~/.config/nix/nix.conf`. This configuration will be available immediately, and any subsequent invocation of Nix commands will take advantage of the Cachix cache.
+Cachix is a service that anyone can use. You can call this command later to add substitutors for someone else using Cachix, replacing "shajra" with their cache's name.
 
-If you're running NixOS, you can configure Cachix globally by running the above command as a root user. The command will then configure `/etc/nixos/cachix/shajra.nix`, and will output instructions on how to tie this configuration into your NixOS configuration.
+If you've just run a multi-user Nix installation and are not yet a trusted user in `/etc/nix/nix.conf`, this command may not work. But it will report back some options to proceed.
+
+One option sets you up as a trusted user, and installs Cachix configuration for Nix locally at `~/.config/nix/nix.conf`. This configuration will be available immediately, and any subsequent invocation of Nix commands will take advantage of the Cachix cache.
+
+You can alternatively configure Cachix as a substitutor globally by running the above command as a root user (say with `sudo`), which sets up Cachix directly in `/etc/nix/nix.conf`. The invocation may give further instructions upon completion.
 
 # This project's Nix expression<a id="sec-6"></a>
 
@@ -225,7 +238,7 @@ nix search --no-cache --file .
     * stack-nonix (stack-args)
       Haskell Stack with args: --no-nix --system-ghc
 
-Note, when loading a directory with `--file`, a Nix expression is assumed to be in the directory's `default.nix` file. Also, the call of `nix show-derivation` is only needed one time to get search results as discussed in [the provided documentation on Nix](doc/nix.md).
+Note, when loading a directory with `--file`, a Nix expression is assumed to be in the directory's `default.nix` file. Also, the call of `nix show-derivation` is only needed one time to get search results as discussed in the provided documentation on Nix]].
 
 The search results of `nix search` tell us the *attribute paths* we can use to select out the package derivations from our Nix expression. Above we got the default 1.2.0 version of HLS packages compiled for GHC 8.10.4. We could have explicitly called `nix search` above with `--argstr ghcVersion 8.10.4` and `--arg hlsUnstable false` and have gotten the same default results.
 
@@ -259,7 +272,7 @@ As noted before, to use HLS with a Haskell project, you must have an instance of
 -   useful build tools like `cabal`, `stack`, and `gen-hie`
 -   useful tools for editor/shell integration like `direnv` and `direnv-nix-lorelei`
 
-By default, Stack downloads and manages its own instances of GHC, based on the version specified in each project's `stack.yaml` file. So by default, Stack won't use externally Nix-installed GHC instances, though you have the option of using Stack's `--system-ghc` switch to use the externally provided instance of GHC. When not using project-level Nix shells, letting Stack manage its own instances of GHC is convenient because it can choose the right version for any given project. However, the way Stack downloads GHC in NixOS [is not reproducible or portable in a principled way](./doc/stack-nix.md).
+By default, Stack downloads and manages its own instances of GHC, based on the version specified in each project's `stack.yaml` file. So by default, Stack won't use externally Nix-installed GHC instances, though you have the option of using Stack's `--system-ghc` switch to use the externally provided instance of GHC. When not using project-level Nix shells, letting Stack manage its own instances of GHC is convenient because it can choose the right version for any given project. However, the way Stack downloads GHC in NixOS is not reproducible or portable in a principled way]].
 
 Stack may manage its own instance of GHC, but we still need to provide an instance of HLS for any versions of GHC our Stack projects use, same as for our Cabal projects.
 
@@ -311,7 +324,7 @@ Next we can install an instance of HLS targeting an alternate version of GHC (8.
 nix-env --install --file . \
     --argstr ghcVersion 8.8.4 \
     --arg hlsUnstable true \
-    --attr hls-renamed
+	--attr hls-renamed
 ```
 
 These packages have been installed in our Nix profile, which we can see by querying our profile with `nix-env`:
@@ -359,7 +372,7 @@ Nix shells are configured in the Nix expression language saved in files with a "
 
 To learn more about writing Nix expressions for Cabal and Stack projects, see the [Nixpkgs guide on configuring Haskell packages](https://haskell4nix.readthedocs.io/).
 
-Authoring a Nix expression isn't a lot of code, but it's not as simple as one line, so this project provides some examples to help follow along. We have [one for Cabal](./examples/example-cabal), and [another for Stack](./examples/example-stack). The Nix expressions in these examples include generous inline comments for guidance. We'll use these examples to illustrate some steps.
+Authoring a Nix expression isn't a lot of code, but it's not as simple as one line, so this project provides some examples to help follow along. We have one for Cabal]], and [another for Stack](./examples/example-stack). The Nix expressions in these examples include generous inline comments for guidance. We'll use these examples to illustrate some steps.
 
 The code between these two examples is largely the same, and both have a dependency on the ICU C library for Unicode support, so these projects may likely not compile outside a Nix shell with Cabal or Stack alone (unless you happened to have installed globally the ICU library and header files).
 
@@ -410,8 +423,8 @@ nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
     trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
     warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
     …
-    2021-07-27 21:46:48.899561112 [ThreadId 733] INFO hls:	finish: GenerateCore (took 0.00s)
     Completed (5 files worked, 0 files failed)
+    2021-08-07 11:10:49.559841294 [ThreadId 485] INFO hls:	finish: GenerateCore (took 0.00s)
 
 The same command can test HLS working with our Stack example project:
 
@@ -425,7 +438,7 @@ nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
     warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
     …
     Completed (3 files worked, 0 files failed)
-    2021-07-27 21:46:59.483354694 [ThreadId 641] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-08-07 11:11:00.650568549 [ThreadId 464] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Editor integration with Nix shells<a id="sec-9"></a>
 
@@ -453,10 +466,10 @@ Both of these methods are detailed in separate documents:
 
 -   a [simple configuration with this project's HLS Nix wrapper `hls-wrapper-nix`](./doc/hls-wrapper-nix.md)
 -   a [more complex configuration using Direnv and Lorelei](./doc/direnv.md) that can be faster in some instances.
-
-We recommend starting with the HLS Nix wrapper, and consider Direnv and Lorelei if you notice the Nix shell taking a long and annoying time to enter.
-
-Using the Nix wrapper can be as simple as just specifying `hls-wrapper-nix` instead of `haskell-language-server-wrapper` for your editor's LSP configuration.
+    
+    We recommend starting with the HLS Nix wrapper, and consider Direnv and Lorelei if you notice the Nix shell taking a long and annoying time to enter.
+    
+    Using the Nix wrapper can be as simple as just specifying `hls-wrapper-nix` instead of `haskell-language-server-wrapper` for your editor's LSP configuration.
 
 # Workarounds for known problems<a id="sec-10"></a>
 

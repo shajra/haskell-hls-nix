@@ -85,7 +85,7 @@ When enabling Stack's Nix integration with `--nix` and specifying a non-Haskell 
 ```shell
 /run/current-system/sw/bin/nix-shell \
     --pure -E "
-       with (import <nixpkgs> {});
+	with (import <nixpkgs> {});
 	let inputs = [icu haskell.compiler.ghc884 git gcc gmp];
 	    libPath = lib.makeLibraryPath inputs;
 	    stackExtraArgs = lib.concatMap (pkg: [
@@ -100,12 +100,11 @@ When enabling Stack's Nix integration with `--nix` and specifying a non-Haskell 
 	    STACK_IN_NIX_EXTRA_ARGS = stackExtraArgs;
 	    https://docs.haskellstack.org/en/stable/nix_integration/LANG=\"en_US.UTF-8\";
 	    } \"\"" \
-    --run
-	"'/path_to_stack_installation/bin/stack' \
-	$STACK_IN_NIX_EXTRA_ARGS \
-	'--internal-re-exec-version=2.5.1' \
-	'--verbose' \
-	'build'"
+    --run "'/path_to_stack_installation/bin/stack' \
+    $STACK_IN_NIX_EXTRA_ARGS \
+    '--internal-re-exec-version=2.5.1' \
+    '--verbose' \
+    'build'"
 ```
 
 ## Stack imports Nixpkgs in an impure way<a id="sec-4-3"></a>
@@ -203,8 +202,8 @@ The means that the GHC version can be specified as follows:
 | Component   | GHC from Stack resolver | GHC from Nix expressions    |
 |----------- |----------------------- |--------------------------- |
 | Stack build | ✓ (`--nix`)             | ✓ (`--no-nix --system-ghc`) |
-| HLS         | 🗴                       | ✓                           |
-| Nix build   | 🗴                       | ✓                           |
+| HLS         | ✗                       | ✓                           |
+| Nix build   | ✗                       | ✓                           |
 
 Users of Stack on non-NixOS systems are probably familiar with Stack's ability to download instances of GHC. This unfortunately doesn't work with NixOS. We definitely don't want to exclude NixOS users, so we don't consider any options where GHC is downloaded directly by Stack. Nix will always provide GHC. The only question is whether Stack selects this instance from Nixpkgs with its `--nix` option or whether it delegates to Nix to have it selected outside of Stack with `--no-nix --system-ghc`.
 
