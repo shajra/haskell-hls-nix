@@ -2,624 +2,639 @@
 #+SETUPFILE: links.org
 
 
-* Org-mode Setup :noexport:
+* Org-mode setup :noexport:
 
-  This document is written in a project-agnostic way so it can be copied to
-  other projects that use Nix.
+This document is written in a project-agnostic way so it can be copied to other
+projects that use Nix.
 
 ** Variables
 
-   We set variables in =nix.org.el= and access those settings with the
-   following macros and source code blocks (using Noweb).
+We set variables in =nix.org.el= and access those settings with the following
+macros and source code blocks (using Noweb).
 
-   #+NAME: get
-   #+BEGIN_SRC emacs-lisp :var arg="" :eval yes :results silent
-     (alist-get (intern arg) (car (read-from-string (f-read "nix.org.el"))))
-   #+END_SRC
+#+NAME: get
+#+BEGIN_SRC emacs-lisp :var arg="" :eval yes :results silent
+  (alist-get (intern arg) (car (read-from-string (f-read "nix.org.el"))))
+#+END_SRC
 
-   #+MACRO: get (eval (concat $2 (alist-get (intern $1) (car (read-from-string (f-read "nix.org.el")))) $2))
-   #+MACRO: package-attr {{{get(package-attr,=)}}}
-   #+MACRO: package-name {{{get(package-name,")}}}
-   #+MACRO: package-type {{{get(package-type)}}}
-   #+MACRO: package-target {{{get(package-target,=)}}}
-   #+MACRO: run-src {{{get(run-src,=)}}}
-   #+MACRO: run-attr {{{get(run-attr,=)}}}
-   #+MACRO: run-name {{{get(run-name,=)}}}
-   #+MACRO: run-target {{{get(run-target,=)}}}
-   #+MACRO: nixos-release {{{get(nixos-release)}}}
+#+MACRO: get (eval (concat $2 (alist-get (intern $1) (car (read-from-string (f-read "nix.org.el")))) $2))
+#+MACRO: package-attr {{{get(package-attr,=)}}}
+#+MACRO: package-name {{{get(package-name,")}}}
+#+MACRO: package-type {{{get(package-type)}}}
+#+MACRO: package-target {{{get(package-target,=)}}}
+#+MACRO: run-src {{{get(run-src,=)}}}
+#+MACRO: run-attr {{{get(run-attr,=)}}}
+#+MACRO: run-name {{{get(run-name,=)}}}
+#+MACRO: run-target {{{get(run-target,=)}}}
+#+MACRO: nixos-release {{{get(nixos-release)}}}
 
 ** Formatting help
 
-   This snippet can be used as a post-processing step to crop down the results
-   from an evaluation of a source code block.
+This snippet can be used as a post-processing step to crop down the results from
+an evaluation of a source code block.
 
-   #+NAME: crop
-   #+BEGIN_SRC emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
-     (let* ((ls         (split-string text "\n"))
-            (first-ls   (-take first-n ls))
-            (rest-first (-drop first-n ls))
-            (rest-last  (-drop-last (+ 1 last-n) rest-first))
-            (last-ls    (-take-last (+ 1 last-n) rest-first)))
-       (string-join
-        (if rest-last
-            (append first-ls '("…") last-ls)
-          (append first-ls last-ls))
-        "\n"))
-   #+END_SRC
+#+NAME: crop
+#+BEGIN_SRC emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
+  (let* ((ls         (split-string text "\n"))
+         (first-ls   (-take first-n ls))
+         (rest-first (-drop first-n ls))
+         (rest-last  (-drop-last (+ 1 last-n) rest-first))
+         (last-ls    (-take-last (+ 1 last-n) rest-first)))
+    (string-join
+     (if rest-last
+         (append first-ls '("…") last-ls)
+       (append first-ls last-ls))
+     "\n"))
+#+END_SRC
 
 ** Setup action
 
-   The following helps (using Noweb) set up Nix environment variables for
-   source block evaluation.
+The following helps (using Noweb) set up Nix environment variables for source
+block evaluation.
 
-   #+NAME: nix-init
-   #+BEGIN_SRC shell :eval no
-     export NIX_PROFILE=$(pwd)/nix-profile
-     export NIX_PAGER=cat
-     export PATH="$NIX_PROFILE/bin:$PATH"
-   #+END_SRC
+#+NAME: nix-init
+#+BEGIN_SRC shell :eval no
+  export NIX_PROFILE=$(pwd)/nix-profile
+  export NIX_PAGER=cat
+  export PATH="$NIX_PROFILE/bin:$PATH"
+#+END_SRC
 
-   Next we perform some side-effects to set up the evaluation of the whole
-   document.
+Next we perform some side-effects to set up the evaluation of the whole
+document.
 
-   #+NAME: cleanup
-   #+BEGIN_SRC shell :dir .. :results output silent :noweb yes
-     <<nix-init>>
-     rm --force result*
-     rm --force "$NIX_PROFILE"*
-   #+END_SRC
+#+NAME: cleanup
+#+BEGIN_SRC shell :dir .. :results output silent :noweb yes
+  <<nix-init>>
+  rm --force result*
+  rm --force "$NIX_PROFILE"*
+#+END_SRC
 
-   This is just a hack to deal with the fact that we never know what directory a
-   session will start in, so we need a way to calculate the PWD to jump to it.
+This is just a hack to deal with the fact that we never know what directory a
+session will start in, so we need a way to calculate the PWD to jump to it.
 
-   #+NAME: pwd-parent
-   #+BEGIN_SRC shell :results output silent
-     echo cd "$(pwd)/.."
-   #+END_SRC
+#+NAME: pwd-parent
+#+BEGIN_SRC shell :results output silent
+  echo cd "$(pwd)/.."
+#+END_SRC
 
-   This begins a session with environment variables initialized.
+This begins a session with environment variables initialized.
 
-   #+NAME: session-init
-   #+BEGIN_SRC shell :session env :results output silent :noweb yes
-     <<pwd-parent()>>
-     <<nix-init>>
-   #+END_SRC
+#+NAME: session-init
+#+BEGIN_SRC shell :session env :results output silent :noweb yes
+  <<pwd-parent()>>
+  <<nix-init>>
+#+END_SRC
+
+* About this document
+
+This document is included for people somewhat new to Nix.  Although the [[nix-learn][official
+Nix documentation]] has gotten substantially better with time, this is an embedded
+guide to help get started with Nix so it's easier to use the rest of the
+project.
+
+Note that this document only covers the Nix package manager, an not [[nixos][NixOS]] (a
+full Linux operating system built on top of Nix) or [[nix-darwin][Nix-Darwin]] (a project that
+gives the benefits of NixOS for MacOS).
 
 * How this project uses Nix
 
-  This project uses the [[nix][Nix package manager]] to download all necessary
-  dependencies and build everything from source. In this regard, Nix is helpful
-  as not just a package manager, but also a build tool. Nix helps us get from
-  raw source files to not only built executables, but all the way to a Nix
-  package, which we can install with Nix if we like.
+This project uses the [[nix][Nix package manager]] to download all necessary dependencies
+and build everything from source. In this regard, Nix is helpful as not just a
+package manager, but also a build tool. Nix helps us get from raw source files
+to not only built executables, but all the way to a Nix package, which we can
+install with Nix if we like.
 
-  [[github-actions][This project's continuous integration (using GitHub Actions)]] caches built
-  packages at [[cachix][Cachix]], a service for caching pre-built Nix packages. If you
-  don't want to wait for a full local build when first using this project,
-  setting up Cachix is recommended.
+[[github-actions][This project's continuous integration (using GitHub Actions)]] caches built
+packages at [[cachix][Cachix]], a service for caching pre-built Nix packages. If you don't
+want to wait for a full local build when first using this project, setting up
+Nix to pull from Cachix is recommended.
 
-  Within this project, the various files with a ".nix" extension are Nix files,
-  each of which contains an expression written in the [[nix-expr][Nix expression language]]
-  used by the Nix package manager to specify packages. If you get proficient
-  with this language, you can use these expressions as a starting point to
-  compose your own packages beyond what's provided in this project.
+Within this project, the various files with a ".nix" extension are Nix files,
+each of which contains an expression written in the [[nix-expr][Nix expression language]] used
+by the Nix package manager to specify packages. If you get proficient with this
+language, you can use these expressions as a starting point to compose your own
+packages beyond what's provided in this project.
 
 * Motivation to use Nix
 
-  When making a new software project, wrangling dependencies can be a chore.
-  For instance, GNU Make's makefiles often depend on executables and libraries
-  that may not yet be available on a system. The makefiles in most projects
-  don't assist with getting these dependencies at usable versions. And when
-  projects document how to get and install dependencies, there can be a lot of
-  room for error.
+When making a new software project, wrangling dependencies can be a chore.  For
+instance, GNU Make's makefiles often depend on executables and libraries that
+may not yet be available on a system. The makefiles in most projects don't
+assist with getting these dependencies at usable versions. And when projects
+document how to get and install dependencies, there can be a lot of room for
+error.
 
-  Nix can build and install projects in a way that's precise, repeatable, and
-  guaranteed not to conflict with anything already installed. Every single
-  dependency needed to build a package is specified in Nix expressions. For
-  each dependency needed to build a package, Nix will download the dependency,
-  build it, and install it as a Nix package for use as a dependency. Nix can
-  even concurrently install multiple versions of any dependency without
-  conflicts.
+Nix can build and install projects in a way that's precise, repeatable, and
+guaranteed not to conflict with anything already installed. Every single
+dependency needed to build a package is specified in Nix expressions. For each
+dependency needed to build a package, Nix will download the dependency, build
+it, and install it as a Nix package for use as a dependency. Nix can even
+concurrently install multiple versions of any dependency without conflicts.
 
-  Every dependency of a Nix package is itself a Nix package. And Nix supports
-  building packages for a variety of languages. Nix picks up where
-  language-specific tooling stops, layering on top of the tools and techniques
-  native to those ecosystems. Since each package is specified by a Nix
-  expression, and because Nix expressions are designed to be composed together
-  to make new ones, we can make our own expressions to specify new packages
-  with dependencies that may not all come from the same language ecosystem.
+Every dependency of a Nix package is itself a Nix package. And Nix supports
+building packages for a variety of languages. Nix picks up where
+language-specific tooling stops, layering on top of the tools and techniques
+native to those ecosystems. Since each package is specified by a Nix expression,
+and because Nix expressions are designed to be composed together to make new
+ones, we can make our own expressions to specify new packages with dependencies
+that may not all come from the same language ecosystem.
 
-  To underscore how repeatable and precise Nix builds are, it helps to know
-  that Nix uniquely identifies packages by a hash derived from the hashes of
-  requisite dependencies and configuration. This is a recursive hash
-  calculation that assures that the smallest change to even a distant
-  transitive dependency of a package changes its hash. When dependencies are
-  downloaded, they are checked against the expected hash. Most Nix projects
-  (this one included) are careful to pin dependencies to specific
-  versions/hashes. Because of this, when building the same project with Nix on
-  two different systems, we get an extremely high confidence we will get the
-  same output, often bit-for-bit. This is a profound degree of precision
-  relative to other popular package managers.
+To underscore how repeatable and precise Nix builds are, it helps to know that
+Nix uniquely identifies packages by a hash derived from the hashes of requisite
+dependencies and configuration. This is a recursive hash calculation that
+assures that the smallest change to even a distant transitive dependency of a
+package changes its hash. When dependencies are downloaded, they are checked
+against the expected hash. Most Nix projects (this one included) are careful to
+pin dependencies to specific versions/hashes. Because of this, when building the
+same project with Nix on two different systems, we get an extremely high
+confidence we will get the same output, often bit-for-bit. This is a profound
+degree of precision relative to other popular package managers.
 
-  The repeatability and precision of Nix enables caching services, which for
-  Nix are called /substituters/. Cachix is one such substituter. Before
-  building a package, the hash for the package is calculated. If any configured
-  substituter has a build for the hash, it's pulled down as a substitute. A
-  certificate-based protocol is used to establish trust of substituters.
-  Between this protocol, and the algorithm for calculating hashes in Nix, you
-  can have confidence that a package pulled from a substituter will be
-  identical to what you would have built locally.
+The repeatability and precision of Nix enables caching services, which for Nix
+are called /substitutors/. Cachix is one such substitutor. Before building a
+package, the hash for the package is calculated. If any configured substitutor
+has a build for the hash, it's pulled down as a substitute. A certificate-based
+protocol is used to establish trust of substitutors.  Between this protocol, and
+the algorithm for calculating hashes in Nix, you can have confidence that a
+package pulled from a substitutor will be identical to what you would have built
+locally.
 
-  All of this makes Nix an attractive tool for managing almost any software
-  project.
+All of this makes Nix an attractive tool for managing almost any software
+project.
 
-* Installation and Setup
+* Installation and setup
+
 ** Nix package manager setup
 
-   #+BEGIN_QUOTE
-   *_NOTE:_* You don't need this step if you're running NixOS, which comes with
-   Nix baked in.
-   #+END_QUOTE
+#+BEGIN_QUOTE
+*_NOTE:_* You don't need this step if you're running NixOS, which comes with Nix
+baked in.
+#+END_QUOTE
 
-   If you don't already have Nix, the official installation script should work
-   on a variety of UNIX-like operating systems. The easiest way to run this
-   installation script is to execute the following shell command as a user
-   other than root:
+If you don't already have Nix, [[nix-learn][the official installation script]] should work on a
+variety of UNIX-like operating systems:
 
-   #+BEGIN_SRC shell :eval no
-     curl https://nixos.org/nix/install | sh
-   #+END_SRC
+#+BEGIN_SRC shell :eval no
+  sh <(curl -L https://nixos.org/nix/install) --daemon
+#+END_SRC
 
-   This script will download a distribution-independent binary tarball
-   containing Nix and its dependencies, and unpack it in =/nix=.
+If you're on a recent release of MacOS, you will need an extra switch:
 
-   The Nix manual describes [[nix-install][other methods of installing Nix]] that may suit you
-   more.
+#+BEGIN_SRC shell :eval no
+  sh <(curl -L https://nixos.org/nix/install) --daemon \
+      --darwin-use-unencrypted-nix-store-volume
+#+END_SRC
+
+After installation, you may have to exit your terminal session and log back in
+to have environment variables configured to put Nix executables on your =PATH=.
+
+The =--daemon= switch installs Nix in the recommended multi-user mode.  This
+requires the script to run commands with =sudo=.  The script fairly verbosely
+reports everything it does and touches.  If you later want to uninstall Nix, you
+can run the installation script again, and it will tell you what to do to get
+back to a clean state.
+
+The Nix manual describes [[nix-install][other methods of installing Nix]] that may suit you more.
 
 ** Cache setup
 
-   It's recommended to configure Nix to use shajra.cachix.org as a Nix
-   /substituter/. This project pushes built Nix packages to [[cachix][Cachix]]
-   as part of its continuous integration. Once configured, Nix will pull down
-   these pre-built packages instead of building them locally.
+It's recommended to configure Nix to use shajra.cachix.org as a Nix
+/substitutor/.  This project pushes built Nix packages to [[cachix][Cachix]] as part of its
+continuous integration.  Once configured, Nix will pull down these pre-built
+packages instead of building them locally (potentially saving a lot of time).
+This augments the default substitutor that pulls from cache.nixos.org.
 
-   You can configure shajra.cachix.org as a substituter with the following
-   command:
+You can configure shajra.cachix.org as a substitutor with the following command:
 
-   #+BEGIN_SRC shell :eval no
-     nix run \
-         --file https://cachix.org/api/v1/install \
-         cachix \
-         --command cachix use shajra
-   #+END_SRC
+#+BEGIN_SRC shell :eval no
+  nix run \
+      --file https://cachix.org/api/v1/install \
+      cachix \
+      --command cachix use shajra
+#+END_SRC
 
-   This will perform user-local configuration of Nix at
-   =~/.config/nix/nix.conf=. This configuration will be available immediately,
-   and any subsequent invocation of Nix commands will take advantage of the
-   Cachix cache.
+Cachix is a service that anyone can use.  You can call this command later to add
+substitutors for someone else using Cachix, replacing "shajra" with their
+cache's name.
 
-   If you're running NixOS, you can configure Cachix globally by running the
-   above command as a root user. The command will then configure
-   =/etc/nixos/cachix/shajra.nix=, and will output instructions on how to tie
-   this configuration into your NixOS configuration.
+If you've just run a multi-user Nix installation and are not yet a trusted user
+in =/etc/nix/nix.conf=, this command may not work.  But it will report back some
+options to proceed.
+
+One option sets you up as a trusted user, and installs Cachix configuration for
+Nix locally at =~/.config/nix/nix.conf=.  This configuration will be available
+immediately, and any subsequent invocation of Nix commands will take advantage
+of the Cachix cache.
+
+You can alternatively configure Cachix as a substitutor globally by running the
+above command as a root user (say with =sudo=), which sets up Cachix directly in
+=/etc/nix/nix.conf=.  The invocation may give further instructions upon
+completion.
 
 * Working with Nix
 
-  Though covering Nix comprehensively is beyond the scope of this document,
-  we'll go over a few commands illustrating some usage of Nix with this
-  project.
+Though covering Nix comprehensively is beyond the scope of this document, we'll
+go over a few commands illustrating some usage of Nix with this project.
 
 ** Searching Nix files
 
-   Each of the Nix files in this project (files with a ".nix" extension)
-   contains exactly one Nix expression. This expression evaluates to one of the
-   following values:
+Each of the Nix files in this project (files with a ".nix" extension) contains
+exactly one Nix expression. This expression evaluates to one of the following
+values:
 
-   - simple primitives and functions
-   - /derivations/ of packages that can be built and installed with Nix
-   - containers of values, allowing a single value to provide multiple
-     values of different types, including more containers of values.
+- simple primitives and functions
+- /derivations/ of packages that can be built and installed with Nix
+- containers of values, allowing a single value to provide multiple values of
+  different types, including more containers of values.
 
-   Once you learn the Nix language, you can read these files to see what kind
-   of values they build. We can use the =nix search= command to see what
-   package derivations a Nix expression contains. For example from the root
-   directory of this project, we can execute:
+Once you learn the Nix language, you can read these files to see what kind of
+values they build. We can use the =nix search= command to see what package
+derivations a Nix expression contains. For example from the root directory of
+this project, we can execute:
 
-   #+NAME: nix-derivation-show
-   #+BEGIN_SRC shell :dir .. :results output silent :exports none
-     nix show-derivation --file default.nix >/dev/null 2>&1
-   #+END_SRC
+#+NAME: nix-derivation-show
+#+BEGIN_SRC shell :dir .. :results output silent :exports none
+  nix show-derivation --file default.nix >/dev/null 2>&1
+#+END_SRC
 
-   #+BEGIN_SRC shell :eval no
-     nix search --file default.nix --no-cache
-   #+END_SRC
+#+BEGIN_SRC shell :eval no
+  nix search --file default.nix --no-cache
+#+END_SRC
 
-   #+NAME: nix-search
-   #+BEGIN_SRC shell :dir .. :results output :exports results :post crop(text=*this*, first-n=9, last-n=0)
-     nix search --file default.nix --no-cache | ansifilter
-   #+END_SRC
+#+NAME: nix-search
+#+BEGIN_SRC shell :dir .. :results output :exports results :post crop(text=*this*, first-n=9, last-n=0)
+  nix search --file default.nix --no-cache | ansifilter
+#+END_SRC
 
-   #+RESULTS: nix-search
-   #+begin_example
-   ,* cabal-install (cabal-install)
-     The command-line interface for Cabal and Hackage
+#+RESULTS: nix-search
+#+begin_example
+,* cabal-install (cabal-install)
+  The command-line interface for Cabal and Hackage
 
-   ,* direnv (direnv)
-     A shell extension that manages your environment
+,* direnv (direnv)
+  A shell extension that manages your environment
 
-   ,* direnv-nix-lorelei (direnv-nix-lorelei)
-     Alternative Nix functions for Direnv
+,* direnv-nix-lorelei (direnv-nix-lorelei)
+  Alternative Nix functions for Direnv
 
-   …
-   #+end_example
+…
+#+end_example
 
-   If you don't get the results above, see the [[#nix-drv][section on understanding
-   derivations]] for an explanation of a likely problem and workaround.
+If you don't get the results above, see the [[#nix-drv][section on understanding derivations]]
+for an explanation of a likely problem and workaround.
 
-   Note that because for extremely large Nix expressions, searching can be
-   slow, =nix search= by default returns results from searching an indexed
-   cache. This cache is updated explicitly (with an =--update-cache= switch)
-   but may be inconsistent with what you really want to search. It can be
-   confusing to get incorrect results due to an inconsistent cache. However,
-   because small local projects rarely have that many package derivations we
-   don't really need the cache, and can bypass it with the =--no-cache= switch,
-   as used above. This guarantees accurate results that are fast enough. So for
-   the purposes of this project, it's recommended to always use =--no-cache=.
+Note that because for extremely large Nix expressions, searching can be slow,
+=nix search= by default returns results from searching an indexed cache. This
+cache is updated explicitly (with an =--update-cache= switch) but may be
+inconsistent with what you really want to search. It can be confusing to get
+incorrect results due to an inconsistent cache. However, because small local
+projects rarely have that many package derivations we don't really need the
+cache, and can bypass it with the =--no-cache= switch, as used above. This
+guarantees accurate results that are fast enough. So for the purposes of this
+project, it's recommended to always use =--no-cache=.
 
-   The output of =nix search= is formatted as
+The output of =nix search= is formatted as
 
-   #+BEGIN_EXAMPLE
-     ,* attribute-path (name-of-package)
-       Short description of package
-   #+END_EXAMPLE
+#+BEGIN_EXAMPLE
+    ,* attribute-path (name-of-package)
+      Short description of package
+#+END_EXAMPLE
 
-   /Attribute paths/ are used to select values from Nix sets that might be
-   nested. A dot delimits /attributes/ in the path. For instance an attribute
-   path of =a.b= selects a value from a set with an =a= attribute that has set
-   with a =b= attribute, that then has the value to select.
+/Attribute paths/ are used to select values from Nix sets that might be nested.
+A dot delimits /attributes/ in the path. For instance an attribute path of =a.b=
+selects a value from a set with an =a= attribute that has set with a =b=
+attribute, that then has the value to select.
 
-   If the Nix expression we're searching evaluates to a single derivation (not
-   in a container), the attribute path will be missing from the =nix search=
-   result.
+If the Nix expression we're searching evaluates to a single derivation (not in a
+container), the attribute path will be missing from the =nix search= result.
 
-   Many Nix commands evaluate Nix files. If you specify a directory instead,
-   the command will look for a =default.nix= file within to evaluate. So from
-   the root directory of this project, we could use =.= instead of
-   =default.nix=:
+Many Nix commands evaluate Nix files. If you specify a directory instead, the
+command will look for a =default.nix= file within to evaluate. So from the root
+directory of this project, we could use =.= instead of =default.nix=:
 
-   #+NAME: nix-search-alt
-   #+BEGIN_SRC shell :dir .. :results output silent
-     nix search --file . --no-cache
-   #+END_SRC
+#+NAME: nix-search-alt
+#+BEGIN_SRC shell :dir .. :results output silent
+  nix search --file . --no-cache
+#+END_SRC
 
-   In the remainder of this document, we'll use =.= instead of =default.nix=
-   since this is conventional for Nix.
+In the remainder of this document, we'll use =.= instead of =default.nix= since
+this is conventional for Nix.
 
 ** Building Nix expressions
 
-   The following result is returned by our prior execution of ~nix search
-   --no-cache --file .~:
+The following result is one returned by our prior execution of ~nix search
+--no-cache --file .~:
 
-   #+NAME: nix-search-specific
-   #+BEGIN_SRC shell :dir .. :results output :exports results :noweb yes
-     nix search --no-cache --file . | ansifilter \
-         | grep --color=never --after-context=1 '* <<get("package-attr")>> ('
-   #+END_SRC
+#+NAME: nix-search-specific
+#+BEGIN_SRC shell :dir .. :results output :exports results :noweb yes
+  nix search --no-cache --file . | ansifilter \
+      | grep --color=never --after-context=1 '* <<get("package-attr")>> ('
+#+END_SRC
 
-   #+RESULTS: nix-search-specific
-   : * hls-renamed (haskell-language-server-ghc8104-renamed)
-   :   Haskell Language Server (HLS) for GHC 8.10.4, renamed binary
+#+RESULTS: nix-search-specific
+: * hls-renamed (haskell-language-server-ghc8104-renamed)
+:   Haskell Language Server (HLS) for GHC 8.10.4, renamed binary
 
-   We can see that a package named {{{package-name}}} can be accessed with the
-   {{{package-attr}}} attribute path in the Nix expression in the project root's
-   =default.nix=.  Not shown in the search results above, this package happens
-   to provide the {{{package-type}}} {{{package-target}}}.
+We can see that a package named {{{package-name}}} can be accessed with the
+{{{package-attr}}} attribute path in the Nix expression in the project root's
+=default.nix=.  Not shown in the search results above, this package happens to
+provide the {{{package-type}}} {{{package-target}}}.
 
-   We can build this package with =nix build= from the project root:
+We can build this package with =nix build= from the project root:
 
-   #+NAME: nix-build
-   #+BEGIN_SRC shell :dir .. :results output silent :noweb yes
-     nix build --file . <<get("package-attr")>>
-   #+END_SRC
+#+NAME: nix-build
+#+BEGIN_SRC shell :dir .. :results output silent :noweb yes
+  nix build --file . <<get("package-attr")>>
+#+END_SRC
 
-   The positional arguments to =nix build= are /installables/, which can be
-   referenced by attribute paths. If you supply none then all derivations found
-   are built by default.
+The positional arguments to =nix build= are /installables/, which can be
+referenced by attribute paths. If you supply none then all derivations found are
+built by default.
 
-   All packages built by Nix are stored in =/nix/store=. Nix won't rebuild
-   packages found there. Once a package is built, its content in =/nix/store= is
-   read-only (until the package is garbage collected, discussed later).
+All packages built by Nix are stored in =/nix/store=. Nix won't rebuild packages
+found there. Once a package is built, its content in =/nix/store= is read-only
+(until the package is garbage collected, discussed later).
 
-   After a successful call of =nix build=, you'll see one or more symlinks for
-   each package requested in the current working directory. These symlinks by
-   default have a name prefixed with "result" and point back to the respective
-   build in =/nix/store=:
+After a successful call of =nix build=, you'll see one or more symlinks for each
+package requested in the current working directory. These symlinks by default
+have a name prefixed with "result" and point back to the respective build in
+=/nix/store=:
 
-   #+NAME: nix-build-link
-   #+BEGIN_SRC shell :dir .. :results output :exports both
-     readlink result*
-   #+END_SRC
+#+NAME: nix-build-link
+#+BEGIN_SRC shell :dir .. :results output :exports both
+  readlink result*
+#+END_SRC
 
-   #+RESULTS: nix-build-link
-   : /nix/store/83arjks74ix6w3hzgvlbhzjnsj05cpzf-haskell-language-server-ghc8104-renamed
+#+RESULTS: nix-build-link
+: /nix/store/83arjks74ix6w3hzgvlbhzjnsj05cpzf-haskell-language-server-ghc8104-renamed
 
-   Following these symlinks, we can see the files the project provides:
+Following these symlinks, we can see the files the project provides:
 
-   #+NAME: nix-build-tree
-   #+BEGIN_SRC shell :dir .. :results output :exports both :post crop(text=*this*, first-n=10, last-n=0)
-     tree -l result*
-   #+END_SRC
+#+NAME: nix-build-tree
+#+BEGIN_SRC shell :dir .. :results output :exports both :post crop(text=*this*, first-n=10, last-n=0)
+  tree -l result*
+#+END_SRC
 
-   #+RESULTS: nix-build-tree
-   : result
-   : └── bin
-   :     └── haskell-language-server-8.10.4
-   : 
-   : 1 directory, 1 file
+#+RESULTS: nix-build-tree
+: result
+: └── bin
+:     └── haskell-language-server-8.10.4
+: 
+: 1 directory, 1 file
 
-   It's common to configure these "result" symlinks as ignored in source
-   control tools (for instance, within a Git =.gitignore= file).
+It's common to configure these "result" symlinks as ignored in source control
+tools (for instance, for Git within a =.gitignore= file).
 
-   =nix build= has a =--no-link= switch in case you want to build packages
-   without creating "result" symlinks. To get the paths where your packages are
-   located, you can use =nix path-info= after a successful build:
+=nix build= has a =--no-link= switch in case you want to build packages without
+creating "result" symlinks. To get the paths where your packages are located,
+you can use =nix path-info= after a successful build:
 
-   #+NAME: nix-build-path
-   #+BEGIN_SRC shell :dir .. :results output :exports both :noweb yes
-     nix path-info --file . <<get("package-attr")>>
-   #+END_SRC
+#+NAME: nix-build-path
+#+BEGIN_SRC shell :dir .. :results output :exports both :noweb yes
+  nix path-info --file . <<get("package-attr")>>
+#+END_SRC
 
-   #+RESULTS: nix-build-path
-   : /nix/store/83arjks74ix6w3hzgvlbhzjnsj05cpzf-haskell-language-server-ghc8104-renamed
+#+RESULTS: nix-build-path
+: /nix/store/83arjks74ix6w3hzgvlbhzjnsj05cpzf-haskell-language-server-ghc8104-renamed
 
 ** Running commands
 
-   We can run commands in Nix-curated environments with =nix run=.  Nix will
-   take executables found in packages, put them in an environment's =PATH=, and
-   then execute a user-specified command.
+We can run commands in Nix-curated environments with =nix run=.  Nix will take
+executables found in packages, put them in an environment's =PATH=, and then
+execute a user-specified command.
 
-   With =nix run=, you don't even have to build the package first with =nix
-   build= or mess around with the "result" symlinks. =nix run= will build the
-   project if it's not yet been built.
+With =nix run=, you don't even have to build the package first with =nix build=
+or mess around with "result" symlinks. =nix run= will build the project if it's
+not yet been built.
 
-   For example, to get the help message for the {{{run-target}}} executable
-   provided by the {{{run-name}}} package selected by the {{{run-attr}}}
-   attribute path from {{{run-src}}}, we can call the following:
+For example, to get the help message for the {{{run-target}}} executable
+provided by the {{{run-name}}} package selected by the {{{run-attr}}} attribute
+path from {{{run-src}}}, we can call the following:
 
-   #+NAME: nix-run
-   #+BEGIN_SRC shell :dir .. :results output :exports both :noweb yes :post crop(text=*this*, first-n=5, last-n=0)
-     nix run \
-         --file <<get("run-src")>> \
-         <<get("run-attr")>> \
-         --command <<get("run-target")>> --help
-   #+END_SRC
+#+NAME: nix-run
+#+BEGIN_SRC shell :dir .. :results output :exports both :noweb yes :post crop(text=*this*, first-n=5, last-n=0)
+  nix run \
+      --file <<get("run-src")>> \
+      <<get("run-attr")>> \
+      --command <<get("run-target")>> --help
+#+END_SRC
 
-   #+RESULTS: nix-run
-   : haskell-language-server - GHC Haskell LSP server
-   : 
-   : Usage: haskell-language-server [--version | --numeric-version | --probe-tools | 
-   :                                  --print-cradle | 
-   :                                  [COMMAND | --lsp | FILES/DIRS...] [--cwd DIR] 
-   : …
+#+RESULTS: nix-run
+: haskell-language-server - GHC Haskell LSP server
+: 
+: Usage: haskell-language-server [--version | --numeric-version | --probe-tools | 
+:                                  --print-cradle | 
+:                                  [COMMAND | --lsp | FILES/DIRS...] [--cwd DIR] 
+: …
 
-   Thus far, the argument of the =--file= switch has always referenced a Nix
-   file on our local filesystem.  However, it's possible to reference a Nix
-   expression downloaded from the internet.  The Nix ecosystem is supported by a
-   giant GitHub repository of Nix expressions called [[nixpkgs][Nixpkgs]].  Special branches
-   of this repository are considered /channels/ in the Nix ecosystem.  A Nixpkgs
-   branch of "{{{nixos-release}}}" can be referenced by
-   "channel:{{{nixos-release}}}" for =nix= subcommands that accept a =--file=
-   switch.
+Thus far, the argument of the =--file= switch has always referenced a Nix file
+on our local filesystem.  However, it's possible to reference a Nix expression
+downloaded from the internet.  The Nix ecosystem is supported by a giant GitHub
+repository of Nix expressions called [[nixpkgs][Nixpkgs]].  Special branches of this
+repository are considered /channels/ in the Nix ecosystem.  A Nixpkgs branch of
+"{{{nixos-release}}}" can be referenced by "channel:{{{nixos-release}}}" for
+=nix= subcommands that accept a =--file= switch.
 
-   Again, as with =nix build= attribute paths are specified as positional
-   arguments to select packages.
+Again, as with =nix build=, attribute paths are specified as positional
+arguments to select packages.
 
-   The command to run is specified after the =--command= switch. =nix run= runs
-   the command in a shell set up with a =PATH= environment variable including
-   all the =bin= directories provided by the selected packages.
+The command to run is specified after the =--command= switch. =nix run= runs the
+command in a shell set up with a =PATH= environment variable including all the
+=bin= directories provided by the selected packages.
 
-   =nix run= also supports an =--ignore-environment= flag that restricts =PATH=
-   to only packages selected, rather than extending the =PATH= of the caller's
-   environment. With =--ignore-environment=, the invocation is more sandboxed.
+=nix run= also supports an =--ignore-environment= flag that restricts =PATH= to
+only packages selected, rather than extending the =PATH= of the caller's
+environment. With =--ignore-environment=, the invocation is more sandboxed.
 
 ** Installing and uninstalling programs
 
-   We've seen that we can build programs with =nix build= and then execute them
-   using the "result" symlink (=result/bin/*=). Additionally, we've seen that
-   you can run programs with =nix run=. But these additional steps and
-   switches/arguments can feel extraneous. It would be nice if we could just
-   have the programs on our =PATH=. This is what =nix-env= is for.
+We've seen that we can build programs with =nix build= and then execute them
+using the "result" symlink (=result/bin/*=). Additionally, we've seen that you
+can run programs with =nix run=. But these additional steps and
+switches/arguments can feel extraneous. It would be nice if we could just have
+the programs on our =PATH=. This is what =nix-env= is for.
 
-   =nix-env= maintains a symlink tree, called a /profile/, of installed
-   programs. The active profile is pointed to by a symlink at =~/.nix-profile=.
-   By default, this profile points to
-   =/nix/var/nix/profiles/per-user/$USER/profile=. But you can point your
-   =~/.nix-profile= to any writable location with the =--switch-profile=
-   switch:
+=nix-env= maintains a symlink tree, called a /profile/, of installed programs.
+The active profile is pointed to by a symlink at =~/.nix-profile=.  By default,
+this profile points to =/nix/var/nix/profiles/per-user/$USER/profile=. But you
+can point your =~/.nix-profile= to any writable location with the
+=--switch-profile= switch:
 
-   #+BEGIN_SRC shell :eval no
-     nix-env --switch-profile /nix/var/nix/profiles/per-user/$USER/another-profile
-   #+END_SRC
+#+BEGIN_SRC shell :eval no
+  nix-env --switch-profile /nix/var/nix/profiles/per-user/$USER/another-profile
+#+END_SRC
 
-   This way, you can just put =~/.nix-profile/bin= on your =PATH=, and any
-   programs installed in your currently active profile will be available for
-   interactive use or scripts.
+This way, you can just put =~/.nix-profile/bin= on your =PATH=, and any programs
+installed in your currently active profile will be available for interactive use
+or scripts.
 
-   We can query what's installed in the active profile with the =--query=
-   switch:
+We can query what's installed in the active profile with the =--query= switch:
 
-   #+NAME: nix-env-query-1
-   #+BEGIN_SRC shell :session env :results output silent
-     nix-env --query
-   #+END_SRC
+#+NAME: nix-env-query-1
+#+BEGIN_SRC shell :session env :results output silent
+  nix-env --query
+#+END_SRC
 
-   To install the {{{package-target}}} {{{package-type}}}, which is accessed by
-   the {{{package-attr}}} in our top-level =default.nix= file, we'd run the
-   following:
+To install the {{{package-target}}} {{{package-type}}}, which is accessed by the
+{{{package-attr}}} in our top-level =default.nix= file, we'd run the following:
 
-   #+NAME: nix-env-install
-   #+BEGIN_SRC shell :session env :results output :exports both :noweb yes :post crop(text=*this*, first-n=1, last-n=3)
-     nix-env --install --file . --attr <<get("package-attr")>> 2>&1
-   #+END_SRC
+#+NAME: nix-env-install
+#+BEGIN_SRC shell :session env :results output :exports both :noweb yes :post crop(text=*this*, first-n=1, last-n=3)
+  nix-env --install --file . --attr <<get("package-attr")>> 2>&1
+#+END_SRC
 
-   #+RESULTS: nix-env-install
-   : installing 'haskell-language-server-ghc8104-renamed'
-   : trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
-   : trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
+#+RESULTS: nix-env-install
+: installing 'haskell-language-server-ghc8104-renamed'
+: trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
+: trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
 
-   We can see this installation by querying what's been installed:
+We can see this installation by querying what's been installed:
 
-   #+NAME: nix-env-query-2
-   #+BEGIN_SRC shell :session env :results output :exports both
-     nix-env --query
-   #+END_SRC
+#+NAME: nix-env-query-2
+#+BEGIN_SRC shell :session env :results output :exports both
+  nix-env --query
+#+END_SRC
 
-   #+RESULTS: nix-env-query-2
-   : haskell-language-server-ghc8104-renamed
+#+RESULTS: nix-env-query-2
+: haskell-language-server-ghc8104-renamed
 
-   And if we want to uninstall a program from our active profile, we do so by
-   its name, in this case {{{package-name}}}:
+And if we want to uninstall a program from our active profile, we do so by its
+name, in this case {{{package-name}}}:
 
-   #+NAME: nix-env-uninstall
-   #+BEGIN_SRC shell :session env :results output :exports both :noweb yes
-     nix-env --uninstall <<get("package-name")>> 2>&1
-   #+END_SRC
+#+NAME: nix-env-uninstall
+#+BEGIN_SRC shell :session env :results output :exports both :noweb yes
+  nix-env --uninstall <<get("package-name")>> 2>&1
+#+END_SRC
 
-   #+RESULTS: nix-env-uninstall
-   : uninstalling 'haskell-language-server-ghc8104-renamed'
+#+RESULTS: nix-env-uninstall
+: uninstalling 'haskell-language-server-ghc8104-renamed'
 
-   Note that we've installed our package using its attribute path
-   ({{{package-attr}}}) within the referenced Nix expression. But we uninstall
-   it using the package name ({{{package-name}}}), which may or may not be the
-   same as the attribute path. When a package is installed, Nix keeps no
-   reference to the expression that evaluated to the derivation of the
-   installed package. The attribute path is only relevant to this expression.
-   In fact, two different expressions could evaluate to the exact same
-   derivation, but use different attribute paths. This is why we uninstall
-   packages by their package name.
+Note that we've installed our package using its attribute path
+({{{package-attr}}}) within the referenced Nix expression. But we uninstall it
+using the package name ({{{package-name}}}), which may or may not be the same as
+the attribute path. When a package is installed, Nix keeps no reference to the
+expression that evaluated to the derivation of the installed package. The
+attribute path is only relevant to this expression.  In fact, two different
+expressions could evaluate to the exact same derivation, but use different
+attribute paths. This is why we uninstall packages by their package name.
 
-   Also, if you look at the location for your profile, you'll see that Nix
-   retains the symlink trees of previous generations of your profile.  In fact
-   you can even rollback to a previous profile with the =--rollback= switch.
-   You can delete old generations of your profile with the
-   =--delete-generations= switch.
+Also, if you look at the location for your profile, you'll see that Nix retains
+the symlink trees of previous generations of your profile.  In fact you can even
+rollback to a previous profile with the =--rollback= switch.  You can delete old
+generations of your profile with the =--delete-generations= switch.
 
-   See the [[nix-env][documentation for =nix-env=]] for more details.
+See the [[nix-env][documentation for =nix-env=]] for more details.
 
 ** Garbage collection
 
-   Every time you build a new version of your code, it's stored in =/nix/store=.
-   There is a command called =nix-collect-garbage= that purges unneeded packages.
-   Programs that should not be removed by =nix-collect-garbage= can by found by
-   starting with symlinks stored as /garbage collection (GC) roots/ under three
-   locations:
+Every time you build a new version of your code, it's stored in =/nix/store=.
+There is a command called =nix-collect-garbage= that purges unneeded packages.
+Programs that should not be removed by =nix-collect-garbage= can by found by
+starting with symlinks stored as /garbage collection (GC) roots/ under three
+locations:
 
-   - =/nix/var/nix/gcroots=
-   - =/nix/var/nix/profiles=
-   - =/nix/var/nix/manifests=.
+  - =/nix/var/nix/gcroots=
+  - =/nix/var/nix/profiles=
+  - =/nix/var/nix/manifests=.
 
-   For each package, Nix is aware of all references back to other packages in
-   =/nix/store=, whether in text files or binaries.  This helps Nix assure that
-   dependencies of packages linked as GC roots won't be deleted.
+For each package, Nix is aware of all references back to other packages in
+=/nix/store=, whether in text files or binaries.  This helps Nix assure that
+dependencies of packages linked as GC roots won't be deleted.
 
-   Each "result" symlink created by a =nix build= invocation has a symlink in
-   =/nix/var/nix/gcroots/auto= pointing back it. So we've got symlinks in
-   =/nix/var/nix/gcroots/auto= pointing to "result" symlinks in our projects,
-   which then reference the actual built project in =/nix/store=.  These
-   symlinks prevent packages built by =nix build= from being garbage collected.
+Each "result" symlink created by a =nix build= invocation has a symlink in
+=/nix/var/nix/gcroots/auto= pointing back it. So we've got symlinks in
+=/nix/var/nix/gcroots/auto= pointing to "result" symlinks in our projects, which
+then reference the actual built project in =/nix/store=.  These chains of
+symlinks prevent packages built by =nix build= from being garbage collected.
 
-   If you want a package you've built with =nix build= to be garbage collected,
-   delete the "result" symlink created before calling =nix-collect-garbage=.
-   Breaking symlinks under =/nix/var/nix/gcroots= removes protection from
-   garbage collection. =nix-collect-garbage= will cleans up broken symlinks when
-   it runs.
+If you want a package you've built with =nix build= to be garbage collected,
+delete the "result" symlink created before calling =nix-collect-garbage=.
+Breaking symlink chains under =/nix/var/nix/gcroots= removes protection from
+garbage collection. =nix-collect-garbage= will clean up broken symlinks when it
+runs.
 
-   Note that everything under =/nix/var/nix/profiles= is considered a GC root as
-   well.  This is why users by convention use this location to store their
-   =nix-env= profiles.
+Note that everything under =/nix/var/nix/profiles= is considered a GC root as
+well.  This is why users by convention use this location to store their
+=nix-env= profiles.
 
-   Also, note if you delete a “result*” link and call =nix-collect-garbage=,
-   though some garbage may be reclaimed, you may find that an old =nix-env=
-   profile is keeping the program alive.  As a convenience,
-   =nix-collect-garbage= has a =--delete-old= switch that will delete these old
-   profiles (it just calls ~nix-env --delete-generations~ on your behalf).
+Also, note if you delete a “result*” link and call =nix-collect-garbage=, though
+some garbage may be reclaimed, you may find that an old =nix-env= profile is
+keeping the program alive.  As a convenience, =nix-collect-garbage= has a
+=--delete-old= switch that will delete these old profiles (it just calls
+~nix-env --delete-generations~ on your behalf).
 
-   It's also good to know that =nix-collect-garbage= won't delete packages
-   referenced by any running processes. In the case of =nix run= no garbage
-   collection root symlink is created under =/nix/var/nix/gcroots=, but while
-   =nix run= is running =nix-collect-garbage= won't delete packages needed by
-   the running command. However, once the =nix run= call exits, any packages
-   pulled from a substituter or built locally are candidates for deletion by
-   =nix-collect-garbage=. If you called =nix run= again after garbage
-   collecting, those packages may be pulled or built again.
+It's also good to know that =nix-collect-garbage= won't delete packages
+referenced by any running processes. In the case of =nix run= no garbage
+collection root symlink is created under =/nix/var/nix/gcroots=, but while =nix
+run= is running =nix-collect-garbage= won't delete packages needed by the
+running command. However, once the =nix run= call exits, any packages pulled
+from a substitutor or built locally are candidates for deletion by
+=nix-collect-garbage=. If you called =nix run= again after garbage collecting,
+those packages may be pulled or built again.
 
 ** Understanding derivations
-   :PROPERTIES:
-   :CUSTOM_ID: nix-drv
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: nix-drv
+:END:
 
-   We haven't detailed what happens when we build a Nix expression that
-   evaluates to a package derivation. There are two important steps:
+We haven't detailed what happens when we build a Nix expression that evaluates
+to a package derivation. There are two important steps:
 
-   1. /instantiating/ the derivation
-   2. /realizing/ the instantiated derivation, which builds the final package.
+1. /instantiating/ the derivation
+2. /realizing/ the instantiated derivation, which builds the final package.
 
-   An instantiated derivation is effectively a script stored in =/nix/store=
-   that Nix can run to build the final package (which also ends up in
-   =/nix/store=). These instantiated derivations have a ".drv" extension, and
-   if you look in =/nix/store= you may find some. Instantiated derivations have
-   references to all necessary build dependencies, also in =/nix/store=, which
-   means that everything is physically in place in =/nix/store= to build the
-   package (no network connectivity is needed to realize an instantiated
-   derivation).
+An instantiated derivation is effectively a script stored in =/nix/store= that
+Nix can run to build the final package (which also ends up in =/nix/store=).
+These instantiated derivations have a ".drv" extension, and if you look in
+=/nix/store= you may find some. Instantiated derivations have references to all
+necessary build dependencies, also in =/nix/store=, which means that everything
+is physically in place in =/nix/store= to build the package (no network
+connectivity is needed to realize an instantiated derivation).
 
-   Note that both =nix build= and =nix run= perform both instantiation and
-   realization of a derivation, so for the most part, we don't have to worry
-   about the difference between instantiating and realizing a derivation.
+Note that both =nix build= and =nix run= perform both instantiation and
+realization of a derivation, so for the most part, we don't have to worry about
+the difference between instantiating and realizing a derivation.
 
-   However, you may encounter a Nix expression where =nix search= returns
-   nothing, though you're sure that there are derivations to select out. In
-   this case, the Nix expression is using an advanced technique that
-   unfortunately hides attributes from =nix search= until some derivations are
-   instantiated into =/nix/store=. We can force the instantiation of these
-   derivations without realizing their packages with the following command:
+However, you may encounter a Nix expression where =nix search= returns nothing,
+though you're sure that there are derivations to select out. In this case, the
+Nix expression is using an advanced technique that unfortunately hides
+attributes from =nix search= until some derivations are instantiated into
+=/nix/store=. We can force the instantiation of these derivations without
+realizing their packages with the following command:
 
-   #+NAME: nix-derivation-show-again
-   #+BEGIN_SRC shell :dir .. :results output silent
-     nix show-derivation --file default.nix
-   #+END_SRC
+#+NAME: nix-derivation-show-again
+#+BEGIN_SRC shell :dir .. :results output silent
+  nix show-derivation --file default.nix
+#+END_SRC
 
-   Once these derivations are instantiated, you may get more results with =nix
-   search= for the occasional Nix expression that uses some advanced
-   techniques.
+Once these derivations are instantiated, you may get more results with =nix
+search= for the occasional Nix expression that uses some advanced techniques.
 
 ** Lazy evaluation
 
-   We haven't made a big deal of it, but the Nix language is /lazily
-   evaluated/. This allows a single Nix expression to refer to several thousand
-   packages, but without requiring us to evaluate everything when selecting out
-   packages by attribute paths. In fact, the entire NixOS operating system is
-   based heavily on a single single expression managed in a Git repository
-   called [[nixpkgs][Nixpkgs]].
+We haven't made a big deal of it, but the Nix language is /lazily evaluated/.
+This allows a single Nix expression to refer to several thousand packages, but
+without requiring us to evaluate everything when selecting out packages by
+attribute paths. In fact, the entire NixOS operating system is based heavily on
+a single single expression managed in a Git repository called [[nixpkgs][Nixpkgs]].
 
-* Next Steps
+* Next steps
 
-  This document has covered a fraction of Nix usage, hopefully enough to
-  introduce Nix in the context of [[file:../README.org][this project]].
+This document has covered a fraction of Nix usage, hopefully enough to introduce
+Nix in the context of [[file:../README.org][this project]].
 
-  An obvious place to start learning more about Nix is [[nix-learn][the official
-  documentation]]. The author of this project also maintains another project with
-  [[nix-tutorial][a small tutorial on Nix]]. This tutorial covers the Nix expression language in
-  more detail.
+An obvious place to start learning more about Nix is [[nix-learn][the official documentation]].
+The author of this project also maintains another project with [[nix-tutorial][a small tutorial
+on Nix]]. This tutorial covers the Nix expression language in more detail.
 
-  All the commands we've covered have more switches and options. See the
-  respective man pages for more. Also, we didn't cover =nix-shell=, which can
-  be used for setting up development environments. And we didn't cover much of
-  [[nixpkgs][Nixpkgs]], the gigantic repository of community-curated Nix expressions.
+All the commands we've covered have more switches and options. See the
+respective man pages for more. Also, we didn't cover =nix-shell=, which can be
+used for setting up development environments. And we didn't cover much of
+[[nixpkgs][Nixpkgs]], the gigantic repository of community-curated Nix expressions.
 
-  The Nix ecosystem is vast. This project and documentation illustrates just a
-  small example of what Nix can do.
+The Nix ecosystem is vast. This project and documentation illustrates just a
+small sample of what Nix can do.
 
-* Org-mode Teardown :noexport:
+* Org-mode teardown :noexport:
 
-  #+CALL: cleanup()
+#+CALL: cleanup()

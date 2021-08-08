@@ -99,10 +99,10 @@ The following is an example of a valid configuration:
 
 ```yaml
 /home/youruser/src/some-project:
-- shell_file: shell-alt.nix
-- pure: false
+    - shell_file: shell-alt.nix
+    - pure: false
 /home/youruser/src/another-project:
-- mode: bypass
+    - mode: bypass
 ```
 
 # Testing a project<a id="sec-6"></a>
@@ -121,7 +121,7 @@ hls-wrapper-nix --cwd examples/example-cabal
     …
     
     Completed (5 files worked, 0 files failed)
-    2021-07-27 21:43:39.695152545 [ThreadId 684] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-08-07 11:07:35.093616141 [ThreadId 388] INFO hls:	finish: GenerateCore (took 0.00s)
 
 And here we see that the script works for the Stack example project as well:
 
@@ -135,7 +135,7 @@ hls-wrapper-nix --cwd examples/example-stack
     …
     
     Completed (3 files worked, 0 files failed)
-    2021-07-27 21:45:33.535742078 [ThreadId 526] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-08-07 11:09:31.901728007 [ThreadId 453] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Command-line reference<a id="sec-7"></a>
 
@@ -171,9 +171,9 @@ For reference, here's the output of running `hls-wrapper-nix --help`:
     
         --version                Show haskell-language-server-wrapper and GHC versions
         --numeric-version        Show numeric version of
-    			     haskell-language-server-wrapper
+                                 haskell-language-server-wrapper
         --probe-tools            Show haskell-language-server-wrapper version and
-    			     other tools of interest
+                                 other tools of interest
         --print-cradle           Print the project cradle type
         --lsp                    Start talking to an LSP server
         --cwd DIR                Change to this directory
@@ -185,12 +185,12 @@ For reference, here's the output of running `hls-wrapper-nix --help`:
         -j NUM                   Number of threads (0: automatic) (default: 0)
         --project-ghc-version    Work out the project GHC version and print it
         --vscode-extension-schema
-    			     Print generic config schema for plugins (used in the
-    			     package.json of haskell vscode extension)
+                                 Print generic config schema for plugins (used in the
+                                 package.json of haskell vscode extension)
         --generate-default-config
-    			     Print config supported by the server with default
-    			     values
-    
+                                 Print config supported by the server with default
+                                 values
+      
       Available commands:
         typecheck                Used as a test bed to check your IDE will work
         hiedb                    Query .hie files

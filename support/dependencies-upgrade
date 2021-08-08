@@ -4,11 +4,11 @@ cd "$(dirname "$0")/.."
 
 nix run \
     --ignore-environment \
-    --file ./support \
+    --file nix \
     nix-project-exe \
     --command \
     nix-project \
     --upgrade \
-    --source-dir nix/sources \
+    --source-dir nix/external \
     --nix "$(command -v nix)" \
     "$@"
