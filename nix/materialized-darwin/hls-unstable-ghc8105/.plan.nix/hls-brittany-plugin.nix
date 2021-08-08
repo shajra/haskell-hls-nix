@@ -11,8 +11,8 @@
     flags = {};
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-brittany-plugin"; version = "1.0.0.1"; };
-      license = "Apache-2.0";
+      identifier = { name = "hls-brittany-plugin"; version = "1.0.0.2"; };
+      license = "AGPL-3.0-only";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";
       author = "The Haskell IDE Team";
@@ -44,6 +44,9 @@
           (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
+          (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
+          (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
+          (hsPkgs."czipwith" or (errorHandler.buildDepError "czipwith"))
           ];
         buildable = true;
         modules = [ "Ide/Plugin/Brittany" ];

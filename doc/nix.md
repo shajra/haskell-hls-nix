@@ -164,7 +164,7 @@ After a successful call of `nix build`, you'll see one or more symlinks for each
 readlink result*
 ```
 
-    /nix/store/83arjks74ix6w3hzgvlbhzjnsj05cpzf-haskell-language-server-ghc8104-renamed
+    /nix/store/fid8n7g36s22pr3q2z8jfj3w5j7i6xhz-haskell-language-server-ghc8104-renamed
 
 Following these symlinks, we can see the files the project provides:
 
@@ -186,7 +186,7 @@ It's common to configure these "result" symlinks as ignored in source control to
 nix path-info --file . hls-renamed
 ```
 
-    /nix/store/83arjks74ix6w3hzgvlbhzjnsj05cpzf-haskell-language-server-ghc8104-renamed
+    /nix/store/fid8n7g36s22pr3q2z8jfj3w5j7i6xhz-haskell-language-server-ghc8104-renamed
 
 ## Running commands<a id="sec-5-3"></a>
 
@@ -245,6 +245,8 @@ nix-env --install --file . --attr hls-renamed 2>&1
     installing 'haskell-language-server-ghc8104-renamed'
     trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
     trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
+    trace: WARNING: No sha256 found for source-repository-package https://github.com/haskell/lsp.git ef59c28b41ed4c5775f0ab0c1e985839359cec96 download may fail in restricted mode (hydra)
+    trace: Consider adding `--sha256: 1whcgw4hhn2aplrpy9w8q6rafwy7znnp0rczgr6py15fqyw2fwb5` to the cabal.project file or passing in a lookupSha256 argument
 
 We can see this installation by querying what's been installed:
 

@@ -8,7 +8,7 @@ nix run \
     nix-project-exe \
     --command \
     nix-project \
-    --upgrade \
     --source-dir nix/external \
     --nix "$(command -v nix)" \
+    init-update \
     "$@"

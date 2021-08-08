@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-tactics-plugin"; version = "1.2.0.0"; };
+      identifier = { name = "hls-tactics-plugin"; version = "1.3.0.0"; };
       license = "Apache-2.0";
       copyright = "Sandy Maguire, Reed Mullanix";
       maintainer = "sandy@sandymaguire.me";
@@ -137,6 +137,7 @@
             "CodeAction/DestructPunSpec"
             "CodeAction/DestructSpec"
             "CodeAction/IntrosSpec"
+            "CodeAction/IntroDestructSpec"
             "CodeAction/RefineSpec"
             "CodeAction/RunMetaprogramSpec"
             "CodeAction/UseDataConSpec"

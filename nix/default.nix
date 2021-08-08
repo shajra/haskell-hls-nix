@@ -52,18 +52,20 @@ let
     };
 
     nixpkgs-hn =
-        let hn = import external."haskell.nix" {};
+        let hn = import external."haskell.nix" {
+                sourcesOverride = { hackage = external."hackage.nix"; };
+            };
             nixpkgsSrc = hn.sources."${nixpkgs-pin}";
             nixpkgsOrigArgs = hn.nixpkgsArgs;
             nixpkgsArgs = nixpkgsOrigArgs // {
-                config = {};
+                config = nixpkgsOrigArgs.config;
                 overlays = nixpkgsOrigArgs.overlays;
                 #overlays = nixpkgsOrigArgs.overlays ++ [(self: super: {
                 #    alex = super.haskellPackages.alex;
                 #    happy = super.haskellPackages.happy;
                 #})];
             };
-        in import nixpkgsSrc nixpkgsArgs;
+        in import nixpkgsSrc hn.nixpkgsArgs;
 
     haskell-nix = nixpkgs-hn.haskell-nix;
 
@@ -74,7 +76,7 @@ let
             needsNewName = name == "hls-${stability}";
             newName = if needsNewName then "${name}-${compiler-nix-name}" else name;
         in {
-                inherit name modules index-state index-sha256 compiler-nix-name
+            inherit name modules index-state index-sha256 compiler-nix-name
                 checkMaterialization;
             configureArgs = "--disable-benchmarks";
             lookupSha256 = {location, ...}:
@@ -85,12 +87,6 @@ let
     allExes = pkg: pkg.components.exes;
 
     defaultModules = [{ enableSeparateDataOutput = true; }];
-
-    fromHackage = name:
-        let planConfig = planConfigFor name "ghc8103" defaultModules // {
-                version = config.hackage.version."${name}";
-            };
-        in allExes (haskell-nix.hackage-package planConfig);
 
     fromSource = name:
         let planConfig = planConfigFor name (hnGhc ghcVersion) defaultModules // {

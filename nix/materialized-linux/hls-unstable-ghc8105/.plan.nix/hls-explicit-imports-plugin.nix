@@ -13,7 +13,7 @@
       specVersion = "2.2";
       identifier = {
         name = "hls-explicit-imports-plugin";
-        version = "1.0.0.3";
+        version = "1.0.0.4";
         };
       license = "Apache-2.0";
       copyright = "";

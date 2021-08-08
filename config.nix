@@ -5,8 +5,8 @@
     haskell-nix.checkMaterialization = false;
     # DESIGN: https://github.com/input-output-hk/hackage.nix/blob/master/index-state-hashes.nix
     haskell-nix.hackage.index = {
-        state = "2021-07-25T00:00:00Z";
-        sha256 = "d01e60cc933f805b6f5e85d128f445cd07dbf12b14f010ee71c6dadd1bd9626b";
+        state = "2021-08-08T00:00:00Z";
+        sha256 = "e8aed582a6afc4a82127cdbc976d3aac700a4660fc1c4770170c3fe0443bea68";
     };
     haskell-nix.nixpkgs-pin = {
        # DESIGN: default to "nixpkgs-unstable"

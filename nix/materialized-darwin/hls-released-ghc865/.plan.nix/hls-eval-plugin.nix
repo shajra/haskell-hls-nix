@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-eval-plugin"; version = "1.1.1.0"; };
+      identifier = { name = "hls-eval-plugin"; version = "1.1.2.0"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "https://github.com/haskell/haskell-language-server/contributors";
@@ -29,11 +29,13 @@
       extraSrcFiles = [
         "LICENSE"
         "README.md"
+        "test/cabal.project"
+        "test/info-util/*.cabal"
+        "test/info-util/*.hs"
         "test/testdata/*.cabal"
         "test/testdata/*.hs"
         "test/testdata/*.lhs"
         "test/testdata/*.yaml"
-        "test/testdata/cabal.project"
         ];
       extraTmpFiles = [];
       extraDocFiles = [];
@@ -98,6 +100,7 @@
             (hsPkgs."hls-test-utils" or (errorHandler.buildDepError "hls-test-utils"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
             (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
+            (hsPkgs."text" or (errorHandler.buildDepError "text"))
             ];
           buildable = true;
           hsSourceDirs = [ "test" ];

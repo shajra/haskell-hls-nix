@@ -11,7 +11,7 @@
     flags = { ghc-lib = false; };
     package = {
       specVersion = "1.22";
-      identifier = { name = "hie-compat"; version = "0.2.0.0"; };
+      identifier = { name = "hie-compat"; version = "0.2.1.0"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "zubin.duggal@gmail.com";
@@ -54,13 +54,13 @@
           "Compat/HieDebug"
           "Compat/HieUtils"
           ];
-        hsSourceDirs = (((pkgs.lib).optional (compiler.isGhc && (compiler.version).gt "8.5" && (compiler.isGhc && (compiler.version).lt "8.7") && !flags.ghc-lib) "src-ghc86" ++ (pkgs.lib).optionals (compiler.isGhc && (compiler.version).gt "8.7" && (compiler.isGhc && (compiler.version).lt "8.10")) [
+        hsSourceDirs = ((((pkgs.lib).optional (compiler.isGhc && (compiler.version).gt "8.5" && (compiler.isGhc && (compiler.version).lt "8.7") && !flags.ghc-lib) "src-ghc86" ++ (pkgs.lib).optionals (compiler.isGhc && (compiler.version).gt "8.7" && (compiler.isGhc && (compiler.version).lt "8.10")) [
           "src-ghc88"
           "src-reexport"
           ]) ++ (pkgs.lib).optionals (compiler.isGhc && (compiler.version).gt "8.9" && (compiler.isGhc && (compiler.version).lt "8.11")) [
           "src-ghc810"
           "src-reexport"
-          ]) ++ (pkgs.lib).optional (compiler.isGhc && (compiler.version).ge "9.0" && (compiler.isGhc && (compiler.version).lt "9.1") || flags.ghc-lib) "src-ghc901";
+          ]) ++ (pkgs.lib).optional (compiler.isGhc && (compiler.version).ge "9.0" && (compiler.isGhc && (compiler.version).lt "9.1") || flags.ghc-lib) "src-reexport-ghc9") ++ (pkgs.lib).optional (compiler.isGhc && (compiler.version).ge "9.2" && (compiler.isGhc && (compiler.version).lt "9.3")) "src-reexport-ghc9";
         };
       };
     } // rec { src = (pkgs.lib).mkDefault .././hie-compat; }

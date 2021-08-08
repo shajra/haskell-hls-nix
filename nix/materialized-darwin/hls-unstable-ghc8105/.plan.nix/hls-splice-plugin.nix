@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-splice-plugin"; version = "1.0.0.3"; };
+      identifier = { name = "hls-splice-plugin"; version = "1.0.0.4"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "https://github.com/haskell/haskell-language-server/contributors";
