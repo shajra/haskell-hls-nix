@@ -112,7 +112,7 @@ We can use the provided example projects to illustrate this test. Here we use `d
 direnv allow examples/example-cabal
 direnv exec examples/example-cabal \
     haskell-language-server-wrapper \
-    --cwd "$PWD/examples/example-cabal" 2>&1
+    --cwd "$(pwd)/examples/example-cabal" 2>&1
 ```
 
     direnv: loading ~/src/shajra/nix-haskell-hls/examples/example-cabal/.envrc
@@ -120,7 +120,7 @@ direnv exec examples/example-cabal \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (5 files worked, 0 files failed)
-    2021-08-07 11:09:42.162596343 [ThreadId 792] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-08-10 00:31:32.881064976 [ThreadId 675] INFO hls:	finish: GenerateCore (took 0.00s)
 
 Before we can use Direnv with the example, we have to run `direnv allow` on it to permit running code from the `.envrc` file.
 
@@ -140,7 +140,7 @@ direnv exec examples/example-stack \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (3 files worked, 0 files failed)
-    2021-08-07 11:09:48.828057597 [ThreadId 589] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-08-10 00:31:38.81694826 [ThreadId 640] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Suggested advanced configuration<a id="sec-7"></a>
 

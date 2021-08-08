@@ -246,7 +246,7 @@ Direnv and Lorelei from the Nix shell of our example Cabal project:
 : direnv: not modified: application/example-haskell-app.cabal
 : …
 : Completed (5 files worked, 0 files failed)
-: 2021-08-07 11:21:17.203893796 [ThreadId 467] INFO hls:	finish: GenerateCore (took 0.00s)
+: 2021-08-10 00:31:32.881064976 [ThreadId 675] INFO hls:	finish: GenerateCore (took 0.00s)
 
 Before we can use Direnv with the example, we have to run =direnv allow= on it
 to permit running code from the =.envrc= file.
@@ -275,7 +275,7 @@ And here we see that the same test works for the Stack example project as well:
 : direnv: not modified: application/example-haskell-app.cabal
 : …
 : Completed (3 files worked, 0 files failed)
-: 2021-08-07 11:21:25.080804019 [ThreadId 635] INFO hls:	finish: GenerateCore (took 0.00s)
+: 2021-08-10 00:31:38.81694826 [ThreadId 640] INFO hls:	finish: GenerateCore (took 0.00s)
 
 * Suggested advanced configuration
 

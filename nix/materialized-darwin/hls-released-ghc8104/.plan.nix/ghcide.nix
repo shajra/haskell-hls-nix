@@ -11,7 +11,7 @@
     flags = { ghc-patched-unboxed-bytecode = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "ghcide"; version = "1.4.0.0"; };
+      identifier = { name = "ghcide"; version = "1.4.1.0"; };
       license = "Apache-2.0";
       copyright = "Digital Asset and Ghcide contributors 2018-2020";
       maintainer = "Ghcide contributors";
@@ -42,6 +42,7 @@
       "library" = {
         depends = [
           (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
+          (hsPkgs."aeson-pretty" or (errorHandler.buildDepError "aeson-pretty"))
           (hsPkgs."array" or (errorHandler.buildDepError "array"))
           (hsPkgs."async" or (errorHandler.buildDepError "async"))
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
@@ -210,7 +211,6 @@
             (hsPkgs."hls-graph" or (errorHandler.buildDepError "hls-graph"))
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
             (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
-            (hsPkgs."aeson-pretty" or (errorHandler.buildDepError "aeson-pretty"))
             ];
           buildable = true;
           modules = [ "Arguments" "Paths_ghcide" ];
@@ -227,7 +227,9 @@
             (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
             (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
             (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
+            (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
             (hsPkgs."lsp-test" or (errorHandler.buildDepError "lsp-test"))
+            (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
             (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
             (hsPkgs."process" or (errorHandler.buildDepError "process"))
             (hsPkgs."safe-exceptions" or (errorHandler.buildDepError "safe-exceptions"))
@@ -239,8 +241,12 @@
             (hsPkgs.buildPackages.ghcide.components.exes.ghcide or (pkgs.buildPackages.ghcide or (errorHandler.buildToolDepError "ghcide:ghcide")))
             ];
           buildable = true;
-          modules = [ "Experiments" "Experiments/Types" ];
-          hsSourceDirs = [ "bench/lib" "bench/exe" ];
+          modules = [
+            "Development/IDE/Test/Diagnostic"
+            "Experiments"
+            "Experiments/Types"
+            ];
+          hsSourceDirs = [ "bench/lib" "bench/exe" "test/src" ];
           mainPath = [ "Main.hs" ];
           };
         };
@@ -296,6 +302,7 @@
           buildable = true;
           modules = [
             "Development/IDE/Test"
+            "Development/IDE/Test/Diagnostic"
             "Development/IDE/Test/Runfiles"
             "Experiments"
             "Experiments/Types"

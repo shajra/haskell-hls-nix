@@ -58,6 +58,32 @@ nix-env --install --file . --attr hls-wrapper-nix
     examine these refs and maybe delete them. Turn this message off by
     running "git config advice.objectNameWarning false"
     trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
+    trace: WARNING: No sha256 found for source-repository-package https://github.com/haskell/lsp.git ef59c28b41ed4c5775f0ab0c1e985839359cec96 download may fail in restricted mode (hydra)
+    hint: Using 'master' as the name for the initial branch. This default branch name
+    hint: is subject to change. To configure the initial branch name to use in all
+    hint: of your new repositories, which will suppress this warning, call:
+    hint:
+    hint: 
+    hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+    hint: 'development'. The just-created branch can be renamed via this command:
+    hint:
+    warning: refname 'ef59c28b41ed4c5775f0ab0c1e985839359cec96' is ambiguous.
+    Git normally never creates a ref that ends with 40 hex characters
+    because it will be ignored when you just specify 40-hex. These refs
+    may be created by mistake. For example,
+    br $(git rev-parse ...)
+    br" is somehow empty and a 40-hex ref is created. Please
+    examine these refs and maybe delete them. Turn this message off by
+    running "git config advice.objectNameWarning false"
+    warning: refname 'ef59c28b41ed4c5775f0ab0c1e985839359cec96' is ambiguous.
+    Git normally never creates a ref that ends with 40 hex characters
+    because it will be ignored when you just specify 40-hex. These refs
+    may be created by mistake. For example,
+    br $(git rev-parse ...)
+    br" is somehow empty and a 40-hex ref is created. Please
+    examine these refs and maybe delete them. Turn this message off by
+    running "git config advice.objectNameWarning false"
+    trace: Consider adding `--sha256: 1whcgw4hhn2aplrpy9w8q6rafwy7znnp0rczgr6py15fqyw2fwb5` to the cabal.project file or passing in a lookupSha256 argument
 
 # Editor configuration<a id="sec-3"></a>
 
@@ -121,7 +147,7 @@ hls-wrapper-nix --cwd examples/example-cabal
     …
     
     Completed (5 files worked, 0 files failed)
-    2021-08-07 11:07:35.093616141 [ThreadId 388] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-08-10 00:29:25.882180415 [ThreadId 536] INFO hls:	finish: GenerateCore (took 0.00s)
 
 And here we see that the script works for the Stack example project as well:
 
@@ -135,7 +161,7 @@ hls-wrapper-nix --cwd examples/example-stack
     …
     
     Completed (3 files worked, 0 files failed)
-    2021-08-07 11:09:31.901728007 [ThreadId 453] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-08-10 00:31:22.280199505 [ThreadId 599] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Command-line reference<a id="sec-7"></a>
 
@@ -184,14 +210,12 @@ For reference, here's the output of running `hls-wrapper-nix --help`:
         -l,--logfile LOGFILE     File to log to, defaults to stdout
         -j NUM                   Number of threads (0: automatic) (default: 0)
         --project-ghc-version    Work out the project GHC version and print it
-        --vscode-extension-schema
-                                 Print generic config schema for plugins (used in the
-                                 package.json of haskell vscode extension)
-        --generate-default-config
-                                 Print config supported by the server with default
-                                 values
       
       Available commands:
         typecheck                Used as a test bed to check your IDE will work
         hiedb                    Query .hie files
         lsp                      Start talking to an LSP client
+        vscode-extension-schema  Print generic config schema for plugins (used in the
+                                 package.json of haskell vscode extension)
+        generate-default-config  Print config supported by the server with default
+                                 values

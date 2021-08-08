@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.2";
-      identifier = { name = "hls-refine-imports-plugin"; version = "1.0.0.0"; };
+      identifier = { name = "hls-refine-imports-plugin"; version = "1.0.0.1"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "mnf.shih@gmail.com";
@@ -26,7 +26,7 @@
       licenseFiles = [ "LICENSE" ];
       dataDir = ".";
       dataFiles = [];
-      extraSrcFiles = [ "LICENSE" ];
+      extraSrcFiles = [ "LICENSE" "test/testdata/*.hs" "test/testdata/*.yaml" ];
       extraTmpFiles = [];
       extraDocFiles = [];
       };

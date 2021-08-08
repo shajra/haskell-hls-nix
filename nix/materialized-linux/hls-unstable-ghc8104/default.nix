@@ -5,7 +5,7 @@
         "butcher".revision = (((hackage."butcher")."1.3.3.2").revisions).default;
         "these".revision = (((hackage."these")."1.1.1.1").revisions).default;
         "these".flags.assoc = true;
-        "lsp".revision = (((hackage."lsp")."1.2.0.0").revisions).default;
+        "lsp".revision = (((hackage."lsp")."1.2.0.1").revisions).default;
         "lsp".flags.demo = false;
         "hlint".revision = (((hackage."hlint")."3.2.7").revisions).default;
         "hlint".flags.threaded = true;
@@ -49,7 +49,7 @@
         "Boolean".revision = (((hackage."Boolean")."0.2.4").revisions).default;
         "terminal-size".revision = (((hackage."terminal-size")."0.3.2.1").revisions).default;
         "monad-dijkstra".revision = (((hackage."monad-dijkstra")."0.1.1.3").revisions).default;
-        "lsp-test".revision = (((hackage."lsp-test")."0.14.0.0").revisions).default;
+        "lsp-test".revision = (((hackage."lsp-test")."0.14.0.1").revisions).default;
         "Only".revision = (((hackage."Only")."0.1").revisions).default;
         "blaze-builder".revision = (((hackage."blaze-builder")."0.4.2.1").revisions).default;
         "void".revision = (((hackage."void")."0.7.3").revisions).default;
@@ -149,7 +149,7 @@
         "newtype-generics".revision = (((hackage."newtype-generics")."0.5.4").revisions).default;
         "ghc-tcplugins-extra".revision = (((hackage."ghc-tcplugins-extra")."0.4.2").revisions).default;
         "ghc-tcplugins-extra".flags.deverror = false;
-        "monad-control".revision = (((hackage."monad-control")."1.0.2.3").revisions).default;
+        "monad-control".revision = (((hackage."monad-control")."1.0.3.1").revisions).default;
         "random".revision = (((hackage."random")."1.2.0").revisions).default;
         "unix-compat".revision = (((hackage."unix-compat")."0.5.3").revisions).default;
         "unix-compat".flags.old-time = false;
@@ -186,7 +186,7 @@
         "distributive".revision = (((hackage."distributive")."0.6.2.1").revisions).default;
         "distributive".flags.tagged = true;
         "distributive".flags.semigroups = true;
-        "transformers-base".revision = (((hackage."transformers-base")."0.4.5.2").revisions).default;
+        "transformers-base".revision = (((hackage."transformers-base")."0.4.6").revisions).default;
         "transformers-base".flags.orphaninstances = true;
         "base16-bytestring".revision = (((hackage."base16-bytestring")."1.0.1.0").revisions).default;
         "tasty-rerun".revision = (((hackage."tasty-rerun")."1.1.18").revisions).default;
@@ -241,12 +241,12 @@
         "charset".revision = (((hackage."charset")."0.3.8").revisions).default;
         "unix".revision = (((hackage."unix")."2.7.2.2").revisions).default;
         "dependent-sum-template".revision = (((hackage."dependent-sum-template")."0.1.0.3").revisions).default;
-        "data-fix".revision = (((hackage."data-fix")."0.3.1").revisions).default;
+        "data-fix".revision = (((hackage."data-fix")."0.3.2").revisions).default;
         "typed-process".revision = (((hackage."typed-process")."0.2.6.0").revisions).default;
         "czipwith".revision = (((hackage."czipwith")."1.0.1.3").revisions).default;
         "SVGFonts".revision = (((hackage."SVGFonts")."1.7.0.1").revisions).default;
         "logict".revision = (((hackage."logict")."0.7.0.3").revisions).default;
-        "contravariant".revision = (((hackage."contravariant")."1.5.3").revisions).default;
+        "contravariant".revision = (((hackage."contravariant")."1.5.5").revisions).default;
         "contravariant".flags.tagged = true;
         "contravariant".flags.semigroups = true;
         "contravariant".flags.statevar = true;
@@ -325,12 +325,12 @@
         "base-orphans".revision = (((hackage."base-orphans")."0.8.4").revisions).default;
         "diagrams-svg".revision = (((hackage."diagrams-svg")."1.4.3").revisions).default;
         "prettyprinter-ansi-terminal".revision = (((hackage."prettyprinter-ansi-terminal")."1.1.2").revisions).default;
-        "primitive".revision = (((hackage."primitive")."0.7.1.0").revisions).default;
+        "primitive".revision = (((hackage."primitive")."0.7.2.0").revisions).default;
         "smallcheck".revision = (((hackage."smallcheck")."1.2.1").revisions).default;
         "directory".revision = (((hackage."directory")."1.3.6.0").revisions).default;
         "HsYAML-aeson".revision = (((hackage."HsYAML-aeson")."0.2.0.0").revisions).default;
         "random-shuffle".revision = (((hackage."random-shuffle")."0.0.4").revisions).default;
-        "lsp-types".revision = (((hackage."lsp-types")."1.2.0.0").revisions).default;
+        "lsp-types".revision = (((hackage."lsp-types")."1.3.0.1").revisions).default;
         "transformers-compat".revision = (((hackage."transformers-compat")."0.6.6").revisions).default;
         "transformers-compat".flags.two = false;
         "transformers-compat".flags.five = false;
@@ -346,7 +346,7 @@
         "js-dgtable".revision = (((hackage."js-dgtable")."0.5.2").revisions).default;
         "microlens".revision = (((hackage."microlens")."0.4.12.0").revisions).default;
         "microlens-mtl".revision = (((hackage."microlens-mtl")."0.2.0.1").revisions).default;
-        "resourcet".revision = (((hackage."resourcet")."1.2.4.2").revisions).default;
+        "resourcet".revision = (((hackage."resourcet")."1.2.4.3").revisions).default;
         "aeson".revision = (((hackage."aeson")."1.5.6.0").revisions).default;
         "aeson".flags.developer = false;
         "aeson".flags.bytestring-builder = false;
@@ -397,7 +397,7 @@
         "tasty".flags.unix = true;
         "tasty".flags.clock = true;
         "deepseq".revision = (((hackage."deepseq")."1.4.4.0").revisions).default;
-        "kan-extensions".revision = (((hackage."kan-extensions")."5.2.2").revisions).default;
+        "kan-extensions".revision = (((hackage."kan-extensions")."5.2.3").revisions).default;
         "indexed-profunctors".revision = (((hackage."indexed-profunctors")."0.1.1").revisions).default;
         "strict".revision = (((hackage."strict")."0.4.0.1").revisions).default;
         "strict".flags.assoc = true;
@@ -474,7 +474,7 @@
         "extra".revision = (((hackage."extra")."1.7.9").revisions).default;
         "old-locale".revision = (((hackage."old-locale")."1.0.0.7").revisions).default;
         "split".revision = (((hackage."split")."0.2.3.4").revisions).default;
-        "StateVar".revision = (((hackage."StateVar")."1.2.1").revisions).default;
+        "StateVar".revision = (((hackage."StateVar")."1.2.2").revisions).default;
         "HsYAML".revision = (((hackage."HsYAML")."0.2.1.0").revisions).default;
         "HsYAML".flags.exe = false;
         "stm".revision = (((hackage."stm")."2.5.0.0").revisions).default;
@@ -534,6 +534,7 @@
         ghcide = ./.plan.nix/ghcide.nix;
         hls-hlint-plugin = ./.plan.nix/hls-hlint-plugin.nix;
         hls-test-utils = ./.plan.nix/hls-test-utils.nix;
+        hls-call-hierarchy-plugin = ./.plan.nix/hls-call-hierarchy-plugin.nix;
         hls-splice-plugin = ./.plan.nix/hls-splice-plugin.nix;
         shake-bench = ./.plan.nix/shake-bench.nix;
         hls-retrie-plugin = ./.plan.nix/hls-retrie-plugin.nix;
@@ -582,6 +583,7 @@
           "hls-test-utils" = {
             flags = { "pedantic" = lib.mkOverride 900 false; };
             };
+          "hls-call-hierarchy-plugin" = { flags = {}; };
           "hls-splice-plugin" = { flags = {}; };
           "shake-bench" = { flags = {}; };
           "hls-retrie-plugin" = { flags = {}; };
@@ -606,6 +608,7 @@
               "floskell" = lib.mkOverride 900 true;
               "tactic" = lib.mkOverride 900 true;
               "modulename" = lib.mkOverride 900 true;
+              "callhierarchy" = lib.mkOverride 900 true;
               "refineimports" = lib.mkOverride 900 true;
               };
             };
@@ -660,6 +663,7 @@
           "ghc-check".components.library.planned = lib.mkOverride 900 true;
           "blaze-svg".components.library.planned = lib.mkOverride 900 true;
           "cryptohash-sha1".components.library.planned = lib.mkOverride 900 true;
+          "hls-call-hierarchy-plugin".components.tests."tests".planned = lib.mkOverride 900 true;
           "regex-tdfa".components.library.planned = lib.mkOverride 900 true;
           "hashtables".components.library.planned = lib.mkOverride 900 true;
           "monoid-subclasses".components.library.planned = lib.mkOverride 900 true;
@@ -959,6 +963,7 @@
           "parsec".components.library.planned = lib.mkOverride 900 true;
           "ghc-boot-th".components.library.planned = lib.mkOverride 900 true;
           "multistate".components.library.planned = lib.mkOverride 900 true;
+          "hls-call-hierarchy-plugin".components.library.planned = lib.mkOverride 900 true;
           "hls-splice-plugin".components.library.planned = lib.mkOverride 900 true;
           "hie-bios".components.library.planned = lib.mkOverride 900 true;
           "data-default".components.library.planned = lib.mkOverride 900 true;
