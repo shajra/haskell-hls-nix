@@ -241,7 +241,7 @@ Direnv and Lorelei from the Nix shell of our example Cabal project:
 #+END_SRC
 
 #+RESULTS: test-cabal
-: direnv: loading ~/src/shajra/nix-haskell-hls/examples/example-cabal/.envrc
+: direnv: loading ~/src/shajra/haskell-hls-nix/examples/example-cabal/.envrc
 : direnv: using user-provided direnv-nix-lorelei
 : direnv: not modified: application/example-haskell-app.cabal
 : …
@@ -270,7 +270,7 @@ And here we see that the same test works for the Stack example project as well:
 #+END_SRC
 
 #+RESULTS: test-stack
-: direnv: loading ~/src/shajra/nix-haskell-hls/examples/example-stack/.envrc
+: direnv: loading ~/src/shajra/haskell-hls-nix/examples/example-stack/.envrc
 : direnv: using user-provided direnv-nix-lorelei
 : direnv: not modified: application/example-haskell-app.cabal
 : …

@@ -115,7 +115,7 @@ direnv exec examples/example-cabal \
     --cwd "$(pwd)/examples/example-cabal" 2>&1
 ```
 
-    direnv: loading ~/src/shajra/nix-haskell-hls/examples/example-cabal/.envrc
+    direnv: loading ~/src/shajra/haskell-hls-nix/examples/example-cabal/.envrc
     direnv: using user-provided direnv-nix-lorelei
     direnv: not modified: application/example-haskell-app.cabal
     …
@@ -135,7 +135,7 @@ direnv exec examples/example-stack \
     --cwd "$(pwd)/examples/example-stack" 2>&1
 ```
 
-    direnv: loading ~/src/shajra/nix-haskell-hls/examples/example-stack/.envrc
+    direnv: loading ~/src/shajra/haskell-hls-nix/examples/example-stack/.envrc
     direnv: using user-provided direnv-nix-lorelei
     direnv: not modified: application/example-haskell-app.cabal
     …
