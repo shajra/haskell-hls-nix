@@ -6,7 +6,7 @@
 #+LINK: direnv-nix-lorelei https://github.com/shajra/direnv-nix-lorelei
 #+LINK: ghcide https://github.com/haskell/ghcide
 #+LINK: ghcide-nix https://github.com/cachix/ghcide-nix
-#+LINK: github-actions https://github.com/shajra/nix-haskell-hls/actions
+#+LINK: github-actions https://github.com/shajra/haskell-hls-nix/actions
 #+LINK: haskell https://www.haskell.org
 #+LINK: haskell-cabal https://cabal.readthedocs.io/en/latest/
 #+LINK: haskell-ghcup https://www.haskell.org/ghcup/

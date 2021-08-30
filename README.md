@@ -28,7 +28,7 @@
 - [License](#sec-14)
 - [Contribution](#sec-15)
 
-[![img](https://github.com/shajra/nix-haskell-hls/workflows/CI/badge.svg)](https://github.com/shajra/nix-haskell-hls/actions)
+[![img](https://github.com/shajra/haskell-hls-nix/workflows/CI/badge.svg)](https://github.com/shajra/haskell-hls-nix/actions)
 
 # About this project<a id="sec-1"></a>
 
@@ -54,7 +54,7 @@ These versions of GHC match what's [built, tested, and cached by the Haskell.nix
 
 This project's continuous integration (using GitHub Actions)]] caches all eight of these builds at [Cachix](https://cachix.org/), a service for caching pre-built Nix packages. If you don't want to wait for a full local build when first using this project, setting up Cachix is recommended.
 
-Note that not every commit of the HLS "master" branch is built and cached to Cachix, only versions referenced by the commits of this `nix-haskell-hls` project. Upgrading to the latest commit of HLS's "master" is done periodically, but still manually.
+Note that not every commit of the HLS "master" branch is built and cached to Cachix, only versions referenced by the commits of this `haskell-hls-nix` project. Upgrading to the latest commit of HLS's "master" is done periodically, but still manually.
 
 In addition to HLS, this project includes some useful Nix packages and functions for developing Haskell with Nix and HLS. Notably, we provide
 
@@ -625,7 +625,7 @@ The "master" branch of the repository on GitHub has the latest released version 
 
 # License<a id="sec-14"></a>
 
-All files in this "nix-haskell-hls" project are licensed under the terms of the MIT License.
+All files in this "haskell-hls-nix" project are licensed under the terms of the MIT License.
 
 Please see the [./COPYING.md](./COPYING.md) file for more details.
 

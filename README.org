@@ -1,7 +1,7 @@
 #+TITLE: Nix Builds of Haskell Language Server (HLS)
 #+SETUPFILE: ./doc/links.org
 
-[[https://github.com/shajra/nix-haskell-hls/actions][https://github.com/shajra/nix-haskell-hls/workflows/CI/badge.svg]]
+[[https://github.com/shajra/haskell-hls-nix/actions][https://github.com/shajra/haskell-hls-nix/workflows/CI/badge.svg]]
 
 * Org-mode setup :noexport:
 
@@ -123,7 +123,7 @@ don't want to wait for a full local build when first using this project, setting
 up Cachix is recommended.
 
 Note that not every commit of the HLS "master" branch is built and cached to
-Cachix, only versions referenced by the commits of this =nix-haskell-hls=
+Cachix, only versions referenced by the commits of this =haskell-hls-nix=
 project. Upgrading to the latest commit of HLS's "master" is done periodically,
 but still manually.
 
@@ -1010,7 +1010,7 @@ general use.
 
 * License
 
-All files in this "nix-haskell-hls" project are licensed under the terms of the
+All files in this "haskell-hls-nix" project are licensed under the terms of the
 MIT License.
 
 Please see the [[./COPYING.md][./COPYING.md]] file for more details.
