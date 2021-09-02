@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.."
 nix run \
     --ignore-environment \
     --file nix \
-    nix-project-exe \
+    nix-project.nix-project-exe \
     --command \
     nix-project \
     --source-dir nix/external \

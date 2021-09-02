@@ -19,7 +19,7 @@ Even if your projects don't require a Nix shell yet, using `hls-wrapper-nix` as 
 
 This document discusses installation and configuration of `hls-wrapper-nix`. We assume you're familiar with everything discussed in the [root-level README file](../README.md).
 
-Note that you shouldn't use the HLS Nix wrapper script if you're using [Direnv and Lorelei](./direnv.md) to solve the same problem. Direnv and Lorelei has more configuration steps, but can help if the time to enter into a Nix shell is too long and annoying.
+Note that you shouldn't use the HLS Nix wrapper script if you're using [Direnv and Lorelei](./direnv.md) to solve the same problem. Direnv and Lorelei has more configuration steps, but can help if the time to enter a Nix shell is too long and annoying.
 
 # Installation<a id="sec-2"></a>
 
@@ -27,63 +27,12 @@ Install `hls-wrapper-nix` with the Nix expression provided by this project.
 
 If you followed the root-level README's section on a user-based installation, you likely have already installed the script. If not, you can execute the following:
 
-```shell
+```sh
 nix-env --install --file . --attr hls-wrapper-nix
 ```
 
     installing 'hls-wrapper-nix'
-    trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
-    hint: Using 'master' as the name for the initial branch. This default branch name
-    hint: is subject to change. To configure the initial branch name to use in all
-    hint: of your new repositories, which will suppress this warning, call:
-    hint:
-    hint: 
-    hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-    hint: 'development'. The just-created branch can be renamed via this command:
-    hint:
-    warning: refname '8fee87eac97a538dbe81ff1ab18cff10f2f9fa15' is ambiguous.
-    Git normally never creates a ref that ends with 40 hex characters
-    because it will be ignored when you just specify 40-hex. These refs
-    may be created by mistake. For example,
-    br $(git rev-parse ...)
-    br" is somehow empty and a 40-hex ref is created. Please
-    examine these refs and maybe delete them. Turn this message off by
-    running "git config advice.objectNameWarning false"
-    warning: refname '8fee87eac97a538dbe81ff1ab18cff10f2f9fa15' is ambiguous.
-    Git normally never creates a ref that ends with 40 hex characters
-    because it will be ignored when you just specify 40-hex. These refs
-    may be created by mistake. For example,
-    br $(git rev-parse ...)
-    br" is somehow empty and a 40-hex ref is created. Please
-    examine these refs and maybe delete them. Turn this message off by
-    running "git config advice.objectNameWarning false"
-    trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
-    trace: WARNING: No sha256 found for source-repository-package https://github.com/haskell/lsp.git ef59c28b41ed4c5775f0ab0c1e985839359cec96 download may fail in restricted mode (hydra)
-    hint: Using 'master' as the name for the initial branch. This default branch name
-    hint: is subject to change. To configure the initial branch name to use in all
-    hint: of your new repositories, which will suppress this warning, call:
-    hint:
-    hint: 
-    hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-    hint: 'development'. The just-created branch can be renamed via this command:
-    hint:
-    warning: refname 'ef59c28b41ed4c5775f0ab0c1e985839359cec96' is ambiguous.
-    Git normally never creates a ref that ends with 40 hex characters
-    because it will be ignored when you just specify 40-hex. These refs
-    may be created by mistake. For example,
-    br $(git rev-parse ...)
-    br" is somehow empty and a 40-hex ref is created. Please
-    examine these refs and maybe delete them. Turn this message off by
-    running "git config advice.objectNameWarning false"
-    warning: refname 'ef59c28b41ed4c5775f0ab0c1e985839359cec96' is ambiguous.
-    Git normally never creates a ref that ends with 40 hex characters
-    because it will be ignored when you just specify 40-hex. These refs
-    may be created by mistake. For example,
-    br $(git rev-parse ...)
-    br" is somehow empty and a 40-hex ref is created. Please
-    examine these refs and maybe delete them. Turn this message off by
-    running "git config advice.objectNameWarning false"
-    trace: Consider adding `--sha256: 1whcgw4hhn2aplrpy9w8q6rafwy7znnp0rczgr6py15fqyw2fwb5` to the cabal.project file or passing in a lookupSha256 argument
+    trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
 
 # Editor configuration<a id="sec-3"></a>
 
@@ -137,31 +86,31 @@ You should be able to test your configuration of `hls-wrapper-nix` by running it
 
 We can use the provided example projects to illustrate this test. Here's a run of `hls-wrapper-nix` on the Cabal example project:
 
-```shell
+```sh
 hls-wrapper-nix --cwd examples/example-cabal
 ```
 
     INFO: Entering pure Nix shell
-    trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
-    trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
+    trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
+    Found "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/a"
     …
     
     Completed (5 files worked, 0 files failed)
-    2021-08-10 00:29:25.882180415 [ThreadId 536] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-09-04 04:42:53.204223457 [ThreadId 524] INFO hls:	finish: GenerateCore (took 0.00s)
 
 And here we see that the script works for the Stack example project as well:
 
-```shell
+```sh
 hls-wrapper-nix --cwd examples/example-stack
 ```
 
     INFO: Entering pure Nix shell
-    trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
-    trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
+    trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
+    No 'hie.yaml' found. Try to discover the project type!
     …
+    2021-09-04 04:44:39.826674448 [ThreadId 588] INFO hls:	finish: GenerateCore (took 0.00s)
     
     Completed (3 files worked, 0 files failed)
-    2021-08-10 00:31:22.280199505 [ThreadId 599] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Command-line reference<a id="sec-7"></a>
 

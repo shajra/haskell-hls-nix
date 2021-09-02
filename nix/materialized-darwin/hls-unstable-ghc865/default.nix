@@ -21,7 +21,7 @@
         "streaming-commons".revision = (((hackage."streaming-commons")."0.2.2.1").revisions).default;
         "streaming-commons".flags.use-bytestring-builder = false;
         "old-time".revision = (((hackage."old-time")."1.1.0.3").revisions).default;
-        "dual-tree".revision = (((hackage."dual-tree")."0.2.2.1").revisions).default;
+        "dual-tree".revision = (((hackage."dual-tree")."0.2.3.0").revisions).default;
         "hslogger".revision = (((hackage."hslogger")."1.3.1.0").revisions).default;
         "hslogger".flags.network--gt-3_0_0 = true;
         "bifunctors".revision = (((hackage."bifunctors")."5.5.11").revisions).default;
@@ -61,7 +61,7 @@
         "base-compat".revision = (((hackage."base-compat")."0.11.2").revisions).default;
         "NumInstances".revision = (((hackage."NumInstances")."1.4").revisions).default;
         "diagrams-contrib".revision = (((hackage."diagrams-contrib")."1.4.4").revisions).default;
-        "diagrams-lib".revision = (((hackage."diagrams-lib")."1.4.3").revisions).default;
+        "diagrams-lib".revision = (((hackage."diagrams-lib")."1.4.4").revisions).default;
         "ansi-terminal".revision = (((hackage."ansi-terminal")."0.10.3").revisions).default;
         "ansi-terminal".flags.example = false;
         "js-jquery".revision = (((hackage."js-jquery")."3.3.1").revisions).default;
@@ -132,21 +132,13 @@
         "monad-memo".revision = (((hackage."monad-memo")."0.5.3").revisions).default;
         "dlist".revision = (((hackage."dlist")."1.0").revisions).default;
         "dlist".flags.werror = false;
-        "diagrams".revision = (((hackage."diagrams")."1.4").revisions).default;
-        "diagrams".flags.postscript = false;
-        "diagrams".flags.rasterific = false;
-        "diagrams".flags.cairo = false;
-        "diagrams".flags.gtk = false;
-        "diagrams".flags.svg = true;
-        "diagrams".flags.ps = false;
-        "diagrams".flags.canvas = false;
         "pretty".revision = (((hackage."pretty")."1.1.3.6").revisions).default;
         "ghc-typelits-knownnat".revision = (((hackage."ghc-typelits-knownnat")."0.7.6").revisions).default;
         "ghc-typelits-knownnat".flags.deverror = false;
         "async".revision = (((hackage."async")."2.2.3").revisions).default;
         "async".flags.bench = false;
         "process".revision = (((hackage."process")."1.6.5.0").revisions).default;
-        "newtype-generics".revision = (((hackage."newtype-generics")."0.5.4").revisions).default;
+        "newtype-generics".revision = (((hackage."newtype-generics")."0.6").revisions).default;
         "ghc-tcplugins-extra".revision = (((hackage."ghc-tcplugins-extra")."0.4.2").revisions).default;
         "ghc-tcplugins-extra".flags.deverror = false;
         "monad-control".revision = (((hackage."monad-control")."1.0.3.1").revisions).default;
@@ -177,7 +169,7 @@
         "quickcheck-io".revision = (((hackage."quickcheck-io")."0.2.0").revisions).default;
         "alex".revision = (((hackage."alex")."3.2.6").revisions).default;
         "alex".flags.small_base = true;
-        "diagrams-core".revision = (((hackage."diagrams-core")."1.4.2").revisions).default;
+        "diagrams-core".revision = (((hackage."diagrams-core")."1.5.0").revisions).default;
         "tasty-hunit".revision = (((hackage."tasty-hunit")."0.10.0.3").revisions).default;
         "githash".revision = (((hackage."githash")."0.1.6.1").revisions).default;
         "megaparsec".revision = (((hackage."megaparsec")."9.0.1").revisions).default;
@@ -242,7 +234,7 @@
         "unix".revision = (((hackage."unix")."2.7.2.2").revisions).default;
         "dependent-sum-template".revision = (((hackage."dependent-sum-template")."0.1.0.3").revisions).default;
         "data-fix".revision = (((hackage."data-fix")."0.3.2").revisions).default;
-        "typed-process".revision = (((hackage."typed-process")."0.2.6.0").revisions).default;
+        "typed-process".revision = (((hackage."typed-process")."0.2.6.1").revisions).default;
         "czipwith".revision = (((hackage."czipwith")."1.0.1.3").revisions).default;
         "SVGFonts".revision = (((hackage."SVGFonts")."1.7.0.1").revisions).default;
         "logict".revision = (((hackage."logict")."0.7.0.3").revisions).default;
@@ -304,7 +296,7 @@
         "haddock-library".revision = (((hackage."haddock-library")."1.10.0").revisions).default;
         "Chart".revision = (((hackage."Chart")."1.9.3").revisions).default;
         "tf-random".revision = (((hackage."tf-random")."0.5").revisions).default;
-        "some".revision = (((hackage."some")."1.0.3").revisions).default;
+        "some".revision = (((hackage."some")."1.0.2").revisions).default;
         "some".flags.newtype-unsafe = true;
         "shake".revision = (((hackage."shake")."0.19.5").revisions).default;
         "shake".flags.cloud = false;
@@ -452,6 +444,8 @@
         "Cabal".revision = (((hackage."Cabal")."2.4.0.1").revisions).default;
         "hspec".revision = (((hackage."hspec")."2.7.10").revisions).default;
         "ghc-source-gen".revision = (((hackage."ghc-source-gen")."0.4.1.0").revisions).default;
+        "unagi-chan".revision = (((hackage."unagi-chan")."0.4.1.3").revisions).default;
+        "unagi-chan".flags.compare-benchmarks = false;
         "network-info".revision = (((hackage."network-info")."0.2.0.10").revisions).default;
         "th-compat".revision = (((hackage."th-compat")."0.1.2").revisions).default;
         "mmorph".revision = (((hackage."mmorph")."1.2.0").revisions).default;
@@ -465,7 +459,7 @@
         "indexed-traversable-instances".revision = (((hackage."indexed-traversable-instances")."0.1").revisions).default;
         "data-default-instances-dlist".revision = (((hackage."data-default-instances-dlist")."0.0.1").revisions).default;
         "hiedb".revision = (((hackage."hiedb")."0.4.0.0").revisions).default;
-        "monoid-extras".revision = (((hackage."monoid-extras")."0.5.1").revisions).default;
+        "monoid-extras".revision = (((hackage."monoid-extras")."0.6").revisions).default;
         "force-layout".revision = (((hackage."force-layout")."0.4.0.6").revisions).default;
         "base-compat-batteries".revision = (((hackage."base-compat-batteries")."0.11.2").revisions).default;
         "extra".revision = (((hackage."extra")."1.7.9").revisions).default;
@@ -474,6 +468,8 @@
         "StateVar".revision = (((hackage."StateVar")."1.2.2").revisions).default;
         "HsYAML".revision = (((hackage."HsYAML")."0.2.1.0").revisions).default;
         "HsYAML".flags.exe = false;
+        "atomic-primops".revision = (((hackage."atomic-primops")."0.8.4").revisions).default;
+        "atomic-primops".flags.debug = false;
         "stm".revision = (((hackage."stm")."2.5.0.0").revisions).default;
         };
       compiler = {
@@ -518,6 +514,7 @@
         hls-stylish-haskell-plugin = ./.plan.nix/hls-stylish-haskell-plugin.nix;
         hls-brittany-plugin = ./.plan.nix/hls-brittany-plugin.nix;
         hls-graph = ./.plan.nix/hls-graph.nix;
+        hls-rename-plugin = ./.plan.nix/hls-rename-plugin.nix;
         hls-refine-imports-plugin = ./.plan.nix/hls-refine-imports-plugin.nix;
         hls-floskell-plugin = ./.plan.nix/hls-floskell-plugin.nix;
         hls-module-name-plugin = ./.plan.nix/hls-module-name-plugin.nix;
@@ -549,6 +546,7 @@
           "hls-stylish-haskell-plugin" = { flags = {}; };
           "hls-brittany-plugin" = { flags = {}; };
           "hls-graph" = { flags = { "pedantic" = lib.mkOverride 900 false; }; };
+          "hls-rename-plugin" = { flags = {}; };
           "hls-refine-imports-plugin" = { flags = {}; };
           "hls-floskell-plugin" = { flags = {}; };
           "hls-module-name-plugin" = { flags = {}; };
@@ -600,6 +598,7 @@
               "all-plugins" = lib.mkOverride 900 false;
               "pragmas" = lib.mkOverride 900 true;
               "pedantic" = lib.mkOverride 900 false;
+              "rename" = lib.mkOverride 900 false;
               "floskell" = lib.mkOverride 900 true;
               "tactic" = lib.mkOverride 900 true;
               "modulename" = lib.mkOverride 900 true;
@@ -670,6 +669,7 @@
           "HsYAML".components.library.planned = lib.mkOverride 900 true;
           "haskell-language-server".components.tests."func-test".planned = lib.mkOverride 900 true;
           "shake".components.exes."shake".planned = lib.mkOverride 900 true;
+          "atomic-primops".components.library.planned = lib.mkOverride 900 true;
           "stm".components.library.planned = lib.mkOverride 900 true;
           "haskell-language-server".components.exes."haskell-language-server".planned = lib.mkOverride 900 true;
           "hiedb".components.exes."hiedb".planned = lib.mkOverride 900 true;
@@ -711,6 +711,7 @@
           "hls-pragmas-plugin".components.library.planned = lib.mkOverride 900 true;
           "linear".components.library.planned = lib.mkOverride 900 true;
           "comonad".components.library.planned = lib.mkOverride 900 true;
+          "unagi-chan".components.library.planned = lib.mkOverride 900 true;
           "hspec".components.library.planned = lib.mkOverride 900 true;
           "ghc-source-gen".components.library.planned = lib.mkOverride 900 true;
           "network-info".components.library.planned = lib.mkOverride 900 true;
@@ -779,6 +780,7 @@
           "circle-packing".components.library.planned = lib.mkOverride 900 true;
           "Glob".components.library.planned = lib.mkOverride 900 true;
           "hls-graph".components.library.planned = lib.mkOverride 900 true;
+          "hls-rename-plugin".components.library.planned = lib.mkOverride 900 true;
           "conduit".components.library.planned = lib.mkOverride 900 true;
           "data-default-instances-old-locale".components.library.planned = lib.mkOverride 900 true;
           "hls-refine-imports-plugin".components.library.planned = lib.mkOverride 900 true;
@@ -791,7 +793,6 @@
           "dlist".components.library.planned = lib.mkOverride 900 true;
           "fsnotify".components.library.planned = lib.mkOverride 900 true;
           "monad-memo".components.library.planned = lib.mkOverride 900 true;
-          "diagrams".components.library.planned = lib.mkOverride 900 true;
           "pretty".components.library.planned = lib.mkOverride 900 true;
           "HUnit".components.library.planned = lib.mkOverride 900 true;
           "vector".components.library.planned = lib.mkOverride 900 true;
@@ -859,6 +860,7 @@
           "brittany".components.library.planned = lib.mkOverride 900 true;
           "ghc-paths".components.library.planned = lib.mkOverride 900 true;
           "hls-stylish-haskell-plugin".components.library.planned = lib.mkOverride 900 true;
+          "hls-rename-plugin".components.tests."tests".planned = lib.mkOverride 900 true;
           "ormolu".components.exes."ormolu".planned = lib.mkOverride 900 true;
           "fuzzy".components.library.planned = lib.mkOverride 900 true;
           "contravariant".components.library.planned = lib.mkOverride 900 true;

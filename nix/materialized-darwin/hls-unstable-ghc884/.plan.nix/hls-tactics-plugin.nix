@@ -64,6 +64,7 @@
           (hsPkgs."refinery" or (errorHandler.buildDepError "refinery"))
           (hsPkgs."retrie" or (errorHandler.buildDepError "retrie"))
           (hsPkgs."syb" or (errorHandler.buildDepError "syb"))
+          (hsPkgs."unagi-chan" or (errorHandler.buildDepError "unagi-chan"))
           (hsPkgs."text" or (errorHandler.buildDepError "text"))
           (hsPkgs."transformers" or (errorHandler.buildDepError "transformers"))
           (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
@@ -71,6 +72,10 @@
         buildable = true;
         modules = [
           "Ide/Plugin/Tactic"
+          "Refinery/Future"
+          "Wingman/AbstractLSP"
+          "Wingman/AbstractLSP/TacticActions"
+          "Wingman/AbstractLSP/Types"
           "Wingman/Auto"
           "Wingman/CaseSplit"
           "Wingman/CodeGen"

@@ -13,9 +13,10 @@ let
         "8.10.1" = "ghc8101";
         "8.10.2" = "ghc8102";
         "8.10.3" = "ghc8103";
-        #"8.10.4" = "ghc810420210212";
         "8.10.4" = "ghc8104";
         "8.10.5" = "ghc8105";
+        "8.10.6" = "ghc8106";
+        "8.10.7" = "ghc8107";
         "9.0.1"  = "ghc901";
     }."${ghcVersion}" or (throw "unsupported GHC Version: ${ghcVersion}");
 
@@ -24,13 +25,13 @@ let
 in
 
 { externalOverrides ? {}
-, config ? import ../config.nix
-, checkMaterialization ? config.haskell-nix.checkMaterialization
-, index-state ? config.haskell-nix.hackage.index.state
-, index-sha256 ? config.haskell-nix.hackage.index.sha256
+, config ? import ../config.nix // import ./config.nix
 , ghcVersion ? config.ghcVersion
 , hlsUnstable ? config.hls.unstable
-, nixpkgs-pin ? config.haskell-nix.nixpkgs-pin."${hnGhc ghcVersion}" or "nixpkgs-unstable"
+, checkMaterialization ? config.haskell-nix.checkMaterialization
+, nixpkgs-pin ? config.haskell-nix.nixpkgs-pin."${ghcVersion}" or "nixpkgs-unstable"
+, index-state ? config.haskell-nix.hackage.index.state or null
+, index-sha256 ? config.haskell-nix.hackage.index.sha256 or null
 }:
 
 let
@@ -46,6 +47,8 @@ let
         overlays = [];
     };
 
+    lib = nixpkgs-stable.lib;
+
     nixpkgs-unstable = import external.nixpkgs-unstable {
         config = {};
         overlays = [];
@@ -53,54 +56,101 @@ let
 
     nixpkgs-hn =
         let hn = import external."haskell.nix" {
-                sourcesOverride = { hackage = external."hackage.nix"; };
+                # DESIGN: occaisionally useful, not generally
+                # sourcesOverride = { hackage = external."hackage.nix"; };
             };
             nixpkgsSrc = hn.sources."${nixpkgs-pin}";
             nixpkgsOrigArgs = hn.nixpkgsArgs;
-            nixpkgsArgs = nixpkgsOrigArgs // {
-                config = nixpkgsOrigArgs.config;
-                overlays = nixpkgsOrigArgs.overlays;
-                #overlays = nixpkgsOrigArgs.overlays ++ [(self: super: {
-                #    alex = super.haskellPackages.alex;
-                #    happy = super.haskellPackages.happy;
-                #})];
-            };
+            nixpkgsArgs = nixpkgsOrigArgs;
         in import nixpkgsSrc hn.nixpkgsArgs;
 
     haskell-nix = nixpkgs-hn.haskell-nix;
 
     planConfigFor = name: compiler-nix-name: modules:
-        let isDarwin = builtins.elem builtins.currentSystem
-                nixpkgs-stable.lib.systems.doubles.darwin;
+        let isDarwin = nixpkgs-stable.stdenv.isDarwin;
             platformName = if isDarwin then "darwin" else "linux";
             needsNewName = name == "hls-${stability}";
             newName = if needsNewName then "${name}-${compiler-nix-name}" else name;
         in {
-            inherit name modules index-state index-sha256 compiler-nix-name
+            inherit name modules compiler-nix-name
                 checkMaterialization;
             configureArgs = "--disable-benchmarks";
             lookupSha256 = {location, ...}:
                 config.haskell-nix.lookupSha256."${stability}"."${location}" or null;
             materialized = ./materialized + "-${platformName}/${newName}";
+            ${if isNull index-state then null else "index-state"} = index-state;
+            ${if isNull index-sha256 then null else "index-sha256"} = index-sha256;
         };
 
     allExes = pkg: pkg.components.exes;
 
     defaultModules = [{ enableSeparateDataOutput = true; }];
 
+    # IDEA: This is an incomplete/broken attempt to get a 9.0.1 build working.
+    # Just keeping it around for a moment in case I want to try again.
+    modifiedHlsSrc = name:
+        let
+            orig = external."${name}";
+            sed = "${nixpkgs-stable.gnused}/bin/sed";
+            modified = nixpkgs-stable.runCommand "${name}-pruned" {} ''
+                cp --archive "${orig}" "$out"
+                chmod -R +wX "$out"
+                "${sed}" --in-place --expression '
+                    /hls-brittany-plugin/d
+                    /hls-class-plugin/d
+                    /hls-fourmolu-plugin/d
+                    /hls-refine-imports-plugin/d
+                    /hls-splice-plugin/d
+                    /hls-stylish-haskell-plugin/d
+                    /hls-tactics-plugin/d
+                ' "$out/cabal.project"
+                echo 'flags: -brittany -class -fourmolu -splice -stylishhaskell -tactic -refineImports' >> \
+                    "$out/cabal.project.local"
+                echo; echo; echo CABAL.PROJECT
+                cat "$out/cabal.project"
+                echo; echo; echo CABAL.PROJECT.LOCAL
+                cat "$out/cabal.project.local"
+            '';
+        in if ghcVersion == "9.0.1" then modified else orig;
+
     fromSource = name:
         let planConfig = planConfigFor name (hnGhc ghcVersion) defaultModules // {
-                src = external."${name}";
+                src = modifiedHlsSrc name;
                 # DESIGN: needed before, might be useful in the future
                 #constraints: apply-refact < 0.9.0.0
                 #max-backjumps: 10000
-                ${if hlsUnstable then "cabalProjectLocal" else null} = ''
-                    reorder-goals: True
+                ${if (ghcVersion == "9.0.1") then "cabalProjectLocal" else null} = ''
+                    flags: -brittany -class -fourmolu -splice -stylishhaskell -tactic -refineImports
                 '';
             };
         in allExes (haskell-nix.cabalProject planConfig).haskell-language-server;
 
     build = fromSource "hls-${stability}";
+
+    wrapHls = nameSuffix: exeSuffix: meta:
+        let exeName = "haskell-language-server${exeSuffix}";
+            hls-orig = build.haskell-language-server;
+        in nixpkgs-stable.stdenv.mkDerivation {
+            name = "haskell-language-server-${hnGhc ghcVersion}${nameSuffix}";
+            version = hls-orig.version;
+            phases = ["installPhase"];
+            nativeBuildInputs = with nixpkgs-stable; [
+                installShellFiles makeWrapper
+            ];
+            installPhase = ''
+                mkdir --parents "$out/bin"
+                makeWrapper "${hls-orig}/bin/haskell-language-server" \
+                    "$out/bin/haskell-language-server${exeSuffix}"
+                for shell in fish zsh bash
+                do
+                    "$out/bin/${exeName}" --''${shell}-completion-script \
+                        "$out/bin/${exeName}" > "${exeName}.$shell"
+                    installShellCompletion --''${shell} "${exeName}.$shell"
+                    rm "${exeName}.$shell"
+                done
+            '';
+            meta = hls-orig.meta // meta;
+        };
 
     longDesc = suffix: ''
         Haskell Language Server (HLS) is the latest attempt make an IDE-like
@@ -117,42 +167,26 @@ let
         ${suffix}
     '';
 
-    hls = build.haskell-language-server.overrideAttrs (old: {
-        name = "haskell-language-server-${hnGhc ghcVersion}";
-        meta = old.meta // {
-            description =
-                "Haskell Language Server (HLS) for GHC ${ghcVersion}";
-            longDescription = longDesc ''
-        This package provides the server executable compiled against
-        GHC ${ghcVersion}.  It has the name original name of
+    hls = wrapHls "" "" {
+        description = "Haskell Language Server (HLS) for GHC ${ghcVersion}";
+        longDescription = longDesc ''
+        This package provides the server executable compiled against GHC
+        ${ghcVersion}.  It has the name original name of
         "haskell-language-server," which may clash with versions compiled for
         other compilers.
         '';
-        };
-    });
+    };
 
-    hls-renamed = nixpkgs-hn.stdenv.mkDerivation {
-        name = "haskell-language-server-${hnGhc ghcVersion}-renamed";
-        version = hls.version;
-        phases = ["installPhase"];
-        nativeBuildInputs = [nixpkgs-hn.makeWrapper];
-        installPhase = ''
-            mkdir --parents $out/bin
-            makeWrapper \
-                "${hls}/bin/haskell-language-server" \
-                "$out/bin/haskell-language-server-${ghcVersion}"
-        '';
-        meta = hls.meta // {
-            description =
-                "Haskell Language Server (HLS) for GHC ${ghcVersion}, renamed binary";
-            longDescription = longDesc ''
-        This package provides the server executable compiled against
-        GHC ${ghcVersion}.  The binary has been renamed from
+    hls-renamed = wrapHls "-renamed" "-${ghcVersion}" {
+        description =
+            "Haskell Language Server (HLS) for GHC ${ghcVersion}, renamed binary";
+        longDescription = longDesc ''
+        This package provides the server executable compiled against GHC
+        ${ghcVersion}.  The binary has been renamed from
         "haskell-language-server" to "haskell-language-server-${ghcVersion}" to
         allow Nix to install multiple versions to the same profile for those
         that wish to use the HLS wrapper.
         '';
-        };
     };
 
     hls-wrapper = build.haskell-language-server-wrapper.overrideAttrs (old: {
@@ -192,7 +226,6 @@ let
 
     stackNixPackages = stackYaml: pkgs:
         let
-            lib = nixpkgs-stable.lib;
             jsonFile = nixpkgs-stable.runCommand "yaml2json" {} ''
                 "${nixpkgs-stable.yj}/bin/yj" < ${stackYaml} > "$out"
             '';
@@ -212,37 +245,58 @@ let
         or nixpkgs-hn.haskell-nix.compiler."${hnGhc ghcVersion}";
     implicit-hie = nixpkgs-unstable.haskellPackages.implicit-hie;
 
-in nix-project // {
-    inherit
+    hls-full =
+        let
+            included = [
+                cabal-install
+                direnv
+                direnv-nix-lorelei
+                ghc
+                hls-renamed
+                hls-wrapper
+                hls-wrapper-nix
+                implicit-hie
+                stack-nonix
+            ];
+            desc = p: "${p.name}:\n    ${p.meta.description}";
+            allDesc = lib.strings.concatMapStringsSep "\n" desc included;
+            name = "haskell-hls-nix-full";
+            meta.description =
+                "Haskell Language Server (HLS) full/easy installation";
+            meta.longDescription = ''
+        This is a package combines a few packages together to make for an easy
+        single installation if you don't want to think about what you need.
+
+        ${allDesc}
+        '';
+        in nixpkgs-stable.symlinkJoin {
+            inherit name meta;
+            paths = included;
+        };
+
+    distribution = {
+        inherit
         cabal-install
         direnv
         direnv-nix-lorelei
         ghc
         hls
+        hls-full
         hls-renamed
         hls-wrapper
         hls-wrapper-nix
         implicit-hie
-        nixpkgs-hn
-        nixpkgs-stable
-        nixpkgs-unstable
         stack
         stack-args
         stack-nix
         stackNixPackages
         stack-nonix
         ;
-    recommended = {
-        inherit
-            cabal-install
-            direnv
-            direnv-nix-lorelei
-            ghc
-            hls-renamed
-            hls-wrapper
-            hls-wrapper-nix
-            implicit-hie
-            stack-nonix
-            ;
     };
+
+in {
+    inherit
+    distribution
+    nix-project
+    nixpkgs-stable;
 }

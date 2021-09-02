@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-call-hierarchy-plugin"; version = "1.0.0.1"; };
+      identifier = { name = "hls-call-hierarchy-plugin"; version = "1.0.0.2"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "julytreee@gmail.com";

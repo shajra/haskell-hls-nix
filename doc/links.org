@@ -1,10 +1,12 @@
 #+LINK: all-hies https://github.com/Infinisil/all-hies
-#+LINK: all-hls https://github.com/masaeedu/all-hls
+#+LINK: hls-nix-all https://github.com/masaeedu/all-hls
+#+LINK: hls-nix-easy https://github.com/jkachmar/easy-hls-nix
 #+LINK: cachix https://cachix.org/
 #+LINK: direnv https://direnv.net/
 #+LINK: direnv-editor https://github.com/direnv/direnv/wiki#editor-integration
 #+LINK: direnv-nix-lorelei https://github.com/shajra/direnv-nix-lorelei
 #+LINK: ghcide https://github.com/haskell/ghcide
+#+LINK: ghcide-deprecated https://github.com/haskell/ghcide/pull/939
 #+LINK: ghcide-nix https://github.com/cachix/ghcide-nix
 #+LINK: github-actions https://github.com/shajra/haskell-hls-nix/actions
 #+LINK: haskell https://www.haskell.org

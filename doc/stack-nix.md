@@ -72,7 +72,7 @@ Nix expressions are known to be to evaluate slowly (hopefully the soon-to-releas
 
 We ultimately want to integrate with tools like HLS, which will call a `stack` command several times for a multi-package project. If a call of `nix-shell` is hidden behind each invocation of `stack`, then we'll pay multiple times the cost of evaluating a Nix expression.
 
-Additionally, tools like [Direnv](https://direnv.net/) can completely eliminate the cost of evaluating `nix-shell`, by caching the resultant environment variables we get when invoking it. But the caching benefits of Direnv can not be utilized by these internal calls of `nix-shell` by Stack.
+Additionally, tools like [Direnv](https://direnv.net/) can eliminate the cost of evaluating `nix-shell`, by caching the resultant environment variables we get when invoking it. But the caching benefits of Direnv can not be utilized by these internal calls of `nix-shell` by Stack.
 
 These problems alone can make usage of Stack's built-in Nix integration a non-starter for some. The next few sections cover further problems.
 
@@ -82,7 +82,7 @@ There are details about the Nix expression that Stack builds internally that may
 
 When enabling Stack's Nix integration with `--nix` and specifying a non-Haskell dependency with, for example, `--nix-packages icu`, we get the following internally generated `nix-shell` invocation:
 
-```shell
+```sh
 /run/current-system/sw/bin/nix-shell \
     --pure -E "
 	with (import <nixpkgs> {});
@@ -165,7 +165,7 @@ So this means that if we are having the user call `nix-shell` explicitly to esta
 
 ## Stack forces Nix integration for NixOS<a id="sec-4-4"></a>
 
-Stack reads the file `/etc/os-release` to determine if the operating system is NixOS. If so, then Stack forcibly enables its Nix integration. This means that Nix users on NixOS will have a different experience than people who have installed Nix on a non-NixOS operating system. One or the other will have to enable or disable Nix with Stack's `--nix` or `--no-nix` switches. This wouldn't be the case if a project's `stack.yaml` enabled Nix for all users, but that seems very unlikely. Nix is not that popular yet.
+Stack reads the file `/etc/os-release` to determine if the operating system is NixOS. If so, then Stack forcibly enables its Nix integration. This means that Nix users on NixOS will have a different experience than people who have installed Nix on a non-NixOS operating system. One or the other will have to enable or disable Nix with Stack's `--nix` or `--no-nix` switches. This wouldn't be the case if a project's `stack.yaml` enabled Nix for all users, but that seems unlikely. Nix is not that popular yet.
 
 What seems more likely is that project would provide multiple Stack YAML files, but that just leads to annoying configuration duplication.
 

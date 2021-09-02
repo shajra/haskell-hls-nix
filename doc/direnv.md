@@ -46,7 +46,7 @@ As a convenience, you can install both [Direnv](https://direnv.net/) and [Lorele
 
 If you followed the root-level README's section on a user-based installation, you have everything you need to use Direnv and Lorelei with Nix. If not, you can execute the following:
 
-```shell
+```sh
 nix-env --install --file . --attr direnv --attr direnv-nix-lorelei
 ```
 
@@ -55,7 +55,7 @@ nix-env --install --file . --attr direnv --attr direnv-nix-lorelei
 
 Next, we need to configure Direnv with the Lorelei extension:
 
-```shell
+```sh
 mkdir --parents ~/.config/direnv/lib
 ln --symbolic \
     ~/.nix-profile/share/direnv-nix-lorelei/nix-lorelei.sh \
@@ -68,7 +68,7 @@ Please see the [official Direnv documentation on how to configure your editor](h
 
 One configuration you'll have to do with your editors is tell it what executable to call to start the HLS background process. When using Direnv, we recommended that you use `haskell-language-server-wrapper`, and configure your project's Nix shells to provide the necessary executables for this wrapper to run.
 
-Additionally, Direnv has very nice support for enhancing your terminal experience. You can install a hook into your shell so that when you change into a directory configured with Direnv, the environment will automatically change to calculated variables.
+Additionally, Direnv has nice support for enhancing your terminal experience. You can install a hook into your shell so that when you change into a directory configured with Direnv, the environment will automatically change to calculated variables.
 
 # Configuring a project<a id="sec-5"></a>
 
@@ -82,19 +82,19 @@ You're ready to hook your project into Direnv and Lorelei if the following steps
 
 If you have a project that can be used to enter a Nix shell with a call like
 
-```shell
+```sh
 nix-shell "$NIX_FILE"
 ```
 
 for some file `$NIX_FILE`, then at the root of the project you can create a `.envrc` to get started with Direnv:
 
-```shell
+```sh
 echo "use_nix_gcrooted -a \"$NIX_FILE\"" > .envrc
 ```
 
 And finally, notify Direnv that the configuration file is safe to allow for evaluation:
 
-```shell
+```sh
 direnv allow
 ```
 
@@ -108,7 +108,7 @@ You should be able to test your configuration of Direnv and Lorelei with an invo
 
 We can use the provided example projects to illustrate this test. Here we use `direnv exec` to perform a test run of HLS within the environment picked up by Direnv and Lorelei from the Nix shell of our example Cabal project:
 
-```shell
+```sh
 direnv allow examples/example-cabal
 direnv exec examples/example-cabal \
     haskell-language-server-wrapper \
@@ -120,7 +120,7 @@ direnv exec examples/example-cabal \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (5 files worked, 0 files failed)
-    2021-08-10 00:31:32.881064976 [ThreadId 675] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-09-04 04:42:19.736348549 [ThreadId 469] INFO hls:	finish: GenerateCore (took 0.00s)
 
 Before we can use Direnv with the example, we have to run `direnv allow` on it to permit running code from the `.envrc` file.
 
@@ -128,7 +128,7 @@ Then `direnv exec example/example-cabal` directs Direnv to load an environment s
 
 And here we see that the same test works for the Stack example project as well:
 
-```shell
+```sh
 direnv allow examples/example-stack
 direnv exec examples/example-stack \
     haskell-language-server-wrapper \
@@ -140,7 +140,7 @@ direnv exec examples/example-stack \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (3 files worked, 0 files failed)
-    2021-08-10 00:31:38.81694826 [ThreadId 640] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-09-04 04:42:35.050649368 [ThreadId 455] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Suggested advanced configuration<a id="sec-7"></a>
 

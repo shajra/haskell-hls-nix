@@ -11,16 +11,16 @@ an evaluation of a source code block.
 
 #+NAME: crop
 #+BEGIN_SRC emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
-  (let* ((ls         (split-string text "\n"))
-         (first-ls   (-take first-n ls))
-         (rest-first (-drop first-n ls))
-         (rest-last  (-drop-last (+ 1 last-n) rest-first))
-         (last-ls    (-take-last (+ 1 last-n) rest-first)))
-    (string-join
-     (if rest-last
-         (append first-ls '("…") last-ls)
-       (append first-ls last-ls))
-     "\n"))
+(let* ((ls         (split-string text "\n"))
+       (first-ls   (-take first-n ls))
+       (rest-first (-drop first-n ls))
+       (rest-last  (-drop-last (+ 1 last-n) rest-first))
+       (last-ls    (-take-last (+ 1 last-n) rest-first)))
+  (string-join
+   (if rest-last
+       (append first-ls '("…") last-ls)
+     (append first-ls last-ls))
+   "\n"))
 #+END_SRC
 
 ** Setup action
@@ -29,40 +29,40 @@ The following helps (using Noweb) set up Nix environment variables for source
 block evaluation.
 
 #+NAME: nix-init
-#+BEGIN_SRC shell :eval no
-  export NIX_PROFILE=$(pwd)/nix-profile
-  export NIX_PAGER=cat
-  export PATH="$NIX_PROFILE/bin:$PATH"
-  export NIX_PATH=nixpkgs="$(nix eval --file nix nixpkgs-stable.path)"
-  export HOME="$(pwd)/home-fake"
+#+BEGIN_SRC sh :eval no
+export NIX_PROFILE=$(pwd)/nix-profile
+export NIX_PAGER=cat
+export PATH="$NIX_PROFILE/bin:$PATH"
+export NIX_PATH=nixpkgs="$(nix eval --file nix nixpkgs-stable.path)"
+export HOME="$(pwd)/home-fake"
 #+END_SRC
 
 Next we perform some side-effects to set up the evaluation of the whole
 document.
 
 #+NAME: cleanup
-#+BEGIN_SRC shell :dir .. :results output silent :noweb yes
-  <<nix-init>>
-  rm --force result*
-  rm --force "$NIX_PROFILE"*
-  rm --recursive --force "$(pwd)/home-fake"
-  find . \( -name '.stack-work' -o -name 'dist-newstyle' \) -exec rm -rf {} +
+#+BEGIN_SRC sh :dir .. :results output silent :noweb yes
+<<nix-init>>
+rm --force result*
+rm --force "$NIX_PROFILE"*
+rm --recursive --force "$(pwd)/home-fake"
+find . \( -name '.stack-work' -o -name 'dist-newstyle' \) -exec rm -rf {} +
 #+END_SRC
 
 This is just a hack to deal with the fact that we never know what directory a
 session will start in, so we need a way to calculate the PWD to jump to it.
 
 #+NAME: pwd
-#+BEGIN_SRC shell :results output silent
-  echo cd "$(pwd)/.."
+#+BEGIN_SRC sh :results output silent
+echo cd "$(pwd)/.."
 #+END_SRC
 
 This begins a session with environment variables initialized.
 
 #+NAME: session-init
-#+BEGIN_SRC shell :session env :results output silent :noweb yes
-  <<pwd()>>
-  <<nix-init>>
+#+BEGIN_SRC sh :session env :results output silent :noweb yes
+<<pwd()>>
+<<nix-init>>
 #+END_SRC
 
 * Problems solved by Direnv and Lorelei
@@ -149,8 +149,8 @@ you have everything you need to use Direnv and Lorelei with Nix. If not, you can
 execute the following:
 
 #+NAME: nix-env-install-direnv
-#+BEGIN_SRC shell :session env :results output :exports both
-  nix-env --install --file . --attr direnv --attr direnv-nix-lorelei
+#+BEGIN_SRC sh :session env :results output :exports both
+nix-env --install --file . --attr direnv --attr direnv-nix-lorelei
 #+END_SRC
 
 #+RESULTS: nix-env-install-direnv
@@ -159,11 +159,11 @@ execute the following:
 
 Next, we need to configure Direnv with the Lorelei extension:
 
-#+BEGIN_SRC shell :eval no
-  mkdir --parents ~/.config/direnv/lib
-  ln --symbolic \
-      ~/.nix-profile/share/direnv-nix-lorelei/nix-lorelei.sh \
-      ~/.config/direnv/lib
+#+BEGIN_SRC sh :eval no
+mkdir --parents ~/.config/direnv/lib
+ln --symbolic \
+    ~/.nix-profile/share/direnv-nix-lorelei/nix-lorelei.sh \
+    ~/.config/direnv/lib
 #+END_SRC
 
 * Editor configuration
@@ -178,10 +178,10 @@ to call to start the HLS background process. When using Direnv, we recommended
 that you use =haskell-language-server-wrapper=, and configure your project's Nix
 shells to provide the necessary executables for this wrapper to run.
 
-Additionally, Direnv has very nice support for enhancing your terminal
-experience. You can install a hook into your shell so that when you change into
-a directory configured with Direnv, the environment will automatically change to
-calculated variables.
+Additionally, Direnv has nice support for enhancing your terminal experience.
+You can install a hook into your shell so that when you change into a directory
+configured with Direnv, the environment will automatically change to calculated
+variables.
 
 * Configuring a project
 
@@ -196,22 +196,22 @@ have been completed:
 
 If you have a project that can be used to enter a Nix shell with a call like
 
-#+BEGIN_SRC shell :eval no
-  nix-shell "$NIX_FILE"
+#+BEGIN_SRC sh :eval no
+nix-shell "$NIX_FILE"
 #+END_SRC
 
 for some file =$NIX_FILE=, then at the root of the project you can create a
 =.envrc= to get started with Direnv:
 
-#+BEGIN_SRC shell :eval no
-  echo "use_nix_gcrooted -a \"$NIX_FILE\"" > .envrc
+#+BEGIN_SRC sh :eval no
+echo "use_nix_gcrooted -a \"$NIX_FILE\"" > .envrc
 #+END_SRC
 
 And finally, notify Direnv that the configuration file is safe to allow for
 evaluation:
 
-#+BEGIN_SRC shell :eval no
-  direnv allow
+#+BEGIN_SRC sh :eval no
+direnv allow
 #+END_SRC
 
 See the [[direnv-nix-lorelei][official documentation for Lorelei]] for more details on this
@@ -233,11 +233,11 @@ We can use the provided example projects to illustrate this test. Here we use
 Direnv and Lorelei from the Nix shell of our example Cabal project:
 
 #+NAME: test-cabal
-#+BEGIN_SRC shell :dir .. :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
-  direnv allow examples/example-cabal
-  direnv exec examples/example-cabal \
-      haskell-language-server-wrapper \
-      --cwd "$(pwd)/examples/example-cabal" 2>&1
+#+BEGIN_SRC sh :dir .. :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+direnv allow examples/example-cabal
+direnv exec examples/example-cabal \
+    haskell-language-server-wrapper \
+    --cwd "$(pwd)/examples/example-cabal" 2>&1
 #+END_SRC
 
 #+RESULTS: test-cabal
@@ -246,7 +246,7 @@ Direnv and Lorelei from the Nix shell of our example Cabal project:
 : direnv: not modified: application/example-haskell-app.cabal
 : …
 : Completed (5 files worked, 0 files failed)
-: 2021-08-10 00:31:32.881064976 [ThreadId 675] INFO hls:	finish: GenerateCore (took 0.00s)
+: 2021-09-04 04:42:19.736348549 [ThreadId 469] INFO hls:	finish: GenerateCore (took 0.00s)
 
 Before we can use Direnv with the example, we have to run =direnv allow= on it
 to permit running code from the =.envrc= file.
@@ -262,11 +262,11 @@ errors, have confidence that Direnv and Lorelei is configured correctly.
 And here we see that the same test works for the Stack example project as well:
 
 #+NAME: test-stack
-#+BEGIN_SRC shell :dir .. :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
-  direnv allow examples/example-stack
-  direnv exec examples/example-stack \
-      haskell-language-server-wrapper \
-      --cwd "$(pwd)/examples/example-stack" 2>&1
+#+BEGIN_SRC sh :dir .. :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+direnv allow examples/example-stack
+direnv exec examples/example-stack \
+    haskell-language-server-wrapper \
+    --cwd "$(pwd)/examples/example-stack" 2>&1
 #+END_SRC
 
 #+RESULTS: test-stack
@@ -275,7 +275,7 @@ And here we see that the same test works for the Stack example project as well:
 : direnv: not modified: application/example-haskell-app.cabal
 : …
 : Completed (3 files worked, 0 files failed)
-: 2021-08-10 00:31:38.81694826 [ThreadId 640] INFO hls:	finish: GenerateCore (took 0.00s)
+: 2021-09-04 04:42:35.050649368 [ThreadId 455] INFO hls:	finish: GenerateCore (took 0.00s)
 
 * Suggested advanced configuration
 
