@@ -8,7 +8,7 @@ nix run \
     --keep LANG \
     --keep LOCALE_ARCHIVE \
     --file nix \
-    nix-project-org2gfm \
+    nix-project.nix-project-org2gfm \
     nixpkgs-stable.ansifilter \
     nixpkgs-stable.bash \
     nixpkgs-stable.coreutils \
@@ -23,7 +23,10 @@ nix run \
     nixpkgs-stable.which \
     --command \
     org2gfm \
-    --ignore 'links.org\|home-fake' \
+    --path-bin \
+    --exclude links.org \
+    --exclude nix.mac.org \
+    --exclude home-fake \
     --nix "$(command -v nix)" \
     --evaluate \
     "$@"

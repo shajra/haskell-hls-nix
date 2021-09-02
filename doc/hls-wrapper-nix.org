@@ -10,16 +10,16 @@ an evaluation of a source code block.
 
 #+NAME: crop
 #+BEGIN_SRC emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
-  (let* ((ls         (split-string text "\n"))
-         (first-ls   (-take first-n ls))
-         (rest-first (-drop first-n ls))
-         (rest-last  (-drop-last (+ 1 last-n) rest-first))
-         (last-ls    (-take-last (+ 1 last-n) rest-first)))
-    (string-join
-     (if rest-last
-         (append first-ls '("…") last-ls)
-       (append first-ls last-ls))
-     "\n"))
+(let* ((ls         (split-string text "\n"))
+       (first-ls   (-take first-n ls))
+       (rest-first (-drop first-n ls))
+       (rest-last  (-drop-last (+ 1 last-n) rest-first))
+       (last-ls    (-take-last (+ 1 last-n) rest-first)))
+  (string-join
+   (if rest-last
+       (append first-ls '("…") last-ls)
+     (append first-ls last-ls))
+   "\n"))
 #+END_SRC
 
 ** Setup action
@@ -28,40 +28,40 @@ The following helps (using Noweb) set up Nix environment variables for source
 block evaluation.
 
 #+NAME: nix-init
-#+BEGIN_SRC shell :eval no
-  export NIX_PROFILE=$(pwd)/nix-profile
-  export NIX_PAGER=cat
-  export PATH="$NIX_PROFILE/bin:$PATH"
-  export NIX_PATH=nixpkgs="$(nix eval --file nix nixpkgs-stable.path)"
-  export HOME="$(pwd)/home-fake"
+#+BEGIN_SRC sh :eval no
+export NIX_PROFILE=$(pwd)/nix-profile
+export NIX_PAGER=cat
+export PATH="$NIX_PROFILE/bin:$PATH"
+export NIX_PATH=nixpkgs="$(nix eval --file nix nixpkgs-stable.path)"
+export HOME="$(pwd)/home-fake"
 #+END_SRC
 
 Next we perform some side-effects to set up the evaluation of the whole
 document.
 
 #+NAME: cleanup
-#+BEGIN_SRC shell :dir .. :results output silent :noweb yes
-  <<nix-init>>
-  rm --force result*
-  rm --force "$NIX_PROFILE"*
-  rm --recursive --force "$(pwd)/home-fake"
-  find . \( -name '.stack-work' -o -name 'dist-newstyle' \) -exec rm -rf {} +
+#+BEGIN_SRC sh :dir .. :results output silent :noweb yes
+<<nix-init>>
+rm --force result*
+rm --force "$NIX_PROFILE"*
+rm --recursive --force "$(pwd)/home-fake"
+find . \( -name '.stack-work' -o -name 'dist-newstyle' \) -exec rm -rf {} +
 #+END_SRC
 
 This is just a hack to deal with the fact that we never know what directory a
 session will start in, so we need a way to calculate the PWD to jump to it.
 
 #+NAME: pwd
-#+BEGIN_SRC shell :results output silent
-  echo cd "$(pwd)/.."
+#+BEGIN_SRC sh :results output silent
+echo cd "$(pwd)/.."
 #+END_SRC
 
 This begins a session with environment variables initialized.
 
 #+NAME: session-init
-#+BEGIN_SRC shell :session env :results output silent :noweb yes
-  <<pwd()>>
-  <<nix-init>>
+#+BEGIN_SRC sh :session env :results output silent :noweb yes
+<<pwd()>>
+<<nix-init>>
 #+END_SRC
 
 * About =hls-wrapper-nix=
@@ -88,8 +88,7 @@ assume you're familiar with everything discussed in the [[../README.org][root-le
 
 Note that you shouldn't use the HLS Nix wrapper script if you're using [[./direnv.org][Direnv
 and Lorelei]] to solve the same problem. Direnv and Lorelei has more configuration
-steps, but can help if the time to enter into a Nix shell is too long and
-annoying.
+steps, but can help if the time to enter a Nix shell is too long and annoying.
 
 * Installation
 
@@ -100,66 +99,13 @@ you likely have already installed the script. If not, you can execute the
 following:
 
 #+NAME: nix-env-install
-#+BEGIN_SRC shell :session env :results output :exports both
-  nix-env --install --file . --attr hls-wrapper-nix
+#+BEGIN_SRC sh :session env :results output :exports both
+nix-env --install --file . --attr hls-wrapper-nix
 #+END_SRC
 
 #+RESULTS: nix-env-install
-#+begin_example
-installing 'hls-wrapper-nix'
-trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
-hint: Using 'master' as the name for the initial branch. This default branch name
-hint: is subject to change. To configure the initial branch name to use in all
-hint: of your new repositories, which will suppress this warning, call:
-hint:
-hint: 
-hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-hint: 'development'. The just-created branch can be renamed via this command:
-hint:
-warning: refname '8fee87eac97a538dbe81ff1ab18cff10f2f9fa15' is ambiguous.
-Git normally never creates a ref that ends with 40 hex characters
-because it will be ignored when you just specify 40-hex. These refs
-may be created by mistake. For example,
-br $(git rev-parse ...)
-br" is somehow empty and a 40-hex ref is created. Please
-examine these refs and maybe delete them. Turn this message off by
-running "git config advice.objectNameWarning false"
-warning: refname '8fee87eac97a538dbe81ff1ab18cff10f2f9fa15' is ambiguous.
-Git normally never creates a ref that ends with 40 hex characters
-because it will be ignored when you just specify 40-hex. These refs
-may be created by mistake. For example,
-br $(git rev-parse ...)
-br" is somehow empty and a 40-hex ref is created. Please
-examine these refs and maybe delete them. Turn this message off by
-running "git config advice.objectNameWarning false"
-trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
-trace: WARNING: No sha256 found for source-repository-package https://github.com/haskell/lsp.git ef59c28b41ed4c5775f0ab0c1e985839359cec96 download may fail in restricted mode (hydra)
-hint: Using 'master' as the name for the initial branch. This default branch name
-hint: is subject to change. To configure the initial branch name to use in all
-hint: of your new repositories, which will suppress this warning, call:
-hint:
-hint: 
-hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-hint: 'development'. The just-created branch can be renamed via this command:
-hint:
-warning: refname 'ef59c28b41ed4c5775f0ab0c1e985839359cec96' is ambiguous.
-Git normally never creates a ref that ends with 40 hex characters
-because it will be ignored when you just specify 40-hex. These refs
-may be created by mistake. For example,
-br $(git rev-parse ...)
-br" is somehow empty and a 40-hex ref is created. Please
-examine these refs and maybe delete them. Turn this message off by
-running "git config advice.objectNameWarning false"
-warning: refname 'ef59c28b41ed4c5775f0ab0c1e985839359cec96' is ambiguous.
-Git normally never creates a ref that ends with 40 hex characters
-because it will be ignored when you just specify 40-hex. These refs
-may be created by mistake. For example,
-br $(git rev-parse ...)
-br" is somehow empty and a 40-hex ref is created. Please
-examine these refs and maybe delete them. Turn this message off by
-running "git config advice.objectNameWarning false"
-trace: Consider adding `--sha256: 1whcgw4hhn2aplrpy9w8q6rafwy7znnp0rczgr6py15fqyw2fwb5` to the cabal.project file or passing in a lookupSha256 argument
-#+end_example
+: installing 'hls-wrapper-nix'
+: trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
 
 * Editor configuration
 
@@ -224,11 +170,11 @@ You can configure the following per-project in your YAML file:
 The following is an example of a valid configuration:
 
 #+BEGIN_SRC yaml :eval no
-  /home/youruser/src/some-project:
-      - shell_file: shell-alt.nix
-      - pure: false
-  /home/youruser/src/another-project:
-      - mode: bypass
+/home/youruser/src/some-project:
+    - shell_file: shell-alt.nix
+    - pure: false
+/home/youruser/src/another-project:
+    - mode: bypass
 #+END_SRC
 
 * Testing a project
@@ -241,34 +187,34 @@ We can use the provided example projects to illustrate this test. Here's a run
 of =hls-wrapper-nix= on the Cabal example project:
 
 #+NAME: test-cabal
-#+BEGIN_SRC shell :session env :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
-  hls-wrapper-nix --cwd examples/example-cabal
+#+BEGIN_SRC sh :session env :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+hls-wrapper-nix --cwd examples/example-cabal
 #+END_SRC
 
 #+RESULTS: test-cabal
 : INFO: Entering pure Nix shell
-: trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
-: trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
+: trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
+: Found "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/a"
 : …
 : 
 : Completed (5 files worked, 0 files failed)
-: 2021-08-10 00:29:25.882180415 [ThreadId 536] INFO hls:	finish: GenerateCore (took 0.00s)
+: 2021-09-04 04:42:53.204223457 [ThreadId 524] INFO hls:	finish: GenerateCore (took 0.00s)
 
 And here we see that the script works for the Stack example project as well:
 
 #+NAME: test-stack
-#+BEGIN_SRC shell :session env :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
-  hls-wrapper-nix --cwd examples/example-stack
+#+BEGIN_SRC sh :session env :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+hls-wrapper-nix --cwd examples/example-stack
 #+END_SRC
 
 #+RESULTS: test-stack
 : INFO: Entering pure Nix shell
-: trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
-: trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
+: trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
+: No 'hie.yaml' found. Try to discover the project type!
 : …
+: 2021-09-04 04:44:39.826674448 [ThreadId 588] INFO hls:	finish: GenerateCore (took 0.00s)
 : 
 : Completed (3 files worked, 0 files failed)
-: 2021-08-10 00:31:22.280199505 [ThreadId 599] INFO hls:	finish: GenerateCore (took 0.00s)
 
 * Command-line reference
 
@@ -279,8 +225,8 @@ these useful for testing.
 For reference, here's the output of running ~hls-wrapper-nix --help~:
 
 #+NAME: help
-#+BEGIN_SRC shell :dir .. :results output :exports results
-  nix run --file . hls-wrapper-nix --command hls-wrapper-nix --help
+#+BEGIN_SRC sh :dir .. :results output :exports results
+nix run --file . hls-wrapper-nix --command hls-wrapper-nix --help
 #+END_SRC
 
 #+RESULTS: help

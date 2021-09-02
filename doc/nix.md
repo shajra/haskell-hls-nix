@@ -1,25 +1,26 @@
 - [About this document](#sec-1)
 - [How this project uses Nix](#sec-2)
 - [Motivation to use Nix](#sec-3)
-- [Installation and setup](#sec-4)
-  - [Nix package manager setup](#sec-4-1)
-  - [Cache setup](#sec-4-2)
-- [Working with Nix](#sec-5)
-  - [Searching Nix files](#sec-5-1)
-  - [Building Nix expressions](#sec-5-2)
-  - [Running commands](#sec-5-3)
-  - [Installing and uninstalling programs](#sec-5-4)
-  - [Garbage collection](#sec-5-5)
+- [Level of commitment/risk](#sec-4)
+- [Installation and setup](#sec-5)
+  - [Nix package manager setup](#sec-5-1)
+  - [Cache setup](#sec-5-2)
+- [Working with Nix](#sec-6)
+  - [Searching Nix files](#sec-6-1)
+  - [Building Nix expressions](#sec-6-2)
+  - [Running commands](#sec-6-3)
+  - [Installing and uninstalling programs](#sec-6-4)
+  - [Garbage collection](#sec-6-5)
   - [Understanding derivations](#nix-drv)
-  - [Lazy evaluation](#sec-5-7)
-- [Next steps](#sec-6)
+  - [Lazy evaluation](#sec-6-7)
+- [Next steps](#sec-7)
 
 
 # About this document<a id="sec-1"></a>
 
 This document is included for people somewhat new to Nix. Although the [official Nix documentation](https://nixos.org/learn.html) has gotten substantially better with time, this is an embedded guide to help get started with Nix so it's easier to use the rest of the project.
 
-Note that this document only covers the Nix package manager, an not [NixOS](https://nixos.org) (a full Linux operating system built on top of Nix) or [Nix-Darwin](https://daiderd.com/nix-darwin) (a project that gives the benefits of NixOS for MacOS).
+Note that this document only covers the Nix package manager, not [NixOS](https://nixos.org) (a full Linux operating system built on top of Nix) or [Nix-Darwin](https://daiderd.com/nix-darwin) (a project that gives the benefits of NixOS for MacOS).
 
 # How this project uses Nix<a id="sec-2"></a>
 
@@ -43,21 +44,29 @@ The repeatability and precision of Nix enables caching services, which for Nix a
 
 All of this makes Nix an attractive tool for managing almost any software project.
 
-# Installation and setup<a id="sec-4"></a>
+# Level of commitment/risk<a id="sec-4"></a>
 
-## Nix package manager setup<a id="sec-4-1"></a>
+Unless you're on NixOS, you're likely already using another package manager for your operating system already (APT, Yum, etc.). You don't have to worry about Nix or packages installed by Nix conflicting with anything already on your system. Running Nix along side other package managers is safe.
+
+All the files of a Nix package are located under `/nix` a directory, well isolated from any other package manager. Nix won't touch any directories like `/etc` or `/usr/local`. Nix then symlinks files under `/nix` to your home directory under dot-files like `~/.nix-profile`.
+
+Hopefully, this alleviates any worry about installing a complex program on your machine. Uninstallation is nearly as easy as deleting everything under `/nix`.
+
+# Installation and setup<a id="sec-5"></a>
+
+## Nix package manager setup<a id="sec-5-1"></a>
 
 > **<span class="underline">NOTE:</span>** You don't need this step if you're running NixOS, which comes with Nix baked in.
 
 If you don't already have Nix, [the official installation script](https://nixos.org/learn.html) should work on a variety of UNIX-like operating systems:
 
-```shell
+```bash
 sh <(curl -L https://nixos.org/nix/install) --daemon
 ```
 
 If you're on a recent release of MacOS, you will need an extra switch:
 
-```shell
+```bash
 sh <(curl -L https://nixos.org/nix/install) --daemon \
     --darwin-use-unencrypted-nix-store-volume
 ```
@@ -68,13 +77,13 @@ The `--daemon` switch installs Nix in the recommended multi-user mode. This requ
 
 The Nix manual describes [other methods of installing Nix](https://nixos.org/nix/manual/#chap-installation) that may suit you more.
 
-## Cache setup<a id="sec-4-2"></a>
+## Cache setup<a id="sec-5-2"></a>
 
 It's recommended to configure Nix to use shajra.cachix.org as a Nix *substitutor*. This project pushes built Nix packages to [Cachix](https://cachix.org/) as part of its continuous integration. Once configured, Nix will pull down these pre-built packages instead of building them locally (potentially saving a lot of time). This augments the default substitutor that pulls from cache.nixos.org.
 
 You can configure shajra.cachix.org as a substitutor with the following command:
 
-```shell
+```sh
 nix run \
     --file https://cachix.org/api/v1/install \
     cachix \
@@ -89,11 +98,11 @@ One option sets you up as a trusted user, and installs Cachix configuration for 
 
 You can alternatively configure Cachix as a substitutor globally by running the above command as a root user (say with `sudo`), which sets up Cachix directly in `/etc/nix/nix.conf`. The invocation may give further instructions upon completion.
 
-# Working with Nix<a id="sec-5"></a>
+# Working with Nix<a id="sec-6"></a>
 
 Though covering Nix comprehensively is beyond the scope of this document, we'll go over a few commands illustrating some usage of Nix with this project.
 
-## Searching Nix files<a id="sec-5-1"></a>
+## Searching Nix files<a id="sec-6-1"></a>
 
 Each of the Nix files in this project (files with a ".nix" extension) contains exactly one Nix expression. This expression evaluates to one of the following values:
 
@@ -103,7 +112,7 @@ Each of the Nix files in this project (files with a ".nix" extension) contains e
 
 Once you learn the Nix language, you can read these files to see what kind of values they build. We can use the `nix search` command to see what package derivations a Nix expression contains. For example from the root directory of this project, we can execute:
 
-```shell
+```sh
 nix search --file default.nix --no-cache
 ```
 
@@ -133,24 +142,24 @@ If the Nix expression we're searching evaluates to a single derivation (not in a
 
 Many Nix commands evaluate Nix files. If you specify a directory instead, the command will look for a `default.nix` file within to evaluate. So from the root directory of this project, we could use `.` instead of `default.nix`:
 
-```shell
+```sh
 nix search --file . --no-cache
 ```
 
 In the remainder of this document, we'll use `.` instead of `default.nix` since this is conventional for Nix.
 
-## Building Nix expressions<a id="sec-5-2"></a>
+## Building Nix expressions<a id="sec-6-2"></a>
 
 The following result is one returned by our prior execution of `nix search --no-cache --file .`:
 
-    * hls-renamed (haskell-language-server-ghc8104-renamed)
-      Haskell Language Server (HLS) for GHC 8.10.4, renamed binary
+    * hls-renamed (haskell-language-server-ghc8106-renamed)
+      Haskell Language Server (HLS) for GHC 8.10.6, renamed binary
 
-We can see that a package named "haskell-language-server-ghc8104-renamed" can be accessed with the `hls-renamed` attribute path in the Nix expression in the project root's `default.nix`. Not shown in the search results above, this package happens to provide the executable `haskell-language-server-8.10.4`.
+We can see that a package named "haskell-language-server-ghc8106-renamed" can be accessed with the `hls-renamed` attribute path in the Nix expression in the project root's `default.nix`. Not shown in the search results above, this package happens to provide the executable `haskell-language-server-8.10.6`.
 
 We can build this package with `nix build` from the project root:
 
-```shell
+```sh
 nix build --file . hls-renamed
 ```
 
@@ -160,47 +169,53 @@ All packages built by Nix are stored in `/nix/store`. Nix won't rebuild packages
 
 After a successful call of `nix build`, you'll see one or more symlinks for each package requested in the current working directory. These symlinks by default have a name prefixed with "result" and point back to the respective build in `/nix/store`:
 
-```shell
+```sh
 readlink result*
 ```
 
-    /nix/store/fid8n7g36s22pr3q2z8jfj3w5j7i6xhz-haskell-language-server-ghc8104-renamed
+    /nix/store/pchxgvxqy4xls4i5hjizfnq563yf6h22-haskell-language-server-ghc8106-renamed
 
 Following these symlinks, we can see the files the project provides:
 
-```shell
+```sh
 tree -l result*
 ```
 
     result
-    └── bin
-        └── haskell-language-server-8.10.4
-    
-    1 directory, 1 file
+    ├── bin
+    │   └── haskell-language-server-8.10.6
+    └── share
+        ├── bash-completion
+        │   └── completions
+        │       └── haskell-language-server-8.10.6.bash
+        ├── fish
+        │   └── vendor_completions.d
+        │       └── haskell-language-server-8.10.6.fish
+    …
 
 It's common to configure these "result" symlinks as ignored in source control tools (for instance, for Git within a `.gitignore` file).
 
 `nix build` has a `--no-link` switch in case you want to build packages without creating "result" symlinks. To get the paths where your packages are located, you can use `nix path-info` after a successful build:
 
-```shell
+```sh
 nix path-info --file . hls-renamed
 ```
 
-    /nix/store/fid8n7g36s22pr3q2z8jfj3w5j7i6xhz-haskell-language-server-ghc8104-renamed
+    /nix/store/pchxgvxqy4xls4i5hjizfnq563yf6h22-haskell-language-server-ghc8106-renamed
 
-## Running commands<a id="sec-5-3"></a>
+## Running commands<a id="sec-6-3"></a>
 
 We can run commands in Nix-curated environments with `nix run`. Nix will take executables found in packages, put them in an environment's `PATH`, and then execute a user-specified command.
 
 With `nix run`, you don't even have to build the package first with `nix build` or mess around with "result" symlinks. `nix run` will build the project if it's not yet been built.
 
-For example, to get the help message for the `haskell-language-server-8.10.4` executable provided by the `haskell-language-server-ghc8104-renamed` package selected by the `hls-renamed` attribute path from `.`, we can call the following:
+For example, to get the help message for the `haskell-language-server-8.10.6` executable provided by the `haskell-language-server-ghc8106-renamed` package selected by the `hls-renamed` attribute path from `.`, we can call the following:
 
-```shell
+```sh
 nix run \
     --file . \
     hls-renamed \
-    --command haskell-language-server-8.10.4 --help
+    --command haskell-language-server-8.10.6 --help
 ```
 
     haskell-language-server - GHC Haskell LSP server
@@ -218,13 +233,13 @@ The command to run is specified after the `--command` switch. `nix run` runs the
 
 `nix run` also supports an `--ignore-environment` flag that restricts `PATH` to only packages selected, rather than extending the `PATH` of the caller's environment. With `--ignore-environment`, the invocation is more sandboxed.
 
-## Installing and uninstalling programs<a id="sec-5-4"></a>
+## Installing and uninstalling programs<a id="sec-6-4"></a>
 
 We've seen that we can build programs with `nix build` and then execute them using the "result" symlink (`result/bin/*`). Additionally, we've seen that you can run programs with `nix run`. But these additional steps and switches/arguments can feel extraneous. It would be nice if we could just have the programs on our `PATH`. This is what `nix-env` is for.
 
 `nix-env` maintains a symlink tree, called a *profile*, of installed programs. The active profile is pointed to by a symlink at `~/.nix-profile`. By default, this profile points to `/nix/var/nix/profiles/per-user/$USER/profile`. But you can point your `~/.nix-profile` to any writable location with the `--switch-profile` switch:
 
-```shell
+```sh
 nix-env --switch-profile /nix/var/nix/profiles/per-user/$USER/another-profile
 ```
 
@@ -232,45 +247,42 @@ This way, you can just put `~/.nix-profile/bin` on your `PATH`, and any programs
 
 We can query what's installed in the active profile with the `--query` switch:
 
-```shell
+```sh
 nix-env --query
 ```
 
-To install the `haskell-language-server-8.10.4` executable, which is accessed by the `hls-renamed` in our top-level `default.nix` file, we'd run the following:
+To install the `haskell-language-server-8.10.6` executable, which is accessed by the `hls-renamed` in our top-level `default.nix` file, we'd run the following:
 
-```shell
+```sh
 nix-env --install --file . --attr hls-renamed 2>&1
 ```
 
-    installing 'haskell-language-server-ghc8104-renamed'
-    trace: WARNING: No sha256 found for source-repository-package https://github.com/hsyl20/ghc-api-compat 8fee87eac97a538dbe81ff1ab18cff10f2f9fa15 download may fail in restricted mode (hydra)
-    trace: Consider adding `--sha256: 16bibb7f3s2sxdvdy2mq6w1nj1lc8zhms54lwmj17ijhvjys29vg` to the cabal.project file or passing in a lookupSha256 argument
-    trace: WARNING: No sha256 found for source-repository-package https://github.com/haskell/lsp.git ef59c28b41ed4c5775f0ab0c1e985839359cec96 download may fail in restricted mode (hydra)
-    trace: Consider adding `--sha256: 1whcgw4hhn2aplrpy9w8q6rafwy7znnp0rczgr6py15fqyw2fwb5` to the cabal.project file or passing in a lookupSha256 argument
+    installing 'haskell-language-server-ghc8106-renamed'
+    trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
 
 We can see this installation by querying what's been installed:
 
-```shell
+```sh
 nix-env --query
 ```
 
-    haskell-language-server-ghc8104-renamed
+    haskell-language-server-ghc8106-renamed
 
-And if we want to uninstall a program from our active profile, we do so by its name, in this case "haskell-language-server-ghc8104-renamed":
+And if we want to uninstall a program from our active profile, we do so by its name, in this case "haskell-language-server-ghc8106-renamed":
 
-```shell
-nix-env --uninstall haskell-language-server-ghc8104-renamed 2>&1
+```sh
+nix-env --uninstall haskell-language-server-ghc8106-renamed 2>&1
 ```
 
-    uninstalling 'haskell-language-server-ghc8104-renamed'
+    uninstalling 'haskell-language-server-ghc8106-renamed'
 
-Note that we've installed our package using its attribute path (`hls-renamed`) within the referenced Nix expression. But we uninstall it using the package name ("haskell-language-server-ghc8104-renamed"), which may or may not be the same as the attribute path. When a package is installed, Nix keeps no reference to the expression that evaluated to the derivation of the installed package. The attribute path is only relevant to this expression. In fact, two different expressions could evaluate to the exact same derivation, but use different attribute paths. This is why we uninstall packages by their package name.
+Note that we've installed our package using its attribute path (`hls-renamed`) within the referenced Nix expression. But we uninstall it using the package name ("haskell-language-server-ghc8106-renamed"), which may or may not be the same as the attribute path. When a package is installed, Nix keeps no reference to the expression that evaluated to the derivation of the installed package. The attribute path is only relevant to this expression. In fact, two different expressions could evaluate to the same derivation, but use different attribute paths. This is why we uninstall packages by their package name.
 
 Also, if you look at the location for your profile, you'll see that Nix retains the symlink trees of previous generations of your profile. In fact you can even rollback to a previous profile with the `--rollback` switch. You can delete old generations of your profile with the `--delete-generations` switch.
 
 See the [documentation for `nix-env`](https://nixos.org/nix/manual/#sec-nix-env) for more details.
 
-## Garbage collection<a id="sec-5-5"></a>
+## Garbage collection<a id="sec-6-5"></a>
 
 Every time you build a new version of your code, it's stored in `/nix/store`. There is a command called `nix-collect-garbage` that purges unneeded packages. Programs that should not be removed by `nix-collect-garbage` can by found by starting with symlinks stored as *garbage collection (GC) roots* under three locations:
 
@@ -303,17 +315,17 @@ Note that both `nix build` and `nix run` perform both instantiation and realizat
 
 However, you may encounter a Nix expression where `nix search` returns nothing, though you're sure that there are derivations to select out. In this case, the Nix expression is using an advanced technique that unfortunately hides attributes from `nix search` until some derivations are instantiated into `/nix/store`. We can force the instantiation of these derivations without realizing their packages with the following command:
 
-```shell
+```sh
 nix show-derivation --file default.nix
 ```
 
 Once these derivations are instantiated, you may get more results with `nix search` for the occasional Nix expression that uses some advanced techniques.
 
-## Lazy evaluation<a id="sec-5-7"></a>
+## Lazy evaluation<a id="sec-6-7"></a>
 
 We haven't made a big deal of it, but the Nix language is *lazily evaluated*. This allows a single Nix expression to refer to several thousand packages, but without requiring us to evaluate everything when selecting out packages by attribute paths. In fact, the entire NixOS operating system is based heavily on a single single expression managed in a Git repository called [Nixpkgs](https://github.com/NixOS/nixpkgs).
 
-# Next steps<a id="sec-6"></a>
+# Next steps<a id="sec-7"></a>
 
 This document has covered a fraction of Nix usage, hopefully enough to introduce Nix in the context of [this project](../README.md).
 

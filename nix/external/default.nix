@@ -2,9 +2,8 @@ let
 
     srcs = import ./sources.nix;
 
-    lib = (import srcs.nixpkgs { config = {}; overlays = []; }).lib;
-
-    isDarwin = builtins.elem builtins.currentSystem lib.systems.doubles.darwin;
+    nixpkgs-bootstrap = import srcs.nixpkgs { config = {}; overlays = []; };
+    isDarwin = nixpkgs-bootstrap.stdenv.isDarwin;
 
     sources = builtins.fromJSON
         (builtins.readFile ./sources.json);

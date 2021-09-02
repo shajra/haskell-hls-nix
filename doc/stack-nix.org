@@ -86,9 +86,9 @@ installed, and put in a small YAML snippet into =stack.yaml=, such as the
 following:
 
 #+BEGIN_SRC yaml :eval no
-  nix:
-      enable: true
-      packages: [icu]  # depends on the ICU C library
+nix:
+    enable: true
+    packages: [icu]  # depends on the ICU C library
 #+END_SRC
 
 To Stack's credit, this configuration is indeed simple and declarative.
@@ -108,7 +108,7 @@ command several times for a multi-package project. If a call of =nix-shell= is
 hidden behind each invocation of =stack=, then we'll pay multiple times the cost
 of evaluating a Nix expression.
 
-Additionally, tools like [[direnv][Direnv]] can completely eliminate the cost of evaluating
+Additionally, tools like [[direnv][Direnv]] can eliminate the cost of evaluating
 =nix-shell=, by caching the resultant environment variables we get when invoking
 it. But the caching benefits of Direnv can not be utilized by these internal
 calls of =nix-shell= by Stack.
@@ -127,29 +127,29 @@ When enabling Stack's Nix integration with ~--nix~ and specifying a non-Haskell
 dependency with, for example, ~--nix-packages icu~, we get the following
 internally generated =nix-shell= invocation:
 
-#+BEGIN_SRC shell :eval no
-  /run/current-system/sw/bin/nix-shell \
-      --pure -E "
-          with (import <nixpkgs> {});
-          let inputs = [icu haskell.compiler.ghc884 git gcc gmp];
-              libPath = lib.makeLibraryPath inputs;
-              stackExtraArgs = lib.concatMap (pkg: [
-                  ''--extra-lib-dirs=${lib.getLib pkg}/lib''
-                  ''--extra-include-dirs=${lib.getDev pkg}/include''
-              ]) inputs;
-          in runCommand ''myEnv'' {
-              buildInputs = lib.optional stdenv.isLinux glibcLocales ++ inputs;
-              STACK_PLATFORM_VARIANT=''nix'';
-              STACK_IN_NIX_SHELL=1;
-              LD_LIBRARY_PATH = libPath;
-              STACK_IN_NIX_EXTRA_ARGS = stackExtraArgs;
-              https://docs.haskellstack.org/en/stable/nix_integration/LANG=\"en_US.UTF-8\";
-              } \"\"" \
-      --run "'/path_to_stack_installation/bin/stack' \
-      $STACK_IN_NIX_EXTRA_ARGS \
-      '--internal-re-exec-version=2.5.1' \
-      '--verbose' \
-      'build'"
+#+BEGIN_SRC sh :eval no
+/run/current-system/sw/bin/nix-shell \
+    --pure -E "
+        with (import <nixpkgs> {});
+        let inputs = [icu haskell.compiler.ghc884 git gcc gmp];
+            libPath = lib.makeLibraryPath inputs;
+            stackExtraArgs = lib.concatMap (pkg: [
+                ''--extra-lib-dirs=${lib.getLib pkg}/lib''
+                ''--extra-include-dirs=${lib.getDev pkg}/include''
+            ]) inputs;
+        in runCommand ''myEnv'' {
+            buildInputs = lib.optional stdenv.isLinux glibcLocales ++ inputs;
+            STACK_PLATFORM_VARIANT=''nix'';
+            STACK_IN_NIX_SHELL=1;
+            LD_LIBRARY_PATH = libPath;
+            STACK_IN_NIX_EXTRA_ARGS = stackExtraArgs;
+            https://docs.haskellstack.org/en/stable/nix_integration/LANG=\"en_US.UTF-8\";
+            } \"\"" \
+    --run "'/path_to_stack_installation/bin/stack' \
+    $STACK_IN_NIX_EXTRA_ARGS \
+    '--internal-re-exec-version=2.5.1' \
+    '--verbose' \
+    'build'"
 #+END_SRC
 
 ** Stack imports Nixpkgs in an impure way
@@ -171,10 +171,10 @@ As a workaround, Stack offers a "path" field in =stack.yaml= to override
 =NIX_PATH=. We could set this to a URL of a stable version of Nixpkgs:
 
 #+BEGIN_SRC yaml :eval no
-  nix:
-      enable: true
-      packages: [icu]
-      path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/29e9c10750e2b35a0e47db55f36c685ef9219f4e.tar.gz
+nix:
+    enable: true
+    packages: [icu]
+    path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/29e9c10750e2b35a0e47db55f36c685ef9219f4e.tar.gz
 #+END_SRC
 
 But this wouldn't help us with the fact that passing ~{}~ to Nixpkgs makes
@@ -184,19 +184,19 @@ One way to deal with this is to write our own Nix expression for Nixpkgs, which
 we could then set as our path:
 
 #+BEGIN_SRC yaml :eval no
-  nix:
-      enable: true
-      packages: [icu]
-      path: nixpkgs=nixpkgs.nix
+nix:
+    enable: true
+    packages: [icu]
+    path: nixpkgs=nixpkgs.nix
 #+END_SRC
 
 In our =nixpkgs.nix= we could have something like:
 
 #+BEGIN_SRC nix :eval no
-  _ignored:  # ignore arguments, which might be impure
-  let url = https://github.com/NixOS/nixpkgs/archive/29e9c10750e2b35a0e47db55f36c685ef9219f4e.tar.gz;
-      nixpkgs = builtins.fetchTarball url;
-  in import nixpkgs { config = {}; overlays = []; }
+_ignored:  # ignore arguments, which might be impure
+let url = https://github.com/NixOS/nixpkgs/archive/29e9c10750e2b35a0e47db55f36c685ef9219f4e.tar.gz;
+    nixpkgs = builtins.fetchTarball url;
+in import nixpkgs { config = {}; overlays = []; }
 #+END_SRC
 
 One annoyance with this is that we can only now call =stack= in the directory
@@ -219,10 +219,10 @@ file. Maybe an upstream author maintains a list of these dependencies in the
 provided =stack.yaml= file. For example it may contain:
 
 #+BEGIN_SRC yaml :eval no
-  …
-  nix:
-      packages:
-      - icu
+…
+nix:
+    packages:
+    - icu
 #+END_SRC
 
 Fortunately, it's not much code to parse a YAML file in a Nix expression so we
@@ -244,7 +244,7 @@ Nix users on NixOS will have a different experience than people who have
 installed Nix on a non-NixOS operating system. One or the other will have to
 enable or disable Nix with Stack's =--nix= or =--no-nix= switches. This wouldn't
 be the case if a project's =stack.yaml= enabled Nix for all users, but that
-seems very unlikely. Nix is not that popular yet.
+seems unlikely. Nix is not that popular yet.
 
 What seems more likely is that project would provide multiple Stack YAML files,
 but that just leads to annoying configuration duplication.

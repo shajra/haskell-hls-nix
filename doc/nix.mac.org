@@ -1,0 +1,14 @@
+* About this file
+
+Though =nix.org= is copied across all my Nix projects, not all of the projects
+support MacOS. So this file has any snippets that reference Macs, which can then
+be commented out as necessary.
+
+* Mac installation
+
+If you're on a recent release of MacOS, you will need an extra switch:
+
+#+BEGIN_SRC bash :eval no
+sh <(curl -L https://nixos.org/nix/install) --daemon \
+    --darwin-use-unencrypted-nix-store-volume
+#+END_SRC

@@ -9,12 +9,13 @@ jobs:
         ghc:
           [ "8.6.5"
           , "8.8.4"
-          , "8.10.4"
-          , "8.10.5"
+          , "8.10.6"
+          , "8.10.7"
           ]
         unstable: [true, false]
     name: "linux: ${{ matrix.ghc }}: unstable=${{ matrix.unstable }}"
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v13
@@ -32,20 +33,22 @@ jobs:
         nix --print-build-logs build \
             --arg checkMaterialization true \
             --argstr ghcVersion ${{ matrix.ghc }} \
-            --arg hlsUnstable ${{ matrix.unstable }}
+            --arg hlsUnstable ${{ matrix.unstable }} \
+            --file nix/ci.nix
     - run: |
         nix --print-build-logs path-info \
             --arg checkMaterialization true \
             --argstr ghcVersion ${{ matrix.ghc }} \
-            --arg hlsUnstable ${{ matrix.unstable }}
+            --arg hlsUnstable ${{ matrix.unstable }} \
+            --file nix/ci.nix
   darwin:
     strategy:
       matrix:
         ghc:
           [ "8.6.5"
           , "8.8.4"
-          , "8.10.4"
-          , "8.10.5"
+          , "8.10.6"
+          , "8.10.7"
           ]
         unstable: [true, false]
     name: "darwin: ${{ matrix.ghc }}: unstable=${{ matrix.unstable }}"
@@ -68,9 +71,11 @@ jobs:
         nix --print-build-logs build \
             --arg checkMaterialization true \
             --argstr ghcVersion ${{ matrix.ghc }} \
-            --arg hlsUnstable ${{ matrix.unstable }}
+            --arg hlsUnstable ${{ matrix.unstable }} \
+            --file nix/ci.nix
     - run: |
         nix --print-build-logs path-info \
             --arg checkMaterialization true \
             --argstr ghcVersion ${{ matrix.ghc }} \
-            --arg hlsUnstable ${{ matrix.unstable }}
+            --arg hlsUnstable ${{ matrix.unstable }} \
+            --file nix/ci.nix
