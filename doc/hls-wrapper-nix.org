@@ -1,5 +1,5 @@
-#+TITLE: HLS Nix Wrapper Script
-#+SETUPFILE: links.org
+#+title: HLS Nix Wrapper Script
+#+setupfile: links.org
 
 * Org-mode setup :noexport:
 
@@ -8,8 +8,8 @@
 This snippet can be used as a post-processing step to crop down the results from
 an evaluation of a source code block.
 
-#+NAME: crop
-#+BEGIN_SRC emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
+#+name: crop
+#+begin_src emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
 (let* ((ls         (split-string text "\n"))
        (first-ls   (-take first-n ls))
        (rest-first (-drop first-n ls))
@@ -20,49 +20,49 @@ an evaluation of a source code block.
        (append first-ls '("…") last-ls)
      (append first-ls last-ls))
    "\n"))
-#+END_SRC
+#+end_src
 
 ** Setup action
 
 The following helps (using Noweb) set up Nix environment variables for source
 block evaluation.
 
-#+NAME: nix-init
-#+BEGIN_SRC sh :eval no
+#+name: nix-init
+#+begin_src sh :eval no
 export NIX_PROFILE=$(pwd)/nix-profile
 export NIX_PAGER=cat
 export PATH="$NIX_PROFILE/bin:$PATH"
 export NIX_PATH=nixpkgs="$(nix eval --file nix nixpkgs-stable.path)"
 export HOME="$(pwd)/home-fake"
-#+END_SRC
+#+end_src
 
 Next we perform some side-effects to set up the evaluation of the whole
 document.
 
-#+NAME: cleanup
-#+BEGIN_SRC sh :dir .. :results output silent :noweb yes
+#+name: cleanup
+#+begin_src sh :dir .. :results output silent :noweb yes
 <<nix-init>>
 rm --force result*
 rm --force "$NIX_PROFILE"*
 rm --recursive --force "$(pwd)/home-fake"
 find . \( -name '.stack-work' -o -name 'dist-newstyle' \) -exec rm -rf {} +
-#+END_SRC
+#+end_src
 
 This is just a hack to deal with the fact that we never know what directory a
 session will start in, so we need a way to calculate the PWD to jump to it.
 
-#+NAME: pwd
-#+BEGIN_SRC sh :results output silent
+#+name: pwd
+#+begin_src sh :results output silent
 echo cd "$(pwd)/.."
-#+END_SRC
+#+end_src
 
 This begins a session with environment variables initialized.
 
-#+NAME: session-init
-#+BEGIN_SRC sh :session env :results output silent :noweb yes
+#+name: session-init
+#+begin_src sh :session env :results output silent :noweb yes
 <<pwd()>>
 <<nix-init>>
-#+END_SRC
+#+end_src
 
 * About =hls-wrapper-nix=
 
@@ -98,12 +98,12 @@ If you followed the root-level README's section on a user-based installation,
 you likely have already installed the script. If not, you can execute the
 following:
 
-#+NAME: nix-env-install
-#+BEGIN_SRC sh :session env :results output :exports both
+#+name: nix-env-install
+#+begin_src sh :session env :results output :exports both
 nix-env --install --file . --attr hls-wrapper-nix
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-env-install
+#+results: nix-env-install
 : installing 'hls-wrapper-nix'
 : trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
 
@@ -169,13 +169,13 @@ You can configure the following per-project in your YAML file:
 
 The following is an example of a valid configuration:
 
-#+BEGIN_SRC yaml :eval no
+#+begin_src yaml :eval no
 /home/youruser/src/some-project:
     - shell_file: shell-alt.nix
     - pure: false
 /home/youruser/src/another-project:
     - mode: bypass
-#+END_SRC
+#+end_src
 
 * Testing a project
 
@@ -186,35 +186,35 @@ with no reported errors.
 We can use the provided example projects to illustrate this test. Here's a run
 of =hls-wrapper-nix= on the Cabal example project:
 
-#+NAME: test-cabal
-#+BEGIN_SRC sh :session env :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+#+name: test-cabal
+#+begin_src sh :session env :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
 hls-wrapper-nix --cwd examples/example-cabal
-#+END_SRC
+#+end_src
 
-#+RESULTS: test-cabal
+#+results: test-cabal
 : INFO: Entering pure Nix shell
 : trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
 : Found "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/a"
 : …
 : 
 : Completed (5 files worked, 0 files failed)
-: 2021-09-05 09:49:57.181068847 [ThreadId 575] INFO hls:	finish: GenerateCore (took 0.00s)
+: 2021-09-05 13:44:28.043354406 [ThreadId 598] INFO hls:	finish: GenerateCore (took 0.00s)
 
 And here we see that the script works for the Stack example project as well:
 
-#+NAME: test-stack
-#+BEGIN_SRC sh :session env :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+#+name: test-stack
+#+begin_src sh :session env :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
 hls-wrapper-nix --cwd examples/example-stack
-#+END_SRC
+#+end_src
 
-#+RESULTS: test-stack
+#+results: test-stack
 : INFO: Entering pure Nix shell
 : trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
 : No 'hie.yaml' found. Try to discover the project type!
 : …
+: 2021-09-05 13:46:28.645859864 [ThreadId 453] INFO hls:	finish: GenerateCore (took 0.00s)
 : 
 : Completed (3 files worked, 0 files failed)
-: 2021-09-05 09:51:56.082840859 [ThreadId 589] INFO hls:	finish: GenerateCore (took 0.00s)
 
 * Command-line reference
 
@@ -224,12 +224,12 @@ these useful for testing.
 
 For reference, here's the output of running ~hls-wrapper-nix --help~:
 
-#+NAME: help
-#+BEGIN_SRC sh :dir .. :results output :exports results
+#+name: help
+#+begin_src sh :dir .. :results output :exports results
 nix run --file . hls-wrapper-nix --command hls-wrapper-nix --help
-#+END_SRC
+#+end_src
 
-#+RESULTS: help
+#+results: help
 #+begin_example
 USAGE: hls-wrapper-nix [OPTION]... [HLS_OPTIONS]...
        hls-wrapper-nix --show-path PATH
@@ -285,4 +285,4 @@ HLS OPTIONS:
 
 * Org-mode teardown :noexport:
 
-#+CALL: cleanup()
+#+call: cleanup()
