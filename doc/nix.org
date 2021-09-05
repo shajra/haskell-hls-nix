@@ -1,5 +1,5 @@
-#+TITLE: Nix Setup and Usage
-#+SETUPFILE: links.org
+#+title: Nix Setup and Usage
+#+setupfile: links.org
 
 * Org-mode setup :noexport:
 
@@ -11,29 +11,29 @@ projects that use Nix.
 We set variables in =nix.org.el= and access those settings with the following
 macros and source code blocks (using Noweb).
 
-#+NAME: get
-#+BEGIN_SRC emacs-lisp :var arg="" :eval yes :results silent
+#+name: get
+#+begin_src emacs-lisp :var arg="" :eval yes :results silent
 (alist-get (intern arg) (car (read-from-string (f-read "nix.org.el"))))
-#+END_SRC
+#+end_src
 
-#+MACRO: get (eval (concat $2 (alist-get (intern $1) (car (read-from-string (f-read "nix.org.el")))) $2))
-#+MACRO: package-attr {{{get(package-attr,=)}}}
-#+MACRO: package-name {{{get(package-name,")}}}
-#+MACRO: package-type {{{get(package-type)}}}
-#+MACRO: package-target {{{get(package-target,=)}}}
-#+MACRO: run-src {{{get(run-src,=)}}}
-#+MACRO: run-attr {{{get(run-attr,=)}}}
-#+MACRO: run-name {{{get(run-name,=)}}}
-#+MACRO: run-target {{{get(run-target,=)}}}
-#+MACRO: nixos-release {{{get(nixos-release)}}}
+#+macro: get (eval (concat $2 (alist-get (intern $1) (car (read-from-string (f-read "nix.org.el")))) $2))
+#+macro: package-attr {{{get(package-attr,=)}}}
+#+macro: package-name {{{get(package-name,")}}}
+#+macro: package-type {{{get(package-type)}}}
+#+macro: package-target {{{get(package-target,=)}}}
+#+macro: run-src {{{get(run-src,=)}}}
+#+macro: run-attr {{{get(run-attr,=)}}}
+#+macro: run-name {{{get(run-name,=)}}}
+#+macro: run-target {{{get(run-target,=)}}}
+#+macro: nixos-release {{{get(nixos-release)}}}
 
 ** Formatting help
 
 This snippet can be used as a post-processing step to crop down the results from
 an evaluation of a source code block.
 
-#+NAME: crop
-#+BEGIN_SRC emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
+#+name: crop
+#+begin_src emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
 (let* ((ls         (split-string text "\n"))
        (first-ls   (-take first-n ls))
        (rest-first (-drop first-n ls))
@@ -44,45 +44,45 @@ an evaluation of a source code block.
        (append first-ls '("…") last-ls)
      (append first-ls last-ls))
    "\n"))
-#+END_SRC
+#+end_src
 
 ** Setup action
 
 The following helps (using Noweb) set up Nix environment variables for source
 block evaluation.
 
-#+NAME: nix-init
-#+BEGIN_SRC sh :eval no
+#+name: nix-init
+#+begin_src sh :eval no
 export NIX_PROFILE=$(pwd)/nix-profile
 export NIX_PAGER=cat
 export PATH="$NIX_PROFILE/bin:$PATH"
-#+END_SRC
+#+end_src
 
 Next we perform some side-effects to set up the evaluation of the whole
 document.
 
-#+NAME: cleanup
-#+BEGIN_SRC sh :dir .. :results output silent :noweb yes
+#+name: cleanup
+#+begin_src sh :dir .. :results output silent :noweb yes
 <<nix-init>>
 rm --force result*
 rm --force "$NIX_PROFILE"*
-#+END_SRC
+#+end_src
 
 This is just a hack to deal with the fact that we never know what directory a
 session will start in, so we need a way to calculate the PWD to jump to it.
 
-#+NAME: pwd-parent
-#+BEGIN_SRC sh :results output silent
+#+name: pwd-parent
+#+begin_src sh :results output silent
 echo cd "$(pwd)/.."
-#+END_SRC
+#+end_src
 
 This begins a session with environment variables initialized.
 
-#+NAME: session-init
-#+BEGIN_SRC sh :session env :results output silent :noweb yes
+#+name: session-init
+#+begin_src sh :session env :results output silent :noweb yes
 <<pwd-parent()>>
 <<nix-init>>
-#+END_SRC
+#+end_src
 
 * About this document
 
@@ -180,19 +180,19 @@ machine. Uninstallation is nearly as easy as deleting everything under =/nix=.
 
 ** Nix package manager setup
 
-#+BEGIN_QUOTE
+#+begin_quote
 *_NOTE:_* You don't need this step if you're running NixOS, which comes with Nix
 baked in.
-#+END_QUOTE
+#+end_quote
 
 If you don't already have Nix, [[nix-learn][the official installation script]] should work on a
 variety of UNIX-like operating systems:
 
-#+BEGIN_SRC bash :eval no
+#+begin_src bash :eval no
 sh <(curl -L https://nixos.org/nix/install) --daemon
-#+END_SRC
+#+end_src
 
-#+INCLUDE: "nix.mac.org::*Mac installation" :only-contents t
+#+include: "nix.mac.org::*Mac installation" :only-contents t
 
 After installation, you may have to exit your terminal session and log back in
 to have environment variables configured to put Nix executables on your =PATH=.
@@ -215,12 +215,12 @@ This augments the default substitutor that pulls from cache.nixos.org.
 
 You can configure shajra.cachix.org as a substitutor with the following command:
 
-#+BEGIN_SRC sh :eval no
+#+begin_src sh :eval no
 nix run \
     --file https://cachix.org/api/v1/install \
     cachix \
     --command cachix use shajra
-#+END_SRC
+#+end_src
 
 Cachix is a service that anyone can use. You can call this command later to add
 substitutors for someone else using Cachix, replacing "shajra" with their
@@ -261,21 +261,21 @@ values they build. We can use the =nix search= command to see what package
 derivations a Nix expression contains. For example from the root directory of
 this project, we can execute:
 
-#+NAME: nix-derivation-show
-#+BEGIN_SRC sh :dir .. :results output silent :exports none
+#+name: nix-derivation-show
+#+begin_src sh :dir .. :results output silent :exports none
 nix show-derivation --file default.nix >/dev/null 2>&1
-#+END_SRC
+#+end_src
 
-#+BEGIN_SRC sh :eval no
+#+begin_src sh :eval no
 nix search --file default.nix --no-cache
-#+END_SRC
+#+end_src
 
-#+NAME: nix-search
-#+BEGIN_SRC sh :dir .. :results output :exports results :post crop(text=*this*, first-n=9, last-n=0)
+#+name: nix-search
+#+begin_src sh :dir .. :results output :exports results :post crop(text=*this*, first-n=9, last-n=0)
 nix search --file default.nix --no-cache | ansifilter
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-search
+#+results: nix-search
 #+begin_example
 ,* cabal-install (cabal-install)
   The command-line interface for Cabal and Hackage
@@ -304,10 +304,10 @@ project, it's recommended to always use =--no-cache=.
 
 The output of =nix search= is formatted as
 
-#+BEGIN_EXAMPLE
+#+begin_example
     ,* attribute-path (name-of-package)
       Short description of package
-#+END_EXAMPLE
+#+end_example
 
 /Attribute paths/ are used to select values from Nix sets that might be nested.
 A dot delimits /attributes/ in the path. For instance an attribute path of =a.b=
@@ -321,10 +321,10 @@ Many Nix commands evaluate Nix files. If you specify a directory instead, the
 command will look for a =default.nix= file within to evaluate. So from the root
 directory of this project, we could use =.= instead of =default.nix=:
 
-#+NAME: nix-search-alt
-#+BEGIN_SRC sh :dir .. :results output silent
+#+name: nix-search-alt
+#+begin_src sh :dir .. :results output silent
 nix search --file . --no-cache
-#+END_SRC
+#+end_src
 
 In the remainder of this document, we'll use =.= instead of =default.nix= since
 this is conventional for Nix.
@@ -334,13 +334,13 @@ this is conventional for Nix.
 The following result is one returned by our prior execution of ~nix search
 --no-cache --file .~:
 
-#+NAME: nix-search-specific
-#+BEGIN_SRC sh :dir .. :results output :exports results :noweb yes
+#+name: nix-search-specific
+#+begin_src sh :dir .. :results output :exports results :noweb yes
 nix search --no-cache --file . | ansifilter \
     | grep --color=never --after-context=1 '* <<get("package-attr")>> ('
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-search-specific
+#+results: nix-search-specific
 : * hls-renamed (haskell-language-server-ghc8106-renamed)
 :   Haskell Language Server (HLS) for GHC 8.10.6, renamed binary
 
@@ -351,10 +351,10 @@ provide the {{{package-type}}} {{{package-target}}}.
 
 We can build this package with =nix build= from the project root:
 
-#+NAME: nix-build
-#+BEGIN_SRC sh :dir .. :results output silent :noweb yes
+#+name: nix-build
+#+begin_src sh :dir .. :results output silent :noweb yes
 nix build --file . <<get("package-attr")>>
-#+END_SRC
+#+end_src
 
 The positional arguments to =nix build= are /installables/, which can be
 referenced by attribute paths. If you supply none then all derivations found are
@@ -369,22 +369,22 @@ package requested in the current working directory. These symlinks by default
 have a name prefixed with "result" and point back to the respective build in
 =/nix/store=:
 
-#+NAME: nix-build-link
-#+BEGIN_SRC sh :dir .. :results output :exports both
+#+name: nix-build-link
+#+begin_src sh :dir .. :results output :exports both
 readlink result*
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-build-link
+#+results: nix-build-link
 : /nix/store/pchxgvxqy4xls4i5hjizfnq563yf6h22-haskell-language-server-ghc8106-renamed
 
 Following these symlinks, we can see the files the project provides:
 
-#+NAME: nix-build-tree
-#+BEGIN_SRC sh :dir .. :results output :exports both :post crop(text=*this*, first-n=10, last-n=0)
+#+name: nix-build-tree
+#+begin_src sh :dir .. :results output :exports both :post crop(text=*this*, first-n=10, last-n=0)
 tree -l result*
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-build-tree
+#+results: nix-build-tree
 #+begin_example
 result
 ├── bin
@@ -406,12 +406,12 @@ tools (for instance, for Git within a =.gitignore= file).
 creating "result" symlinks. To get the paths where your packages are located,
 you can use =nix path-info= after a successful build:
 
-#+NAME: nix-build-path
-#+BEGIN_SRC sh :dir .. :results output :exports both :noweb yes
+#+name: nix-build-path
+#+begin_src sh :dir .. :results output :exports both :noweb yes
 nix path-info --file . <<get("package-attr")>>
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-build-path
+#+results: nix-build-path
 : /nix/store/pchxgvxqy4xls4i5hjizfnq563yf6h22-haskell-language-server-ghc8106-renamed
 
 ** Running commands
@@ -428,15 +428,15 @@ For example, to get the help message for the {{{run-target}}} executable
 provided by the {{{run-name}}} package selected by the {{{run-attr}}} attribute
 path from {{{run-src}}}, we can call the following:
 
-#+NAME: nix-run
-#+BEGIN_SRC sh :dir .. :results output :exports both :noweb yes :post crop(text=*this*, first-n=5, last-n=0)
+#+name: nix-run
+#+begin_src sh :dir .. :results output :exports both :noweb yes :post crop(text=*this*, first-n=5, last-n=0)
 nix run \
     --file <<get("run-src")>> \
     <<get("run-attr")>> \
     --command <<get("run-target")>> --help
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-run
+#+results: nix-run
 : haskell-language-server - GHC Haskell LSP server
 : 
 : Usage: haskell-language-server [--version | --numeric-version | --probe-tools | 
@@ -477,9 +477,9 @@ this profile points to =/nix/var/nix/profiles/per-user/$USER/profile=. But you
 can point your =~/.nix-profile= to any writable location with the
 =--switch-profile= switch:
 
-#+BEGIN_SRC sh :eval no
+#+begin_src sh :eval no
 nix-env --switch-profile /nix/var/nix/profiles/per-user/$USER/another-profile
-#+END_SRC
+#+end_src
 
 This way, you can just put =~/.nix-profile/bin= on your =PATH=, and any programs
 installed in your currently active profile will be available for interactive use
@@ -487,42 +487,42 @@ or scripts.
 
 We can query what's installed in the active profile with the =--query= switch:
 
-#+NAME: nix-env-query-1
-#+BEGIN_SRC sh :session env :results output silent
+#+name: nix-env-query-1
+#+begin_src sh :session env :results output silent
 nix-env --query
-#+END_SRC
+#+end_src
 
 To install the {{{package-target}}} {{{package-type}}}, which is accessed by the
 {{{package-attr}}} in our top-level =default.nix= file, we'd run the following:
 
-#+NAME: nix-env-install
-#+BEGIN_SRC sh :session env :results output :exports both :noweb yes :post crop(text=*this*, first-n=1, last-n=3)
+#+name: nix-env-install
+#+begin_src sh :session env :results output :exports both :noweb yes :post crop(text=*this*, first-n=1, last-n=3)
 nix-env --install --file . --attr <<get("package-attr")>> 2>&1
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-env-install
+#+results: nix-env-install
 : installing 'haskell-language-server-ghc8106-renamed'
 : trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
 
 We can see this installation by querying what's been installed:
 
-#+NAME: nix-env-query-2
-#+BEGIN_SRC sh :session env :results output :exports both
+#+name: nix-env-query-2
+#+begin_src sh :session env :results output :exports both
 nix-env --query
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-env-query-2
+#+results: nix-env-query-2
 : haskell-language-server-ghc8106-renamed
 
 And if we want to uninstall a program from our active profile, we do so by its
 name, in this case {{{package-name}}}:
 
-#+NAME: nix-env-uninstall
-#+BEGIN_SRC sh :session env :results output :exports both :noweb yes
+#+name: nix-env-uninstall
+#+begin_src sh :session env :results output :exports both :noweb yes
 nix-env --uninstall <<get("package-name")>> 2>&1
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-env-uninstall
+#+results: nix-env-uninstall
 : uninstalling 'haskell-language-server-ghc8106-renamed'
 
 Note that we've installed our package using its attribute path
@@ -618,10 +618,10 @@ attributes from =nix search= until some derivations are instantiated into
 =/nix/store=. We can force the instantiation of these derivations without
 realizing their packages with the following command:
 
-#+NAME: nix-derivation-show-again
-#+BEGIN_SRC sh :eval no
+#+name: nix-derivation-show-again
+#+begin_src sh :eval no
 nix show-derivation --file default.nix
-#+END_SRC
+#+end_src
 
 Once these derivations are instantiated, you may get more results with =nix
 search= for the occasional Nix expression that uses some advanced techniques.
@@ -653,4 +653,4 @@ small sample of what Nix can do.
 
 * Org-mode teardown :noexport:
 
-#+CALL: cleanup()
+#+call: cleanup()

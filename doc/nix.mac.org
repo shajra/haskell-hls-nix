@@ -8,7 +8,7 @@ be commented out as necessary.
 
 If you're on a recent release of MacOS, you will need an extra switch:
 
-#+BEGIN_SRC bash :eval no
+#+begin_src bash :eval no
 sh <(curl -L https://nixos.org/nix/install) --daemon \
     --darwin-use-unencrypted-nix-store-volume
-#+END_SRC
+#+end_src

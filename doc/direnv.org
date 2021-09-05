@@ -1,5 +1,5 @@
-#+TITLE: Direnv and Lorelei Nix integration for HLS
-#+SETUPFILE: links.org
+#+title: Direnv and Lorelei Nix integration for HLS
+#+setupfile: links.org
 
 * Org-mode setup :noexport:
 
@@ -9,8 +9,8 @@
 This snippet can be used as a post-processing step to crop down the results from
 an evaluation of a source code block.
 
-#+NAME: crop
-#+BEGIN_SRC emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
+#+name: crop
+#+begin_src emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
 (let* ((ls         (split-string text "\n"))
        (first-ls   (-take first-n ls))
        (rest-first (-drop first-n ls))
@@ -21,49 +21,49 @@ an evaluation of a source code block.
        (append first-ls '("…") last-ls)
      (append first-ls last-ls))
    "\n"))
-#+END_SRC
+#+end_src
 
 ** Setup action
 
 The following helps (using Noweb) set up Nix environment variables for source
 block evaluation.
 
-#+NAME: nix-init
-#+BEGIN_SRC sh :eval no
+#+name: nix-init
+#+begin_src sh :eval no
 export NIX_PROFILE=$(pwd)/nix-profile
 export NIX_PAGER=cat
 export PATH="$NIX_PROFILE/bin:$PATH"
 export NIX_PATH=nixpkgs="$(nix eval --file nix nixpkgs-stable.path)"
 export HOME="$(pwd)/home-fake"
-#+END_SRC
+#+end_src
 
 Next we perform some side-effects to set up the evaluation of the whole
 document.
 
-#+NAME: cleanup
-#+BEGIN_SRC sh :dir .. :results output silent :noweb yes
+#+name: cleanup
+#+begin_src sh :dir .. :results output silent :noweb yes
 <<nix-init>>
 rm --force result*
 rm --force "$NIX_PROFILE"*
 rm --recursive --force "$(pwd)/home-fake"
 find . \( -name '.stack-work' -o -name 'dist-newstyle' \) -exec rm -rf {} +
-#+END_SRC
+#+end_src
 
 This is just a hack to deal with the fact that we never know what directory a
 session will start in, so we need a way to calculate the PWD to jump to it.
 
-#+NAME: pwd
-#+BEGIN_SRC sh :results output silent
+#+name: pwd
+#+begin_src sh :results output silent
 echo cd "$(pwd)/.."
-#+END_SRC
+#+end_src
 
 This begins a session with environment variables initialized.
 
-#+NAME: session-init
-#+BEGIN_SRC sh :session env :results output silent :noweb yes
+#+name: session-init
+#+begin_src sh :session env :results output silent :noweb yes
 <<pwd()>>
 <<nix-init>>
-#+END_SRC
+#+end_src
 
 * Problems solved by Direnv and Lorelei
 
@@ -148,23 +148,23 @@ If you followed the root-level README's section on a user-based installation,
 you have everything you need to use Direnv and Lorelei with Nix. If not, you can
 execute the following:
 
-#+NAME: nix-env-install-direnv
-#+BEGIN_SRC sh :session env :results output :exports both
+#+name: nix-env-install-direnv
+#+begin_src sh :session env :results output :exports both
 nix-env --install --file . --attr direnv --attr direnv-nix-lorelei
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-env-install-direnv
+#+results: nix-env-install-direnv
 : installing 'direnv-2.28.0'
 : installing 'direnv-nix-lorelei'
 
 Next, we need to configure Direnv with the Lorelei extension:
 
-#+BEGIN_SRC sh :eval no
+#+begin_src sh :eval no
 mkdir --parents ~/.config/direnv/lib
 ln --symbolic \
     ~/.nix-profile/share/direnv-nix-lorelei/nix-lorelei.sh \
     ~/.config/direnv/lib
-#+END_SRC
+#+end_src
 
 * Editor configuration
 
@@ -196,23 +196,23 @@ have been completed:
 
 If you have a project that can be used to enter a Nix shell with a call like
 
-#+BEGIN_SRC sh :eval no
+#+begin_src sh :eval no
 nix-shell "$NIX_FILE"
-#+END_SRC
+#+end_src
 
 for some file =$NIX_FILE=, then at the root of the project you can create a
 =.envrc= to get started with Direnv:
 
-#+BEGIN_SRC sh :eval no
+#+begin_src sh :eval no
 echo "use_nix_gcrooted -a \"$NIX_FILE\"" > .envrc
-#+END_SRC
+#+end_src
 
 And finally, notify Direnv that the configuration file is safe to allow for
 evaluation:
 
-#+BEGIN_SRC sh :eval no
+#+begin_src sh :eval no
 direnv allow
-#+END_SRC
+#+end_src
 
 See the [[direnv-nix-lorelei][official documentation for Lorelei]] for more details on this
 configuration file.
@@ -232,21 +232,21 @@ We can use the provided example projects to illustrate this test. Here we use
 =direnv exec= to perform a test run of HLS within the environment picked up by
 Direnv and Lorelei from the Nix shell of our example Cabal project:
 
-#+NAME: test-cabal
-#+BEGIN_SRC sh :dir .. :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+#+name: test-cabal
+#+begin_src sh :dir .. :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
 direnv allow examples/example-cabal
 direnv exec examples/example-cabal \
     haskell-language-server-wrapper \
     --cwd "$(pwd)/examples/example-cabal" 2>&1
-#+END_SRC
+#+end_src
 
-#+RESULTS: test-cabal
+#+results: test-cabal
 : direnv: loading ~/src/shajra/haskell-hls-nix/examples/example-cabal/.envrc
 : direnv: using user-provided direnv-nix-lorelei
 : direnv: not modified: application/example-haskell-app.cabal
 : …
 : Completed (5 files worked, 0 files failed)
-: 2021-09-05 09:49:33.034817172 [ThreadId 569] INFO hls:	finish: GenerateCore (took 0.00s)
+: 2021-09-05 13:44:03.631608819 [ThreadId 721] INFO hls:	finish: GenerateCore (took 0.00s)
 
 Before we can use Direnv with the example, we have to run =direnv allow= on it
 to permit running code from the =.envrc= file.
@@ -261,21 +261,21 @@ errors, have confidence that Direnv and Lorelei is configured correctly.
 
 And here we see that the same test works for the Stack example project as well:
 
-#+NAME: test-stack
-#+BEGIN_SRC sh :dir .. :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+#+name: test-stack
+#+begin_src sh :dir .. :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
 direnv allow examples/example-stack
 direnv exec examples/example-stack \
     haskell-language-server-wrapper \
     --cwd "$(pwd)/examples/example-stack" 2>&1
-#+END_SRC
+#+end_src
 
-#+RESULTS: test-stack
+#+results: test-stack
 : direnv: loading ~/src/shajra/haskell-hls-nix/examples/example-stack/.envrc
 : direnv: using user-provided direnv-nix-lorelei
 : direnv: not modified: application/example-haskell-app.cabal
 : …
 : Completed (3 files worked, 0 files failed)
-: 2021-09-05 09:49:39.121804548 [ThreadId 463] INFO hls:	finish: GenerateCore (took 0.00s)
+: 2021-09-05 13:44:10.038915436 [ThreadId 463] INFO hls:	finish: GenerateCore (took 0.00s)
 
 * Suggested advanced configuration
 
@@ -295,4 +295,4 @@ These extra complications are one reason you may prefer to just stick with
 
 * Org-mode teardown :noexport:
 
-#+CALL: cleanup()
+#+call: cleanup()

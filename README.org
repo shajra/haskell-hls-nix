@@ -1,5 +1,5 @@
-#+TITLE: Nix Builds of Haskell Language Server (HLS)
-#+SETUPFILE: ./doc/links.org
+#+title: Nix Builds of Haskell Language Server (HLS)
+#+setupfile: ./doc/links.org
 
 [[https://github.com/shajra/haskell-hls-nix/actions][https://github.com/shajra/haskell-hls-nix/workflows/CI/badge.svg]]
 
@@ -10,8 +10,8 @@
 This snippet can be used as a post-processing step to crop down the results from
 an evaluation of a source code block.
 
-#+NAME: crop
-#+BEGIN_SRC emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
+#+name: crop
+#+begin_src emacs-lisp :var text="" :var first-n=5 :var last-n=5 :results silent
 (let* ((ls         (split-string text "\n"))
        (first-ls   (-take first-n ls))
        (rest-first (-drop first-n ls))
@@ -22,7 +22,7 @@ an evaluation of a source code block.
        (append first-ls '("…") last-ls)
      (append first-ls last-ls))
    "\n"))
-#+END_SRC
+#+end_src
 
 ** Parameterization
 
@@ -30,57 +30,57 @@ These ease the problem of updating this document when versions change. One thing
 covered by this parameterization is the listing of the versions built, and also
 if that count changes then "eight" needs to be changed as well.
 
-#+MACRO: version-hls-latest 1.3.0
-#+MACRO: version-ghc-default 8.10.6
-#+MACRO: version-ghc-default-wrap (eval (concat $1 "8.10.6" $2))
-#+MACRO: version-ghc-alt 8.8.4
+#+macro: version-hls-latest 1.3.0
+#+macro: version-ghc-default 8.10.6
+#+macro: version-ghc-default-wrap (eval (concat $1 "8.10.6" $2))
+#+macro: version-ghc-alt 8.8.4
 
-#+NAME: version-ghc-alt-eol
-#+BEGIN_SRC text :eval no
+#+name: version-ghc-alt-eol
+#+begin_src text :eval no
 8.8.4 \
-#+END_SRC
+#+end_src
 
 ** Setup action
 
 The following helps (using Noweb) set up Nix environment variables for source
 block evaluation.
 
-#+NAME: nix-init
-#+BEGIN_SRC sh :eval no
+#+name: nix-init
+#+begin_src sh :eval no
 export NIX_PROFILE=$(pwd)/nix-profile
 export NIX_PAGER=cat
 export PATH="$NIX_PROFILE/bin:$PATH"
 export NIX_PATH=nixpkgs="$(nix eval --file nix nixpkgs-stable.path)"
 export HOME="$(pwd)/home-fake"
-#+END_SRC
+#+end_src
 
 Next we perform some side-effects to set up the evaluation of the whole
 document.
 
-#+NAME: cleanup
-#+BEGIN_SRC sh :results output silent :noweb yes
+#+name: cleanup
+#+begin_src sh :results output silent :noweb yes
 <<nix-init>>
 rm --force result*
 rm --force "$NIX_PROFILE"*
 rm --recursive --force "$(pwd)/home-fake"
 find . \( -name '.stack-work' -o -name 'dist-newstyle' \) -exec rm -rf {} +
-#+END_SRC
+#+end_src
 
 This is just a hack to deal with the fact that we never know what directory a
 session will start in, so we need a way to calculate the PWD to jump to it.
 
-#+NAME: pwd
-#+BEGIN_SRC sh :results output silent
+#+name: pwd
+#+begin_src sh :results output silent
 echo cd "$(pwd)"
-#+END_SRC
+#+end_src
 
 This begins a session with environment variables initialized.
 
-#+NAME: session-init
-#+BEGIN_SRC sh :session env :results output silent :noweb yes
+#+name: session-init
+#+begin_src sh :session env :results output silent :noweb yes
 <<pwd()>>
 <<nix-init>>
-#+END_SRC
+#+end_src
 
 * About this project
 
@@ -280,9 +280,9 @@ need the HLS Nix wrapper script.
 
 To use Nix at all, you first need to have it on your system.
 
-#+INCLUDE: "doc/nix.org::*Nix package manager setup"
+#+include: "doc/nix.org::*Nix package manager setup"
 
-#+INCLUDE: "doc/nix.org::*Cache setup"
+#+include: "doc/nix.org::*Cache setup"
 
 * This project's Nix expression
 
@@ -302,18 +302,18 @@ For this project's Nix expression, the following overrides can be done:
 
 We can see the package derivations provided with the following =nix= calls:
 
-#+BEGIN_SRC sh :eval no
+#+begin_src sh :eval no
 nix show-derivation --file . >/dev/null 2>&1
 nix search --no-cache --file .
-#+END_SRC
+#+end_src
 
-#+NAME: nix-derivation-search
-#+BEGIN_SRC sh :results output :exports results
+#+name: nix-derivation-search
+#+begin_src sh :results output :exports results
 nix show-derivation --file . >/dev/null 2>&1
 nix search --no-cache --file . | ansifilter
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-derivation-search
+#+results: nix-derivation-search
 #+begin_example
 ,* cabal-install (cabal-install)
   The command-line interface for Cabal and Hackage
@@ -488,8 +488,8 @@ To illustrate installing with =nix-env= let's consider installing the following:
 We can install the first four in one step relying on defaults of the Nix
 expression:
 
-#+NAME: nix-env-install-most
-#+BEGIN_SRC sh :session env :results output silent
+#+name: nix-env-install-most
+#+begin_src sh :session env :results output silent
 nix-env --install --file . \
     --attr hls-renamed \
     --attr hls-wrapper-nix \
@@ -499,7 +499,7 @@ nix-env --install --file . \
     --attr direnv \
     --attr direnv-nix-lorelei \
     --attr ghc
-#+END_SRC
+#+end_src
 
 Note, because we want multiple instances of HLS on our =PATH= we use
 =hls-renamed= instead of =hls=.
@@ -508,23 +508,23 @@ Next we can install an instance of HLS targeting an alternate version of GHC
 ({{{version-ghc-alt}}}) using ~--argstr ghcVersion~, and with ~--arg
 hlsUnstable~ we can select a recent "main" branch version of HLS:
 
-#+NAME: nix-env-install-rest
-#+BEGIN_SRC sh :session env :results output silent :noweb yes
+#+name: nix-env-install-rest
+#+begin_src sh :session env :results output silent :noweb yes
 nix-env --install --file . \
     --argstr ghcVersion <<version-ghc-alt-eol>>
     --arg hlsUnstable true \
     --attr hls-renamed
-#+END_SRC
+#+end_src
 
 These packages have been installed in our Nix profile, which we can see by
 querying our profile with =nix-env=:
 
-#+NAME: nix-env-query
-#+BEGIN_SRC sh :session env :results output :exports both
+#+name: nix-env-query
+#+begin_src sh :session env :results output :exports both
 nix-env --query
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-env-query
+#+results: nix-env-query
 : cabal-install-3.4.0.0
 : direnv-2.28.0
 : direnv-nix-lorelei
@@ -539,21 +539,21 @@ If we've set up the =bin= directory of our Nix profile in our =PATH=, we should
 be able to see what we've installed as available. For instance, we should be
 able to the see the version of GHC is as expected:
 
-#+NAME: nix-env-versions
-#+BEGIN_SRC sh :session env :results output :exports both
+#+name: nix-env-versions
+#+begin_src sh :session env :results output :exports both
 ghc --version
-#+END_SRC
+#+end_src
 
-#+RESULTS: nix-env-versions
+#+results: nix-env-versions
 : The Glorious Glasgow Haskell Compilation System, version 8.10.6
 
 Without using =nix-shell=, Cabal and Stack will both manage Haskell dependencies
 of projects. In this case, for Cabal you need to at least once call ~cabal
 update~ to download the latest index of Haskell packages on Hackage:
 
-#+BEGIN_SRC sh :eval no
+#+begin_src sh :eval no
 cabal update
-#+END_SRC
+#+end_src
 
 For Stack, you don't have to explicitly call anything to get an index of Haskell
 packages.
@@ -614,13 +614,13 @@ If you want to run commands within the shell non-interactively, we can use the
 =--run= switch. For example, we can build and run our project locally with Cabal
 (the example projects both print out a silly message):
 
-#+NAME: shell-build-cabal
-#+BEGIN_SRC sh :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+#+name: shell-build-cabal
+#+begin_src sh :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
 cd examples/example-cabal
 nix-shell --pure --run 'cabal run all'
-#+END_SRC
+#+end_src
 
-#+RESULTS: shell-build-cabal
+#+results: shell-build-cabal
 : Resolving dependencies...
 : Build profile: -w ghc-8.10.6 -O1
 : In order, the following will be built (use -v for more details):
@@ -635,13 +635,13 @@ won't be available within the shell.
 A similar =nix-shell= call will build our example Stack project within a Nix
 shell:
 
-#+NAME: shell-build-stack
-#+BEGIN_SRC sh :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+#+name: shell-build-stack
+#+begin_src sh :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
 cd examples/example-stack
 nix-shell --pure --run 'stack run'
-#+END_SRC
+#+end_src
 
-#+RESULTS: shell-build-stack
+#+results: shell-build-stack
 : Answer to the Ultimate Question of Life,
 :     the Universe, and Everything: 42
 
@@ -650,35 +650,35 @@ calling HLS with no arguments. It should exit successfully reporting no
 failures. Here's an illustration of a successful run in our Cabal example
 project.
 
-#+NAME: shell-hls-cabal
-#+BEGIN_SRC sh :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+#+name: shell-hls-cabal
+#+begin_src sh :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
 cd examples/example-cabal
 nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
-#+END_SRC
+#+end_src
 
-#+RESULTS: shell-hls-cabal
+#+results: shell-hls-cabal
 : trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
 : warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
 : Found "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/a"
 : …
+: 
 : Completed (5 files worked, 0 files failed)
-: 2021-09-05 09:48:53.687812697 [ThreadId 386] INFO hls:	finish: GenerateCore (took 0.00s)
 
 The same command can test HLS working with our Stack example project:
 
-#+NAME: shell-hls-stack
-#+BEGIN_SRC sh :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
+#+name: shell-hls-stack
+#+begin_src sh :results output :exports both :post crop(text=*this*, first-n=3, last-n=2)
 cd examples/example-stack
 nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
-#+END_SRC
+#+end_src
 
-#+RESULTS: shell-hls-stack
+#+results: shell-hls-stack
 : trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
 : warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
 : No 'hie.yaml' found. Try to discover the project type!
 : …
-: 2021-09-05 09:49:04.661816595 [ThreadId 463] INFO hls:	finish: GenerateCore (took 0.00s)
 : Completed (3 files worked, 0 files failed)
+: 2021-09-05 13:43:35.071446989 [ThreadId 465] INFO hls:	finish: GenerateCore (took 0.01s)
 
 * Editor integration with Nix shells
 
@@ -758,13 +758,13 @@ We can see the difference in the GHC instances of our example projects. Both the
 Cabal and Stack projects depend on the Haskell =text-icu= package. With the
 Cabal project we can see this package included with GHC:
 
-#+NAME: example-cabal-pkg-list
-#+BEGIN_SRC sh :results output :exports both
+#+name: example-cabal-pkg-list
+#+begin_src sh :results output :exports both
 cd examples/example-cabal
 nix-shell --pure --run 'ghc-pkg list text-icu'
-#+END_SRC
+#+end_src
 
-#+RESULTS: example-cabal-pkg-list
+#+results: example-cabal-pkg-list
 : /nix/store/rsyvws8dwv47h87mgm57spzvj4gnfq5n-ghc-8.10.6-with-packages/lib/ghc-8.10.6/package.conf.d
 :     text-icu-0.7.1.0
 : 
@@ -772,13 +772,13 @@ nix-shell --pure --run 'ghc-pkg list text-icu'
 We can similarly look at the GHC instance for the Stack example project to see
 that it doesn't provide third-party Haskell dependencies:
 
-#+NAME: example-stack-pkg-list
-#+BEGIN_SRC sh :results output :exports both
+#+name: example-stack-pkg-list
+#+begin_src sh :results output :exports both
 cd examples/example-stack
 nix-shell --pure --run 'ghc-pkg list text-icu'
-#+END_SRC
+#+end_src
 
-#+RESULTS: example-stack-pkg-list
+#+results: example-stack-pkg-list
 : /nix/store/xygkar338ssrwqjcpmmbv1pkkpqc1yfy-ghc-8.10.6/lib/ghc-8.10.6/package.conf.d
 :     (no packages)
 
@@ -822,9 +822,9 @@ a project's root to generate the implicit HIE configuration inferred by HLS.
 Just run =gen-hie= with no arguments at the root of your project and redirect
 the standard output to a =hie.yaml= file:
 
-#+BEGIN_SRC sh :eval no
+#+begin_src sh :eval no
 gen-hie > hie.yaml
-#+END_SRC
+#+end_src
 
 This gives you a starting point in case the implicit HIE configuration is
 insufficient. If the implicit HIE configuration isn't causing you a problem,
@@ -891,29 +891,29 @@ But because our projects have Nix expressions for building, we can build and run
 them with Nix irrespective of the state of our user environment. Here's a run of
 our example Cabal project:
 
-#+NAME: example-cabal-run
-#+BEGIN_SRC sh :results output :exports both
+#+name: example-cabal-run
+#+begin_src sh :results output :exports both
 nix run \
     --file examples/example-cabal \
     --command example-haskell
-#+END_SRC
+#+end_src
 
-#+RESULTS: example-cabal-run
+#+results: example-cabal-run
 : Answer to the Ultimate Question of Life,
 :     the Universe, and Everything: 42
 
 Building and running Stack projects within Nix involve a relaxation to Nix's
 default sandboxing, but otherwise runs similarly:
 
-#+NAME: example-stack-run
-#+BEGIN_SRC sh :results output :exports both
+#+name: example-stack-run
+#+begin_src sh :results output :exports both
 nix run \
     --option sandbox relaxed \
     --file examples/example-stack \
     --command example-haskell
-#+END_SRC
+#+end_src
 
-#+RESULTS: example-stack-run
+#+results: example-stack-run
 : Answer to the Ultimate Question of Life,
 :     the Universe, and Everything: 42
 
@@ -1029,4 +1029,4 @@ Copyright © 2020 Sukant Hajra
 
 * Org-mode teardown :noexport:
 
-#+CALL: cleanup()
+#+call: cleanup()
