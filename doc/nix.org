@@ -619,7 +619,7 @@ attributes from =nix search= until some derivations are instantiated into
 realizing their packages with the following command:
 
 #+NAME: nix-derivation-show-again
-#+BEGIN_SRC sh :dir .. :results output silent
+#+BEGIN_SRC sh :eval no
 nix show-derivation --file default.nix
 #+END_SRC
 

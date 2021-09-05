@@ -198,7 +198,7 @@ For this project's Nix expression, the following overrides can be done:
 We can see the package derivations provided with the following `nix` calls:
 
 ```sh
-nix show-derivation --file . >/dev/null
+nix show-derivation --file . >/dev/null 2>&1
 nix search --no-cache --file .
 ```
 
@@ -426,8 +426,8 @@ nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
     warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
     Found "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/a"
     …
-    
     Completed (5 files worked, 0 files failed)
+    2021-09-05 09:48:53.687812697 [ThreadId 386] INFO hls:	finish: GenerateCore (took 0.00s)
 
 The same command can test HLS working with our Stack example project:
 
@@ -440,8 +440,8 @@ nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
     warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
     No 'hie.yaml' found. Try to discover the project type!
     …
+    2021-09-05 09:49:04.661816595 [ThreadId 463] INFO hls:	finish: GenerateCore (took 0.00s)
     Completed (3 files worked, 0 files failed)
-    2021-09-04 04:41:43.810517134 [ThreadId 453] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Editor integration with Nix shells<a id="sec-9"></a>
 
