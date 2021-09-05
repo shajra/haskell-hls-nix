@@ -14,13 +14,8 @@ nix run \
     nixpkgs-stable.coreutils \
     nixpkgs-stable.direnv \
     nixpkgs-stable.findutils \
-    nixpkgs-stable.git \
     nixpkgs-stable.gnugrep \
-    nixpkgs-stable.gnutar \
-    nixpkgs-stable.gzip \
-    nixpkgs-stable.stack \
     nixpkgs-stable.tree \
-    nixpkgs-stable.which \
     --command \
     org2gfm \
     --path-bin \

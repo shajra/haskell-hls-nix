@@ -96,7 +96,7 @@ hls-wrapper-nix --cwd examples/example-cabal
     …
     
     Completed (5 files worked, 0 files failed)
-    2021-09-05 13:44:28.043354406 [ThreadId 598] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-09-05 18:05:23.006240489 [ThreadId 612] INFO hls:	finish: GenerateCore (took 0.00s)
 
 And here we see that the script works for the Stack example project as well:
 
@@ -108,9 +108,9 @@ hls-wrapper-nix --cwd examples/example-stack
     trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
     No 'hie.yaml' found. Try to discover the project type!
     …
-    2021-09-05 13:46:28.645859864 [ThreadId 453] INFO hls:	finish: GenerateCore (took 0.00s)
     
     Completed (3 files worked, 0 files failed)
+    2021-09-05 18:07:14.867861329 [ThreadId 595] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Command-line reference<a id="sec-7"></a>
 

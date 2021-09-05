@@ -441,7 +441,7 @@ nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
     No 'hie.yaml' found. Try to discover the project type!
     …
     Completed (3 files worked, 0 files failed)
-    2021-09-05 13:43:35.071446989 [ThreadId 465] INFO hls:	finish: GenerateCore (took 0.01s)
+    2021-09-05 18:04:31.379868687 [ThreadId 636] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Editor integration with Nix shells<a id="sec-9"></a>
 
