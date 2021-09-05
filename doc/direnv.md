@@ -119,8 +119,8 @@ direnv exec examples/example-cabal \
     direnv: using user-provided direnv-nix-lorelei
     direnv: not modified: application/example-haskell-app.cabal
     …
+    
     Completed (5 files worked, 0 files failed)
-    2021-09-05 13:44:03.631608819 [ThreadId 721] INFO hls:	finish: GenerateCore (took 0.00s)
 
 Before we can use Direnv with the example, we have to run `direnv allow` on it to permit running code from the `.envrc` file.
 
@@ -140,7 +140,7 @@ direnv exec examples/example-stack \
     direnv: not modified: application/example-haskell-app.cabal
     …
     Completed (3 files worked, 0 files failed)
-    2021-09-05 13:44:10.038915436 [ThreadId 463] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-09-05 18:05:05.59211061 [ThreadId 474] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Suggested advanced configuration<a id="sec-7"></a>
 
