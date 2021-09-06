@@ -5,10 +5,10 @@
         "homepage": "",
         "owner": "shajra",
         "repo": "direnv-nix-lorelei",
-        "rev": "b61e7ff9ab0013e094423ac899996fe104f0a261",
-        "sha256": "0dqxcm7zx7qq661yfnq7l9qlyz5kb2c67q09pmcqyxk5jdw2nq1v",
+        "rev": "f8d21cb02cfdb9afe71df99c6be9abf0bf02d8ed",
+        "sha256": "1xdidlz28i1nfrmfpw7l224yamprywnimjxvwma1pp2wikzmvhya",
         "type": "tarball",
-        "url": "https://github.com/shajra/direnv-nix-lorelei/archive/b61e7ff9ab0013e094423ac899996fe104f0a261.tar.gz",
+        "url": "https://github.com/shajra/direnv-nix-lorelei/archive/f8d21cb02cfdb9afe71df99c6be9abf0bf02d8ed.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "hackage.nix": {
