@@ -3,7 +3,7 @@
 
 * About this documentation
 
-This project discourages use of Stack's [[haskell-stack-nix][built-in Nix integration]]. This is not
+This project discourages use of Stack's [[stack-nix][built-in Nix integration]]. This is not
 done lightly. It's okay to have multiple ways to accomplish a task, measuring
 the benefits and liabilities of each. But without some care using Stack's
 built-in Nix integration can lead to undesirable properties. Particularly
