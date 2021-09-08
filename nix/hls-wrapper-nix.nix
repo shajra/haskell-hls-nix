@@ -32,6 +32,7 @@ set -o pipefail
 DEFAULT_CONFIG="$HOME/.config/haskell-language-server/wrapper-nix.yaml"
 CONFIG=
 NIX_EXE="$(command -v nix || true)"
+HLS_EXE="${hls-wrapper}/bin/haskell-language-server-wrapper"
 SHELL_FILE=
 WORK_DIR=
 NIX_PURE=
@@ -50,7 +51,7 @@ USAGE: ${progName} [OPTION]... [HLS_OPTIONS]...
 
 DESCRIPTION:
 
-    Run haskell-language-server-wrapper in a nix-shell.
+    Run the Haskell Language Server wrapper, possibly in a Nix Shell.
 
 OPTIONS:
 
@@ -84,25 +85,24 @@ main()
             exit 0
             ;;
         --show-path)
-            local to_show="''${2:-}"
-            if [ -z "$to_show" ]
+            if [ -z "''${2:-}" ]
             then die "$1 requires argument"
             fi
-            readlink -f "$to_show"
+            readlink -f "''${2:-}"
             exit 0
             ;;
         --config)
-            CONFIG="''${2:-}"
-            if [ -z "$CONFIG" ]
+            if [ -z "''${2:-}" ]
             then die "$1 requires argument"
             fi
+            CONFIG="''${2:-}"
             shift
             ;;
         --nix)
-            NIX_EXE="''${2:-}"
-            if [ -z "$NIX_EXE" ]
+            if [ -z "''${2:-}" ]
             then die "$1 requires argument"
             fi
+            NIX_EXE="''${2:-}"
             shift
             ;;
         --auto-detect)
@@ -115,18 +115,18 @@ main()
             MODE=bypass
             ;;
         --shell-file)
-            SHELL_FILE="''${2:-}"
-            if [ -z "$SHELL_FILE" ]
+            if [ -z "''${2:-}" ]
             then die "$1 requires argument"
             fi
-            shift
+            SHELL_FILE="''${2:-}"
             MODE=shell
+            shift
             ;;
         --cwd)
-            WORK_DIR="''${2:-}"
-            if [ -z "$WORK_DIR" ]
+            if [ -z "''${2:-}" ]
             then die "$1 requires argument"
             fi
+            WORK_DIR="''${2:-}"
             shift
             ;;
         --pure)
@@ -246,14 +246,13 @@ call_with_shell()
         --run \
         "
         $(declare -p HLS_ARGS)
-        exec haskell-language-server-wrapper \"\''${HLS_ARGS[@]}\"
+        exec \"$HLS_EXE\" \"\''${HLS_ARGS[@]}\"
         "
 }
 
 call_without_shell()
 {
-    log_info "Not entering Nix shell"
-    exec haskell-language-server-wrapper "''${HLS_ARGS[@]}"
+    exec "$HLS_EXE" "''${HLS_ARGS[@]}"
 }
 
 shell_file()
@@ -292,7 +291,7 @@ validate_config_file()
 
 hls_options()
 {
-    haskell-language-server-wrapper --help \
+    "$HLS_EXE" --help \
     | grep -A99 options: \
     | sed '/options:/d;s/^/  /;/--help/d'
 }
