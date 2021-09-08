@@ -198,7 +198,7 @@ hls-wrapper-nix --cwd examples/example-cabal
 : …
 : 
 : Completed (5 files worked, 0 files failed)
-: 2021-09-08 10:03:56.372417853 [ThreadId 586] INFO hls:	finish: GenerateCore (took 0.00s)
+: 2021-09-08 14:06:10.507326695 [ThreadId 692] INFO hls:	finish: GenerateCore (took 0.00s)
 
 And here we see that the script works for the Stack example project as well:
 
@@ -214,7 +214,7 @@ hls-wrapper-nix --cwd examples/example-stack
 : …
 : 
 : Completed (3 files worked, 0 files failed)
-: 2021-09-08 10:05:47.646931236 [ThreadId 636] INFO hls:	finish: GenerateCore (took 0.00s)
+: 2021-09-08 14:07:59.619477442 [ThreadId 455] INFO hls:	finish: GenerateCore (took 0.00s)
 
 * Command-line reference
 
