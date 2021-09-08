@@ -426,8 +426,8 @@ nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
     warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
     Found "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/a"
     …
+    
     Completed (5 files worked, 0 files failed)
-    2021-09-06 22:49:27.813622223 [ThreadId 687] INFO hls:	finish: GenerateCore (took 0.00s)
 
 The same command can test HLS working with our Stack example project:
 
@@ -441,7 +441,7 @@ nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
     No 'hie.yaml' found. Try to discover the project type!
     …
     Completed (3 files worked, 0 files failed)
-    2021-09-06 22:50:06.399571882 [ThreadId 596] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-09-08 09:48:01.654593628 [ThreadId 602] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Editor integration with Nix shells<a id="sec-9"></a>
 
