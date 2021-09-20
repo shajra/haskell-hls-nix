@@ -11,7 +11,7 @@
     flags = { pedantic = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-tactics-plugin"; version = "1.3.0.0"; };
+      identifier = { name = "hls-tactics-plugin"; version = "1.4.0.0"; };
       license = "Apache-2.0";
       copyright = "Sandy Maguire, Reed Mullanix";
       maintainer = "sandy@sandymaguire.me";
@@ -19,7 +19,7 @@
       homepage = "https://haskellwingman.dev";
       url = "";
       synopsis = "Wingman plugin for Haskell Language Server";
-      description = "Please see README.md";
+      description = "Please see the README on GitHub at <https://github.com/haskell/haskell-language-server#readme>";
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";

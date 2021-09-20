@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.2";
-      identifier = { name = "shake-bench"; version = "0.1.0.0"; };
+      identifier = { name = "shake-bench"; version = "0.1.0.2"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "pepeiborra@gmail.com";

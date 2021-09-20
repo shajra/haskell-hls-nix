@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.2";
-      identifier = { name = "shake-bench"; version = "0.1.0.0"; };
+      identifier = { name = "shake-bench"; version = "0.1.0.2"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "pepeiborra@gmail.com";
@@ -37,7 +37,9 @@
           (hsPkgs."base" or (errorHandler.buildDepError "base"))
           (hsPkgs."Chart" or (errorHandler.buildDepError "Chart"))
           (hsPkgs."Chart-diagrams" or (errorHandler.buildDepError "Chart-diagrams"))
-          (hsPkgs."diagrams" or (errorHandler.buildDepError "diagrams"))
+          (hsPkgs."diagrams-contrib" or (errorHandler.buildDepError "diagrams-contrib"))
+          (hsPkgs."diagrams-core" or (errorHandler.buildDepError "diagrams-core"))
+          (hsPkgs."diagrams-lib" or (errorHandler.buildDepError "diagrams-lib"))
           (hsPkgs."diagrams-svg" or (errorHandler.buildDepError "diagrams-svg"))
           (hsPkgs."directory" or (errorHandler.buildDepError "directory"))
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))

@@ -13,7 +13,7 @@
       specVersion = "2.2";
       identifier = {
         name = "hls-explicit-imports-plugin";
-        version = "1.0.0.4";
+        version = "1.0.1.0";
         };
       license = "Apache-2.0";
       copyright = "";
@@ -22,7 +22,7 @@
       homepage = "";
       url = "";
       synopsis = "Explicit imports plugin for Haskell Language Server";
-      description = "";
+      description = "Please see the README on GitHub at <https://github.com/haskell/haskell-language-server#readme>";
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";
@@ -41,7 +41,6 @@
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
           (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
-          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."hls-graph" or (errorHandler.buildDepError "hls-graph"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))

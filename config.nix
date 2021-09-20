@@ -1,4 +1,4 @@
 {
-    ghcVersion = "8.10.6";
+    ghcVersion = "8.10.7";
     hls.unstable = false;
 }

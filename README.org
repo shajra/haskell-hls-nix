@@ -30,9 +30,9 @@ These ease the problem of updating this document when versions change. One thing
 covered by this parameterization is the listing of the versions built, and also
 if that count changes then "eight" needs to be changed as well.
 
-#+macro: version-hls-latest 1.3.0
-#+macro: version-ghc-default 8.10.6
-#+macro: version-ghc-default-wrap (eval (concat $1 "8.10.6" $2))
+#+macro: version-hls-latest 1.4.0
+#+macro: version-ghc-default 8.10.7
+#+macro: version-ghc-default-wrap (eval (concat $1 "8.10.7" $2))
 #+macro: version-ghc-alt 8.8.4
 
 #+name: version-ghc-alt-eol
@@ -661,7 +661,7 @@ nix-shell --pure --run 'haskell-language-server-wrapper' 2>&1
 : warning: file 'nixpkgs' was not found in the Nix search path (add it using $NIX_PATH or -I), at (string):1:9; will use bash from your environment
 : Found "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/a"
 : …
-: 
+:
 : Completed (5 files worked, 0 files failed)
 
 The same command can test HLS working with our Stack example project:
@@ -767,7 +767,7 @@ nix-shell --pure --run 'ghc-pkg list text-icu'
 #+results: example-cabal-pkg-list
 : /nix/store/rsyvws8dwv47h87mgm57spzvj4gnfq5n-ghc-8.10.6-with-packages/lib/ghc-8.10.6/package.conf.d
 :     text-icu-0.7.1.0
-: 
+:
 
 We can similarly look at the GHC instance for the Stack example project to see
 that it doesn't provide third-party Haskell dependencies:

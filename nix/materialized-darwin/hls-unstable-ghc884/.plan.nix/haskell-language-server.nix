@@ -33,7 +33,7 @@
       };
     package = {
       specVersion = "2.4";
-      identifier = { name = "haskell-language-server"; version = "1.3.0.0"; };
+      identifier = { name = "haskell-language-server"; version = "1.4.0.0"; };
       license = "Apache-2.0";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";
@@ -118,7 +118,6 @@
             (hsPkgs."cryptohash-sha1" or (errorHandler.buildDepError "cryptohash-sha1"))
             (hsPkgs."deepseq" or (errorHandler.buildDepError "deepseq"))
             (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
-            (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
             (hsPkgs."ghc-boot-th" or (errorHandler.buildDepError "ghc-boot-th"))
             (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
             (hsPkgs."hashable" or (errorHandler.buildDepError "hashable"))

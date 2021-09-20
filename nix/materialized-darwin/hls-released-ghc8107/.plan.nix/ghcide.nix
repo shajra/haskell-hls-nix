@@ -11,7 +11,7 @@
     flags = { ghc-patched-unboxed-bytecode = false; };
     package = {
       specVersion = "2.4";
-      identifier = { name = "ghcide"; version = "1.4.1.0"; };
+      identifier = { name = "ghcide"; version = "1.4.2.0"; };
       license = "Apache-2.0";
       copyright = "Digital Asset and Ghcide contributors 2018-2020";
       maintainer = "Ghcide contributors";
@@ -40,7 +40,7 @@
       };
     components = {
       "library" = {
-        depends = [
+        depends = ([
           (hsPkgs."aeson" or (errorHandler.buildDepError "aeson"))
           (hsPkgs."aeson-pretty" or (errorHandler.buildDepError "aeson-pretty"))
           (hsPkgs."array" or (errorHandler.buildDepError "array"))
@@ -106,14 +106,31 @@
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghc-check" or (errorHandler.buildDepError "ghc-check"))
           (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
-          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."cryptohash-sha1" or (errorHandler.buildDepError "cryptohash-sha1"))
           (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
           (hsPkgs."implicit-hie-cradle" or (errorHandler.buildDepError "implicit-hie-cradle"))
           (hsPkgs."base16-bytestring" or (errorHandler.buildDepError "base16-bytestring"))
           ] ++ (if system.isWindows
           then [ (hsPkgs."Win32" or (errorHandler.buildDepError "Win32")) ]
-          else [ (hsPkgs."unix" or (errorHandler.buildDepError "unix")) ]);
+          else [
+            (hsPkgs."unix" or (errorHandler.buildDepError "unix"))
+            ])) ++ (if compiler.isGhc && (compiler.version).lt "8.10.5"
+          then [
+            (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
+            ]
+          else if compiler.isGhc && (compiler.version).eq "8.10.5"
+            then [
+              (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
+              ]
+            else if compiler.isGhc && (compiler.version).eq "8.10.6"
+              then [
+                (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
+                ]
+              else if compiler.isGhc && (compiler.version).eq "8.10.7"
+                then [
+                  (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
+                  ]
+                else (pkgs.lib).optional (compiler.isGhc && (compiler.version).eq "9.0.1") (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat")));
         buildable = true;
         modules = [
           "Development/IDE/Core/FileExists"

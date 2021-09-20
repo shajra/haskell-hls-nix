@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-brittany-plugin"; version = "1.0.0.2"; };
+      identifier = { name = "hls-brittany-plugin"; version = "1.0.1.0"; };
       license = "AGPL-3.0-only";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";

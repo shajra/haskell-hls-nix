@@ -8,10 +8,15 @@
   , config
   , ... }:
   {
-    flags = { ghc-patched-unboxed-bytecode = false; };
+    flags = {
+      ghc-patched-unboxed-bytecode = false;
+      test-exe = true;
+      executable = true;
+      bench-exe = true;
+      };
     package = {
       specVersion = "2.4";
-      identifier = { name = "ghcide"; version = "1.4.1.0"; };
+      identifier = { name = "ghcide"; version = "1.4.2.1"; };
       license = "Apache-2.0";
       copyright = "Digital Asset and Ghcide contributors 2018-2020";
       maintainer = "Ghcide contributors";
@@ -57,7 +62,6 @@
           (hsPkgs."dependent-sum" or (errorHandler.buildDepError "dependent-sum"))
           (hsPkgs."dlist" or (errorHandler.buildDepError "dlist"))
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
-          (hsPkgs."fuzzy" or (errorHandler.buildDepError "fuzzy"))
           (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
           (hsPkgs."fingertree" or (errorHandler.buildDepError "fingertree"))
           (hsPkgs."ghc-exactprint" or (errorHandler.buildDepError "ghc-exactprint"))
@@ -71,6 +75,7 @@
           (hsPkgs."hiedb" or (errorHandler.buildDepError "hiedb"))
           (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
           (hsPkgs."lsp" or (errorHandler.buildDepError "lsp"))
+          (hsPkgs."monoid-subclasses" or (errorHandler.buildDepError "monoid-subclasses"))
           (hsPkgs."mtl" or (errorHandler.buildDepError "mtl"))
           (hsPkgs."network-uri" or (errorHandler.buildDepError "network-uri"))
           (hsPkgs."optparse-applicative" or (errorHandler.buildDepError "optparse-applicative"))
@@ -106,7 +111,6 @@
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
           (hsPkgs."ghc-check" or (errorHandler.buildDepError "ghc-check"))
           (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
-          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."cryptohash-sha1" or (errorHandler.buildDepError "cryptohash-sha1"))
           (hsPkgs."hie-bios" or (errorHandler.buildDepError "hie-bios"))
           (hsPkgs."implicit-hie-cradle" or (errorHandler.buildDepError "implicit-hie-cradle"))
@@ -125,6 +129,7 @@
           "Development/IDE/Plugin/Completions/Logic"
           "Development/IDE/Session/VersionCheck"
           "Development/IDE/Types/Action"
+          "Text/Fuzzy"
           "Control/Concurrent/Strict"
           "Generics/SYB/GHC"
           "Development/IDE"
@@ -144,6 +149,15 @@
           "Development/IDE/Core/Tracing"
           "Development/IDE/Core/UseStale"
           "Development/IDE/GHC/Compat"
+          "Development/IDE/GHC/Compat/Core"
+          "Development/IDE/GHC/Compat/Env"
+          "Development/IDE/GHC/Compat/Iface"
+          "Development/IDE/GHC/Compat/Logger"
+          "Development/IDE/GHC/Compat/Outputable"
+          "Development/IDE/GHC/Compat/Parser"
+          "Development/IDE/GHC/Compat/Plugins"
+          "Development/IDE/GHC/Compat/Units"
+          "Development/IDE/GHC/Compat/Util"
           "Development/IDE/Core/Compile"
           "Development/IDE/GHC/Error"
           "Development/IDE/GHC/ExactPrint"
@@ -177,15 +191,15 @@
           "Development/IDE/Plugin/HLS/GhcIde"
           "Development/IDE/Plugin/Test"
           "Development/IDE/Plugin/TypeLenses"
-          ];
+          ] ++ (pkgs.lib).optional (compiler.isGhc && (compiler.version).lt "8.10") "Development/IDE/GHC/Compat/CPP";
         hsSourceDirs = [ "src" "session-loader" ];
         };
       exes = {
         "ghcide-test-preprocessor" = {
           depends = [ (hsPkgs."base" or (errorHandler.buildDepError "base")) ];
-          buildable = true;
+          buildable = if !flags.test-exe then false else true;
           hsSourceDirs = [ "test/preprocessor" ];
-          mainPath = [ "Main.hs" ];
+          mainPath = [ "Main.hs" ] ++ (pkgs.lib).optional (!flags.test-exe) "";
           };
         "ghcide" = {
           depends = [
@@ -212,10 +226,12 @@
             (hsPkgs."text" or (errorHandler.buildDepError "text"))
             (hsPkgs."unordered-containers" or (errorHandler.buildDepError "unordered-containers"))
             ];
-          buildable = true;
+          buildable = if !flags.executable then false else true;
           modules = [ "Arguments" "Paths_ghcide" ];
           hsSourceDirs = [ "exe" ];
-          mainPath = [ "Main.hs" ];
+          mainPath = [
+            "Main.hs"
+            ] ++ (pkgs.lib).optional (!flags.executable) "";
           };
         "ghcide-bench" = {
           depends = [
@@ -240,14 +256,14 @@
           build-tools = [
             (hsPkgs.buildPackages.ghcide.components.exes.ghcide or (pkgs.buildPackages.ghcide or (errorHandler.buildToolDepError "ghcide:ghcide")))
             ];
-          buildable = true;
+          buildable = if !flags.bench-exe then false else true;
           modules = [
             "Development/IDE/Test/Diagnostic"
             "Experiments"
             "Experiments/Types"
             ];
           hsSourceDirs = [ "bench/lib" "bench/exe" "test/src" ];
-          mainPath = [ "Main.hs" ];
+          mainPath = [ "Main.hs" ] ++ (pkgs.lib).optional (!flags.bench-exe) "";
           };
         };
       tests = {

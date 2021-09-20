@@ -19,7 +19,7 @@
       homepage = "";
       url = "";
       synopsis = "HLS Plugin to expand TemplateHaskell Splices and QuasiQuotes";
-      description = "HLS Plugin to expand TemplateHaskell Splices and QuasiQuotes.";
+      description = "Please see the README on GitHub at <https://github.com/haskell/haskell-language-server#readme>";
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";

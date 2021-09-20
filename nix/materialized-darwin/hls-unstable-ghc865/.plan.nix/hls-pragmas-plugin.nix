@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-pragmas-plugin"; version = "1.0.0.1"; };
+      identifier = { name = "hls-pragmas-plugin"; version = "1.0.1.0"; };
       license = "Apache-2.0";
       copyright = "The Haskell IDE Team";
       maintainer = "alan.zimm@gmail.com";
@@ -57,6 +57,7 @@
             (hsPkgs."hls-test-utils" or (errorHandler.buildDepError "hls-test-utils"))
             (hsPkgs."lens" or (errorHandler.buildDepError "lens"))
             (hsPkgs."lsp-types" or (errorHandler.buildDepError "lsp-types"))
+            (hsPkgs."text" or (errorHandler.buildDepError "text"))
             ];
           buildable = true;
           hsSourceDirs = [ "test" ];
