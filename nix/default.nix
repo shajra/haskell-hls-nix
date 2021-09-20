@@ -42,6 +42,8 @@ let
 
     stability = if hlsUnstable then "unstable" else "released";
 
+    name = "hls-${stability}";
+
     nixpkgs-stable = import external.nixpkgs-stable {
         config = {};
         overlays = [];
@@ -66,7 +68,7 @@ let
 
     haskell-nix = nixpkgs-hn.haskell-nix;
 
-    planConfigFor = name: compiler-nix-name: modules:
+    planConfigFor = compiler-nix-name: modules:
         let isDarwin = nixpkgs-stable.stdenv.isDarwin;
             platformName = if isDarwin then "darwin" else "linux";
             needsNewName = name == "hls-${stability}";
@@ -88,7 +90,7 @@ let
 
     # IDEA: This is an incomplete/broken attempt to get a 9.0.1 build working.
     # Just keeping it around for a moment in case I want to try again.
-    modifiedHlsSrc = name:
+    modifiedHlsSrc =
         let
             orig = external."${name}";
             sed = "${nixpkgs-stable.gnused}/bin/sed";
@@ -113,19 +115,22 @@ let
             '';
         in if ghcVersion == "9.0.1" then modified else orig;
 
-    fromSource = name:
-        let planConfig = planConfigFor name (hnGhc ghcVersion) defaultModules // {
-                src = modifiedHlsSrc name;
-                # DESIGN: needed before, might be useful in the future
-                #constraints: apply-refact < 0.9.0.0
-                #max-backjumps: 10000
-                ${if (ghcVersion == "9.0.1") then "cabalProjectLocal" else null} = ''
-                    flags: -brittany -class -fourmolu -splice -stylishhaskell -tactic -refineImports
-                '';
-            };
-        in allExes (haskell-nix.cabalProject planConfig).haskell-language-server;
+    planConfig = planConfigFor (hnGhc ghcVersion) defaultModules // {
+        src = external."${name}";
+        # DESIGN: needed before, might be useful in the future
+        #constraints: apply-refact < 0.9.0.0
+        #max-backjumps: 10000
+        ${if (ghcVersion == "9.0.1") then "cabalProjectLocal" else null} = ''
+            flags: -brittany -class -fourmolu -splice -stylishhaskell -tactic -refineImports
+        '';
+    };
 
-    build = fromSource "hls-${stability}";
+    cabalProject = haskell-nix.cabalProject planConfig;
+
+    updateMaterialized =
+        (haskell-nix.cabalProject' planConfig).plan-nix.passthru.updateMaterialized;
+
+    build = allExes cabalProject.haskell-language-server;
 
     wrapHls = nameSuffix: exeSuffix: meta:
         let exeName = "haskell-language-server${exeSuffix}";
@@ -296,6 +301,8 @@ let
 
 in {
     inherit
+    build
+    updateMaterialized
     distribution
     nix-project
     nixpkgs-stable;

@@ -22,7 +22,7 @@
       homepage = "";
       url = "";
       synopsis = "Integration with the Stylish Haskell code formatter";
-      description = "";
+      description = "Please see the README on GitHub at <https://github.com/haskell/haskell-language-server#readme>";
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";

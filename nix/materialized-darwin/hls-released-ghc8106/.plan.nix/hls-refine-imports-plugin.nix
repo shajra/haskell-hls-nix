@@ -10,7 +10,7 @@
   {
     flags = {};
     package = {
-      specVersion = "2.2";
+      specVersion = "2.4";
       identifier = { name = "hls-refine-imports-plugin"; version = "1.0.0.1"; };
       license = "Apache-2.0";
       copyright = "";
@@ -19,7 +19,7 @@
       homepage = "";
       url = "";
       synopsis = "Refine imports plugin for Haskell Language Server";
-      description = "";
+      description = "Please see the README on GitHub at <https://github.com/haskell/haskell-language-server#readme>";
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";

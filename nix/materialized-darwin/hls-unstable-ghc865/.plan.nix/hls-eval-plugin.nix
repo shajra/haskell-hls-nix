@@ -53,7 +53,6 @@
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
           (hsPkgs."filepath" or (errorHandler.buildDepError "filepath"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
-          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."ghc-boot-th" or (errorHandler.buildDepError "ghc-boot-th"))
           (hsPkgs."ghc-paths" or (errorHandler.buildDepError "ghc-paths"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))

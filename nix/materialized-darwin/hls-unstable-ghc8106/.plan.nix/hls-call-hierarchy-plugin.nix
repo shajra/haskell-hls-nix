@@ -11,7 +11,7 @@
     flags = {};
     package = {
       specVersion = "2.4";
-      identifier = { name = "hls-call-hierarchy-plugin"; version = "1.0.0.2"; };
+      identifier = { name = "hls-call-hierarchy-plugin"; version = "1.0.1.0"; };
       license = "Apache-2.0";
       copyright = "";
       maintainer = "julytreee@gmail.com";
@@ -19,7 +19,7 @@
       homepage = "";
       url = "";
       synopsis = "Call hierarchy plugin for Haskell Language Server";
-      description = "";
+      description = "Please see the README on GitHub at <https://github.com/haskell/haskell-language-server/tree/master/plugins/hls-call-hierarchy-plugin#readme>";
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";
@@ -39,7 +39,6 @@
           (hsPkgs."containers" or (errorHandler.buildDepError "containers"))
           (hsPkgs."extra" or (errorHandler.buildDepError "extra"))
           (hsPkgs."ghc" or (errorHandler.buildDepError "ghc"))
-          (hsPkgs."ghc-api-compat" or (errorHandler.buildDepError "ghc-api-compat"))
           (hsPkgs."ghcide" or (errorHandler.buildDepError "ghcide"))
           (hsPkgs."hiedb" or (errorHandler.buildDepError "hiedb"))
           (hsPkgs."hls-plugin-api" or (errorHandler.buildDepError "hls-plugin-api"))

@@ -19,7 +19,7 @@
       homepage = "";
       url = "";
       synopsis = "Hlint integration plugin with Haskell Language Server";
-      description = "Please see Haskell Language Server Readme (https://github.com/haskell/haskell-language-server#readme)";
+      description = "Please see the README on GitHub at <https://github.com/haskell/haskell-language-server#readme>";
       buildType = "Simple";
       isLocal = true;
       detailLevel = "FullDetails";
