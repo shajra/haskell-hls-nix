@@ -32,7 +32,6 @@ nix-env --install --file . --attr hls-wrapper-nix
 ```
 
     installing 'hls-wrapper-nix'
-    trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
 
 # Editor configuration<a id="sec-3"></a>
 
@@ -91,12 +90,12 @@ hls-wrapper-nix --cwd examples/example-cabal
 ```
 
     INFO: Entering pure Nix shell
-    trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
     Found "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/hie.yaml" for "/home/tnks/src/shajra/haskell-hls-nix/examples/example-cabal/a"
+    Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 1.4.0.0 x86_64 ghc-8.10.7
     …
     
     Completed (5 files worked, 0 files failed)
-    2021-09-08 14:06:10.507326695 [ThreadId 692] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-09-21 02:11:20.16832857 [ThreadId 383] INFO hls:	finish: GenerateCore (took 0.00s)
 
 And here we see that the script works for the Stack example project as well:
 
@@ -105,12 +104,12 @@ hls-wrapper-nix --cwd examples/example-stack
 ```
 
     INFO: Entering pure Nix shell
-    trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
     No 'hie.yaml' found. Try to discover the project type!
+    Run entered for haskell-language-server-wrapper(haskell-language-server-wrapper) Version 1.4.0.0 x86_64 ghc-8.10.7
     …
     
     Completed (3 files worked, 0 files failed)
-    2021-09-08 14:07:59.619477442 [ThreadId 455] INFO hls:	finish: GenerateCore (took 0.00s)
+    2021-09-21 02:13:13.261875187 [ThreadId 643] INFO hls:	finish: GenerateCore (took 0.00s)
 
 # Command-line reference<a id="sec-7"></a>
 
@@ -149,6 +148,7 @@ For reference, here's the output of running `hls-wrapper-nix --help`:
                                  haskell-language-server-wrapper
         --probe-tools            Show haskell-language-server-wrapper version and
                                  other tools of interest
+        --list-plugins           List all avaliable plugins
         --print-cradle           Print the project cradle type
         --lsp                    Start talking to an LSP server
         --cwd DIR                Change to this directory

@@ -341,8 +341,8 @@ nix search --no-cache --file . | ansifilter \
 #+end_src
 
 #+results: nix-search-specific
-: * hls-renamed (haskell-language-server-ghc8106-renamed)
-:   Haskell Language Server (HLS) for GHC 8.10.6, renamed binary
+: * hls-renamed (haskell-language-server-ghc8107-renamed)
+:   Haskell Language Server (HLS) for GHC 8.10.7, renamed binary
 
 We can see that a package named {{{package-name}}} can be accessed with the
 {{{package-attr}}} attribute path in the Nix expression in the project root's
@@ -375,7 +375,7 @@ readlink result*
 #+end_src
 
 #+results: nix-build-link
-: /nix/store/pchxgvxqy4xls4i5hjizfnq563yf6h22-haskell-language-server-ghc8106-renamed
+: /nix/store/4adikhmdkw6j3gk5za5n767252wmkah5-haskell-language-server-ghc8107-renamed
 
 Following these symlinks, we can see the files the project provides:
 
@@ -388,14 +388,14 @@ tree -l result*
 #+begin_example
 result
 ├── bin
-│   └── haskell-language-server-8.10.6
+│   └── haskell-language-server-8.10.7
 └── share
     ├── bash-completion
     │   └── completions
-    │       └── haskell-language-server-8.10.6.bash
+    │       └── haskell-language-server-8.10.7.bash
     ├── fish
     │   └── vendor_completions.d
-    │       └── haskell-language-server-8.10.6.fish
+    │       └── haskell-language-server-8.10.7.fish
 …
 #+end_example
 
@@ -412,7 +412,7 @@ nix path-info --file . <<get("package-attr")>>
 #+end_src
 
 #+results: nix-build-path
-: /nix/store/pchxgvxqy4xls4i5hjizfnq563yf6h22-haskell-language-server-ghc8106-renamed
+: /nix/store/4adikhmdkw6j3gk5za5n767252wmkah5-haskell-language-server-ghc8107-renamed
 
 ** Running commands
 
@@ -440,7 +440,7 @@ nix run \
 : haskell-language-server - GHC Haskell LSP server
 : 
 : Usage: haskell-language-server [--version | --numeric-version | --probe-tools | 
-:                                  --print-cradle | 
+:                                  --list-plugins | --print-cradle | 
 :                                  [COMMAND | --lsp | FILES/DIRS...] [--cwd DIR] 
 : …
 
@@ -501,8 +501,7 @@ nix-env --install --file . --attr <<get("package-attr")>> 2>&1
 #+end_src
 
 #+results: nix-env-install
-: installing 'haskell-language-server-ghc8106-renamed'
-: trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
+: installing 'haskell-language-server-ghc8107-renamed'
 
 We can see this installation by querying what's been installed:
 
@@ -512,7 +511,7 @@ nix-env --query
 #+end_src
 
 #+results: nix-env-query-2
-: haskell-language-server-ghc8106-renamed
+: haskell-language-server-ghc8107-renamed
 
 And if we want to uninstall a program from our active profile, we do so by its
 name, in this case {{{package-name}}}:
@@ -523,7 +522,7 @@ nix-env --uninstall <<get("package-name")>> 2>&1
 #+end_src
 
 #+results: nix-env-uninstall
-: uninstalling 'haskell-language-server-ghc8106-renamed'
+: uninstalling 'haskell-language-server-ghc8107-renamed'
 
 Note that we've installed our package using its attribute path
 ({{{package-attr}}}) within the referenced Nix expression. But we uninstall it

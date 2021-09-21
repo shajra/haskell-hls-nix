@@ -15,6 +15,8 @@ nix run \
     nixpkgs-stable.direnv \
     nixpkgs-stable.findutils \
     nixpkgs-stable.gnugrep \
+    nixpkgs-stable.gnutar \
+    nixpkgs-stable.gzip \
     nixpkgs-stable.tree \
     --command \
     org2gfm \

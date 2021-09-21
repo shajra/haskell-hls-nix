@@ -152,10 +152,10 @@ In the remainder of this document, we'll use `.` instead of `default.nix` since 
 
 The following result is one returned by our prior execution of `nix search --no-cache --file .`:
 
-    * hls-renamed (haskell-language-server-ghc8106-renamed)
-      Haskell Language Server (HLS) for GHC 8.10.6, renamed binary
+    * hls-renamed (haskell-language-server-ghc8107-renamed)
+      Haskell Language Server (HLS) for GHC 8.10.7, renamed binary
 
-We can see that a package named "haskell-language-server-ghc8106-renamed" can be accessed with the `hls-renamed` attribute path in the Nix expression in the project root's `default.nix`. Not shown in the search results above, this package happens to provide the executable `haskell-language-server-8.10.6`.
+We can see that a package named "haskell-language-server-ghc8107-renamed" can be accessed with the `hls-renamed` attribute path in the Nix expression in the project root's `default.nix`. Not shown in the search results above, this package happens to provide the executable `haskell-language-server-8.10.7`.
 
 We can build this package with `nix build` from the project root:
 
@@ -173,7 +173,7 @@ After a successful call of `nix build`, you'll see one or more symlinks for each
 readlink result*
 ```
 
-    /nix/store/pchxgvxqy4xls4i5hjizfnq563yf6h22-haskell-language-server-ghc8106-renamed
+    /nix/store/4adikhmdkw6j3gk5za5n767252wmkah5-haskell-language-server-ghc8107-renamed
 
 Following these symlinks, we can see the files the project provides:
 
@@ -183,14 +183,14 @@ tree -l result*
 
     result
     ├── bin
-    │   └── haskell-language-server-8.10.6
+    │   └── haskell-language-server-8.10.7
     └── share
         ├── bash-completion
         │   └── completions
-        │       └── haskell-language-server-8.10.6.bash
+        │       └── haskell-language-server-8.10.7.bash
         ├── fish
         │   └── vendor_completions.d
-        │       └── haskell-language-server-8.10.6.fish
+        │       └── haskell-language-server-8.10.7.fish
     …
 
 It's common to configure these "result" symlinks as ignored in source control tools (for instance, for Git within a `.gitignore` file).
@@ -201,7 +201,7 @@ It's common to configure these "result" symlinks as ignored in source control to
 nix path-info --file . hls-renamed
 ```
 
-    /nix/store/pchxgvxqy4xls4i5hjizfnq563yf6h22-haskell-language-server-ghc8106-renamed
+    /nix/store/4adikhmdkw6j3gk5za5n767252wmkah5-haskell-language-server-ghc8107-renamed
 
 ## Running commands<a id="sec-6-3"></a>
 
@@ -209,19 +209,19 @@ We can run commands in Nix-curated environments with `nix run`. Nix will take ex
 
 With `nix run`, you don't even have to build the package first with `nix build` or mess around with "result" symlinks. `nix run` will build the project if it's not yet been built.
 
-For example, to get the help message for the `haskell-language-server-8.10.6` executable provided by the `haskell-language-server-ghc8106-renamed` package selected by the `hls-renamed` attribute path from `.`, we can call the following:
+For example, to get the help message for the `haskell-language-server-8.10.7` executable provided by the `haskell-language-server-ghc8107-renamed` package selected by the `hls-renamed` attribute path from `.`, we can call the following:
 
 ```sh
 nix run \
     --file . \
     hls-renamed \
-    --command haskell-language-server-8.10.6 --help
+    --command haskell-language-server-8.10.7 --help
 ```
 
     haskell-language-server - GHC Haskell LSP server
     
     Usage: haskell-language-server [--version | --numeric-version | --probe-tools | 
-                                     --print-cradle | 
+                                     --list-plugins | --print-cradle | 
                                      [COMMAND | --lsp | FILES/DIRS...] [--cwd DIR] 
     …
 
@@ -251,14 +251,13 @@ We can query what's installed in the active profile with the `--query` switch:
 nix-env --query
 ```
 
-To install the `haskell-language-server-8.10.6` executable, which is accessed by the `hls-renamed` in our top-level `default.nix` file, we'd run the following:
+To install the `haskell-language-server-8.10.7` executable, which is accessed by the `hls-renamed` in our top-level `default.nix` file, we'd run the following:
 
 ```sh
 nix-env --install --file . --attr hls-renamed 2>&1
 ```
 
-    installing 'haskell-language-server-ghc8106-renamed'
-    trace: WARNING: 8.10.6 is out of date, consider using 8.10.7.
+    installing 'haskell-language-server-ghc8107-renamed'
 
 We can see this installation by querying what's been installed:
 
@@ -266,17 +265,17 @@ We can see this installation by querying what's been installed:
 nix-env --query
 ```
 
-    haskell-language-server-ghc8106-renamed
+    haskell-language-server-ghc8107-renamed
 
-And if we want to uninstall a program from our active profile, we do so by its name, in this case "haskell-language-server-ghc8106-renamed":
+And if we want to uninstall a program from our active profile, we do so by its name, in this case "haskell-language-server-ghc8107-renamed":
 
 ```sh
-nix-env --uninstall haskell-language-server-ghc8106-renamed 2>&1
+nix-env --uninstall haskell-language-server-ghc8107-renamed 2>&1
 ```
 
-    uninstalling 'haskell-language-server-ghc8106-renamed'
+    uninstalling 'haskell-language-server-ghc8107-renamed'
 
-Note that we've installed our package using its attribute path (`hls-renamed`) within the referenced Nix expression. But we uninstall it using the package name ("haskell-language-server-ghc8106-renamed"), which may or may not be the same as the attribute path. When a package is installed, Nix keeps no reference to the expression that evaluated to the derivation of the installed package. The attribute path is only relevant to this expression. In fact, two different expressions could evaluate to the same derivation, but use different attribute paths. This is why we uninstall packages by their package name.
+Note that we've installed our package using its attribute path (`hls-renamed`) within the referenced Nix expression. But we uninstall it using the package name ("haskell-language-server-ghc8107-renamed"), which may or may not be the same as the attribute path. When a package is installed, Nix keeps no reference to the expression that evaluated to the derivation of the installed package. The attribute path is only relevant to this expression. In fact, two different expressions could evaluate to the same derivation, but use different attribute paths. This is why we uninstall packages by their package name.
 
 Also, if you look at the location for your profile, you'll see that Nix retains the symlink trees of previous generations of your profile. In fact you can even rollback to a previous profile with the `--rollback` switch. You can delete old generations of your profile with the `--delete-generations` switch.
 
