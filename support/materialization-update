@@ -1,0 +1,28 @@
+#!/bin/sh -eu
+
+cd "$(dirname "$0")/.."
+
+
+mkdir --parent nix/materialized-darwin
+mkdir --parent nix/materialized-linux
+
+for hlsUnstable in false true
+do
+    for ghcVersion in 8.10.7 8.10.6 8.8.4 8.6.5
+    do
+        case "$hlsUnstable" in
+        true) stability=unstable ;;
+        false) stability=released ;;
+        esac
+        echo
+        echo "###"
+        echo "### Update Materialization: $ghcVersion, $stability"
+        echo "###"
+        echo
+        "$(nix-build nix \
+            --no-out-link \
+            --argstr ghcVersion "$ghcVersion" \
+            --arg hlsUnstable "$hlsUnstable" \
+            --attr updateMaterialized)"
+    done
+done

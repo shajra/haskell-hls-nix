@@ -3,8 +3,8 @@
     # DESIGN: HLS already pins index-state in the cabal.project file.
     # Specifying the index-state here just overrides that pinning.
     #haskell-nix.hackage.index = {
-    #    state = "2021-09-01T00:00:00Z";
-    #    sha256 = "934338f5c73d91ee7dfdcb838ac44e8d92d5306aa60582cdded7abae887a7646";
+    #    state = "2021-09-21T00:00:00Z";
+    #    sha256 = "0000000000000000000000000000000000000000000000000000000000000000";
     #};
     haskell-nix.nixpkgs-pin = {
        # DESIGN: default to "nixpkgs-unstable"
